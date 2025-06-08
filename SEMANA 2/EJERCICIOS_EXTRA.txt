@@ -1,0 +1,58 @@
+⭐ Ejercicios Extra
+1.	Cree un algoritmo que le pida 2 números al usuario, los guarde en dos variables distintas (primero y segundo) y los ordene de menor a mayor en dichas variables.
+
+1.Inicio
+2.Definir primero
+3.Definir segundo
+4.Mostrar “Dime el primer número”
+5.Pedir primero
+6.Mostrar “Dime el segundo número”
+7.Pedir segundo
+7.Si (primero < segundo) entonces
+a. Mostrar “A:”, primero
+b. Mostrar “B:”, segundo
+8.Sino
+a. Mostrar “A:”, segundo
+b. Mostrar “B:”, primero
+9.FinSi
+10.Fin
+1.	Cree un algoritmo que le pida al usuario una velocidad en km/h y la convierta a m/s. Recuerda que 1 km == 1000m y 1 hora == 60 minutos * 60 segundos.
+
+1.Inicio
+2.Definir velocidad_km_h
+3.Mostrar “Dime la velocidad en km/h”
+5.Pedir velocidad_km_h
+6.Definir velocidad_m_s
+7.velocidad_m_s=(velocidad_km_h x 1000) / 3600
+8.Mostrar “La velocidad en m/s es: “
+9.Mostrar velocidad_m_s
+10.Fin
+1.	Cree un algoritmo que le pregunte al usuario por el sexo de 6 personas, ingresando 1 si es mujer o 2 si es hombre, y muestre al final el porcentaje de mujeres y hombres.
+
+1.Inicio
+2.Definir sexo
+3.Definir contador_H
+4.Definir contador_M
+5.Definir contador
+6.Definir porcentaje_H
+7.Definir porcentaje_M
+7.contador=1
+8.contador_H=0
+9.contador_M=0
+10.porcentaje_H=0
+11.porcentaje_M=0
+12.Mientras que(contador ≤ 6) hacer:
+a. Mostrar “Digite H si eres hombre o M si eres mujer: “
+b. Pedir sexo
+c.Si (sexo == “H”) entonces
+a. contador_H=contador_H +1
+d.Sino
+a. contador_M=contador_M +1
+e.FinSi
+f.contador=contador+1
+13.FinMientras
+14.porcentaje_H=(contador_H /6) * 100
+15.porcentaje_M=(contador_M /6) * 100
+16.Mostrar porcentaje_H
+17.Mostrar porcentaje_M
+10.Fin

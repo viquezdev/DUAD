@@ -1,0 +1,17 @@
+1.	Cree un algoritmo que le pida un numero al usuario, y realice una suma de cada número del 1 hasta ese número ingresado. Luego muestre el resultado de la suma.
+
+1.Inicio
+2.Definir numero
+3.Mostrar “Dime un numero”
+4.Pedir numero
+5.Definir suma
+6.suma=0
+7.Definir contador
+8.contador=1
+7.Mientras que(contador ≤numero) hacer:
+a.suma=suma+contador
+b.contador=contador+1
+8.FinMientras
+9.Mostrar “La suma es:”
+10.Mostrar suma
+11.Fin

@@ -1,0 +1,18 @@
+1.	Cree un pseudocódigo que le pida un tiempo en segundos al usuario y calcule si es menor o mayor a 10 minutos. Si es menor, muestre cuantos segundos faltarían para llegar a 10 minutos. Si es mayor, muestre “Mayor”. Si es exactamente igual, muestre “Igual”.
+
+1.Inicio
+2.Definir tiempo_segundos
+3.Mostrar “Digite el tiempo en segundos”
+4.Pedir tiempo_segundos
+5.Definir minutos
+6.minutos=tiempo_segundos/60
+7.Si (minutos <10) entonces
+a.Mostrar 600-tiempo_segundos
+8.Sino
+a.Si (minutos >10) entonces
+i.Mostrar “Mayor”
+b.Sino
+i.Mostrar “Igual”
+c.FinSi
+9.FinSi
+10.Fin
