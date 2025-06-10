@@ -1,0 +1,5 @@
+print("Hola mundo")
+print("Mi nombre es " + "Luis Daniel")
+print(2+3)
+print(40*5)
+print(8%2)

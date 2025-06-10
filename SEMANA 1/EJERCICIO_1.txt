@@ -1,0 +1,21 @@
+1.	Cree un algoritmo para ver un video en YouTube. Sea lo más específico posible.
+
+Respuesta:
+1.Inicio.
+2.Si computadora apagada:
+i. Encender computadora.
+a. Presionar botón de encendido.
+3.Sino:
+i. Iniciar sesión
+a. Digitar contraseña.
+b. Presionar la tecla enter.
+4.Abrir navegador de internet
+5.Digitar la dirección web de YouTube
+6.Si la página web no carga
+i. Verificar conexión de internet
+7.Sino:
+i. Digitar el nombre del video
+ii. Clic en el icono de buscar
+8.Elegir video
+9.Reproducir video
+10.Fin

@@ -1,0 +1,21 @@
+2.	Cree un algoritmo que describa su rutina diaria. Use condiciones, condiciones multiples y ciclos.
+Respuesta:
+
+1.Inicio.
+2.Levantarme a las 5:20 a.m
+3.Si tengo hambre
+i.Preparar desayuno
+4.Alistarme
+5.Salir para el trabajo a las 6:10 a.m
+6.Llegar al trabajo
+7.Mientras no sean las 4:10 p.m
+i.Trabajar
+8.Si tengo energía y no está lloviendo
+i.Ir al gimnasio
+9.Sino:
+i.Volver a casa
+10.Llegar a casa
+11.Cenar
+12.Realizar semana 1 de Lyfter
+13.Dormir
+14.Fin
