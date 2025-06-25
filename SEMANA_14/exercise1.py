@@ -13,8 +13,8 @@ class Node:
 class Stack:
     top: Node
 
-    def __init__(self, top):
-        self.top = top
+    def __init__(self):
+        self.top = None
 
 
     def print_structure(self):
@@ -28,18 +28,21 @@ class Stack:
         if self.top is None:
             self.top = new_node
             return
-        current_node = self.top
+        new_node.next=self.top
         self.top=new_node
-        self.top.next=current_node
-        
+
+
 
     def pop(self):
-        if self.top:
+        if self.top is None:
+            print("The stack is empty")
+        else:
             self.top = self.top.next
 
 
 first_node = Node("Hello")
-my_stack = Stack(first_node)
+my_stack = Stack()
+my_stack.push(first_node)
 
 
 second_node = Node("World")
@@ -60,3 +63,7 @@ forth_node= Node("Forth")
 my_stack.push(forth_node)
 my_stack.print_structure()
 
+my_stack.pop()
+my_stack.pop()
+my_stack.pop()
+my_stack.pop()

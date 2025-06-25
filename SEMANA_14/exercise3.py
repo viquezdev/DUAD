@@ -3,47 +3,52 @@
 
 class Node:
     data: str
-    next: "Node"
+    left: "Node"
+    right: "Node"
 
-    def __init__(self, data, left_next=None,right_next=None):
+    def __init__(self, data, left=None,right=None):
         self.data = data
-        self.left_next = left_next
-        self.right_next=right_next
+        self.left= left
+        self.right=right
 
 
 class BinaryTree:
     root: Node
 
 
-    def __init__(self, root):
+    def __init__(self, root=None):
         self.root = root
     
 
     def print_structure(self,node=None):
         if node is None:
             return
-        
         print(node.data)
-        self.print_structure(node.left_next)
-        self.print_structure(node.right_next)
+        self.print_structure(node.left) 
+        self.print_structure(node.right)
 
         
-    def add_node(self, new_node):
-        if (self.root is None):
+    def add_node(self, new_node,current_node=None):
+        if self.root is None:
             self.root = new_node
-            return
-        current_node = self.root
-        while (current_node.left_next is not None) and (current_node.right_next is not None):
-            current_node=current_node.left_next
-            if (current_node.left_next)!=None and (current_node.right_next!=None):
-                current_node=self.root
-                current_node=current_node.right_next
-            
+            return True
+        
+        if current_node is None:
+            current_node=self.root
 
-        if (current_node.left_next==None):
-            current_node.left_next = new_node
+        if current_node.left is None:
+            current_node.left=new_node
+            return True
+        
+        elif current_node.right is None:
+            current_node.right=new_node
+            return True
         else:
-            current_node.right_next=new_node
+            if self.add_node(new_node,current_node.left):
+                return True
+            return self.insert(new_node,current_node.right)                 
+
+
 
 
 node_a=Node('A')
@@ -53,7 +58,8 @@ node_d=Node('D')
 node_e=Node('E')
 node_f=Node('F')
 node_g=Node('G')
-my_binary_tree=BinaryTree(node_a)
+my_binary_tree=BinaryTree()
+my_binary_tree.add_node(node_a)
 my_binary_tree.add_node(node_b)
 my_binary_tree.add_node(node_c)
 my_binary_tree.add_node(node_d)
