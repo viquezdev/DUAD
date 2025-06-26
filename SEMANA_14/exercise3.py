@@ -46,7 +46,7 @@ class BinaryTree:
         else:
             if self.add_node(new_node,current_node.left):
                 return True
-            return self.insert(new_node,current_node.right)                 
+            return self.add_node(new_node,current_node.right)                 
 
 
 
