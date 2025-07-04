@@ -32,7 +32,8 @@ class FinanceManager:
     def create_list_of_categories(self,list_of_transactions):
         list_categories=[]
         for obj in list_of_transactions:
-            list_categories.append(obj.category)
+            if obj.category not in list_categories:
+                list_categories.append(obj.category)
         self.categories=list_categories
         
 

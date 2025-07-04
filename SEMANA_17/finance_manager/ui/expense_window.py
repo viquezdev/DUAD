@@ -25,7 +25,7 @@ def show_expense_window(manager,window_main):
                     if amount < 0:
                         sg.popup("Amount must be a positive number.")
                     else:
-                        input_value = str(values.get("title", "")).strip()
+                        input_value = str(values["title"]).strip()
                         manager.add_expense(input_value, amount, values["combo_value"])
                         export_data_to_csv(
                             'manager.csv',
