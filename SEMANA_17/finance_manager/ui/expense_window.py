@@ -15,26 +15,39 @@ def show_expense_window(manager,window_main):
         event, values = window_expense.read()
         if event == sg.WIN_CLOSED:
             break
-        if event=="Add Expense":
-            if manager.categories==[]:
-                sg.popup('You need to add a Category first .')
-            elif values["title"]!="" and values["amount"]!="" and values["combo_value"]!="":
-                if not values["amount"].isdigit():
-                    sg.popup('Amount must no be text .')
-                else:
-                    manager.add_expense(values["title"],values["amount"],values["combo_value"])
-                    export_data_to_csv('manager.csv',manager.transactions,["transaction_type","title","amount","category",])
-                    sg.popup('Expense was added successfully.')
-                    row_colors = []
-                    for i, row in enumerate(manager.extract_attributes(manager.transactions)):
-                        if row[3] == 'income':
-                            row_colors.append((i, 'green')) 
-                        elif row[3] == 'expense':
-                            row_colors.append((i, 'red')) 
+        if event == "Add Expense":
+            if not manager.categories:
+                sg.popup("You need to add a category first.")
+            
+            elif values["title"] and values["amount"] and values["combo_value"]:
+                try:
+                    amount = float(values["amount"])
+                    if amount < 0:
+                        sg.popup("Amount must be a positive number.")
+                    else:
+                        input_value = str(values.get("title", "")).strip()
+                        manager.add_expense(input_value, amount, values["combo_value"])
+                        export_data_to_csv(
+                            'manager.csv',
+                            manager.transactions,
+                            ["transaction_type", "title", "amount", "category"]
+                        )
+                        sg.popup("Expense was added successfully.")
                         
-                    window_main["table_values"].update(values=manager.extract_attributes(manager.transactions),row_colors=row_colors)
-                    window_expense.close()
+                        attributes = manager.extract_attributes(manager.transactions)
+                        row_colors = [
+                            (i, "green") if row[3] == "income" else (i, "red")
+                            for i, row in enumerate(attributes)
+                            if row[3] in ("income", "expense")
+                        ]
+                        
+                        window_main["table_values"].update(values=attributes, row_colors=row_colors)
+                        window_expense.close()
+
+                except ValueError:
+                    sg.popup("Amount must be a valid number.")
+            
             else:
-                sg.popup('Required information is incomplete .')
+                sg.popup("Required information is incomplete.")
     window_expense.close()
 

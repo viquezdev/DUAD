@@ -16,14 +16,14 @@ def show_category_window(manager):
         if event == sg.WIN_CLOSED:
             break
         if event=="Add Category":
-            input_value=values["input"]
-            if input_value!="":
+            input_value = str(values.get("input", "")).strip()
+            if input_value:
                 if input_value not in manager.categories:
                     manager.add_new_category(input_value)
-                    sg.popup('Category was added successfully.')
+                    sg.popup("Category was added successfully.")
                     window.close()
                 else:
-                    sg.popup('The Category already exists.')
+                    sg.popup("The category already exists.")
             else:
                 sg.popup('Required information is incomplete .')
     window.close()
