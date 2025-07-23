@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask import Flask, request, Response, jsonify
-from dataclasses import dataclass
+from dataclasses import dataclass,asdict
 from data import *
 import json 
 
@@ -14,110 +14,110 @@ class Task:
     description:str
     status:str
 
-def is_valid_task(task):
+def is_valid_task(data):
     current_tasks=read_json_file()
-    task_objects = [Task(**task_dict) for task_dict in current_tasks]
+    required_fields={"identifier", "title", "description", "status"}
+    missing_fields=required_fields-data.keys()
     allowed_statuses={"to do","in progress","completed"}
-    for element in task_objects:
-        if(task.identifier==element.identifier):
-            return "Identifier already exists"
-    if task.title=="":
-        return "Title required"
-    if task.description=="":
-        return "Description required"
-    if task.status.strip().lower() not in  allowed_statuses:
-        return "Status must be 'To Do', 'In Progress' or 'Completed'"
-    return None
+    errors=[]
+    if missing_fields:
+        errors.append(f"Missing fields: {', '.join(missing_fields)}")
+    
+    if data.get("title", "").strip() == "":
+        errors.append("Title is required")
+
+    if data.get("description", "").strip() == "":
+        errors.append("Description is required")
+
+    allowed_statuses = {"to do", "in progress", "completed"}
+    if data.get("status", "").strip().lower() not in allowed_statuses:
+        errors.append("Status must be 'To Do', 'In Progress' or 'Completed'")
+
+    current_tasks = read_json_file()
+    if any(task["identifier"] == data.get("identifier") for task in current_tasks):
+        errors.append("Identifier already exists")
+
+    return errors if errors else None
 
 class TaskAPI(MethodView):
     def get(self, identifier=None):
         try:
             current_tasks = read_json_file()
             if not current_tasks:
-                return jsonify({"error": "No tasks have been created"}), 400
+                return jsonify({"data": [], "message": "No tasks found"}), 200
 
             status_filter = request.args.get("status")
             task_objects = [Task(**task_dict) for task_dict in current_tasks]
             if status_filter:
-                task_objects = [
-                    task for task in task_objects
-                    if task.status.lower() == status_filter.lower()
-                ]
+                current_tasks=list(
+                    filter(lambda status:status["status"].lower()==status_filter.lower(),current_tasks)
+                )
 
-            task_dicts = [task.__dict__ for task in task_objects]
-
-            return jsonify({"data": task_dicts}), 200
+            return jsonify({"data": current_tasks}), 200
     
         except ValueError as ex:
             return jsonify(message=str(ex)), 400
         except Exception as ex:
             return jsonify(message=str(ex)), 500
+        
 
     def post(self,identifier=None):
         try:
-            data=request.get_json(silent=True)
+            data = request.get_json(silent=True)
             if data is None:
-                return jsonify({"error":"No valid JSON body or incorrect Content-Type"}),400
-            required_fields={"identifier","title","description","status"}
-            if not data or not required_fields.issubset(data):
-                return jsonify({"error":"Missing data"}),400
-            else:
-                task=Task(
-                    identifier=data["identifier"],
-                    title=data["title"],
-                    description=data["description"],
-                    status=data["status"]
-                )
-                validation_error=is_valid_task(task)
-                if validation_error:
-                    return jsonify({"error":validation_error}),400
-                
-                current_tasks = read_json_file()
-                if not isinstance(current_tasks, list):
-                    current_tasks = []
-                task_dict = {
-                    "identifier": task.identifier,
-                    "title": task.title,
-                    "description": task.description,
-                    "status": task.status
-                }
-                current_tasks.append(task_dict)
-                save_json_file(current_tasks)
-                return jsonify({"message": "Task created"}), 201
+                return jsonify({"error": "No valid JSON body or incorrect Content-Type"}), 400
+
+            validation_errors = is_valid_task(data)
+            if validation_errors:
+                return jsonify({"errors": validation_errors}), 400
+
+            task = Task(**data)
+            current_tasks = read_json_file()
+            if not isinstance(current_tasks, list):
+                current_tasks = []
+
+            current_tasks.append(asdict(task))
+            save_json_file(current_tasks)
+            return jsonify({"message": "Task created"}), 201
+
         except ValueError as ex:
             return jsonify(message=str(ex)), 400
         except Exception as ex:
             return jsonify(message=str(ex)), 500
     
+
     def put(self,identifier):
         try:
             data=request.get_json(silent=True)
             if data is None:
                 return jsonify({"error":"No valid JSON body or incorrect Content-Type"}),400
             current_tasks=read_json_file()
-            task_objects = [Task(**task_dict) for task_dict in current_tasks]
             task_found=False
-            for element in task_objects:
-                if element.identifier ==identifier:
+            updated_task=None
+            for element in current_tasks:
+                if element["identifier"] ==identifier:
                     if "title" in data:
-                        element.title=data["title"]
+                        element["title"]=data["title"]
                     if "description" in data:
-                        element.description=data["description"]
+                        element["description"]=data["description"]
                     if "status" in data:
                         allowed_statuses={"to do","in progress","completed"}
                         if data["status"].strip().lower() not in allowed_statuses:
                             return jsonify({"error":"Invalid status. Must be 'To Do', 'In Progress' or 'Completed'"}), 400
-                        element.status=data["status"]
+                        element["status"]=data["status"]
+                    update_task=element.copy()
                     task_found=True
                     break
                     
             if not task_found:
-                return jsonify({"error": "Task not found"}), 404
-            
-            updated_tasks = [task.__dict__ for task in task_objects]
-            save_json_file(updated_tasks)
+                    return jsonify({"error": "Task not found"}), 404
+                
+            save_json_file(current_tasks)
 
-            return jsonify({"message": "Task updated"}), 200
+            return jsonify({
+                "message": "Task updated",
+                "task":update_task
+            }), 200
     
         except ValueError as ex:
             return jsonify(message=str(ex)), 400
@@ -130,29 +130,32 @@ class TaskAPI(MethodView):
             if data is None:
                 return jsonify({"error":"No valid JSON body or incorrect Content-Type"}),400
             current_tasks=read_json_file()
-            task_objects = [Task(**task_dict) for task_dict in current_tasks]
             task_found=False
-            for element in task_objects:
-                if element.identifier ==identifier:
+            updated_task=None
+            for element in current_tasks:
+                if element["identifier"] ==identifier:
                     if "title" in data:
-                        element.title=data["title"]
+                        element["title"]=data["title"]
                     if "description" in data:
-                        element.description=data["description"]
+                        element["description"]=data["description"]
                     if "status" in data:
                         allowed_statuses={"to do","in progress","completed"}
                         if data["status"].strip().lower() not in allowed_statuses:
                             return jsonify({"error":"Invalid status. Must be 'To Do', 'In Progress' or 'Completed'"}), 400
-                        element.status=data["status"]
+                        element["status"]=data["status"]
+                    update_task=element.copy()
                     task_found=True
                     break
                     
             if not task_found:
-                return jsonify({"error": "Task not found"}), 404
-            
-            updated_tasks = [task.__dict__ for task in task_objects]
-            save_json_file(updated_tasks)
+                    return jsonify({"error": "Task not found"}), 404
+                
+            save_json_file(current_tasks)
 
-            return jsonify({"message": "Task updated"}), 200
+            return jsonify({
+                "message": "Task updated",
+                "task":update_task
+            }), 200
     
         except ValueError as ex:
             return jsonify(message=str(ex)), 400
@@ -161,21 +164,24 @@ class TaskAPI(MethodView):
 
     def delete(self,identifier):
         try:
-            task_found=False
             current_tasks=read_json_file()
-            task_objects = [Task(**task_dict) for task_dict in current_tasks]
-            new_task_objects=[]
-            for element in task_objects:
-                if element.identifier==identifier:
-                    task_found=True
+            deleted_task=None
+            new_tasks = []
+            for element in current_tasks:
+                if element["identifier"] == identifier:
+                    deleted_task = element.copy()
                 else:
-                    new_task_objects.append(element)
-            if not task_found:
+                    new_tasks.append(element)
+
+            if deleted_task is None:
                 return jsonify({"error": "Task not found"}), 404
-            
-            task_dicts = [task.__dict__ for task in new_task_objects]
-            save_json_file(task_dicts)
-            return jsonify({"message": "Task deleted"}), 200
+
+            save_json_file(new_tasks)
+
+            return jsonify({
+                "message": "Task deleted",
+                "deleted_task": deleted_task
+            }), 200
     
         except ValueError as ex:
             return jsonify(message=str(ex)), 400
