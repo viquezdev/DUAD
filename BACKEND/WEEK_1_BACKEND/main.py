@@ -48,18 +48,20 @@ def get_task():
             return jsonify({"data": [], "message": "No tasks found"}), 200
 
         status_filter = request.args.get("status")
-        task_objects = [Task(**task_dict) for task_dict in current_tasks]
         if status_filter:
             current_tasks=list(
-                filter(lambda status:status["status"].lower()==status_filter.lower(),current_tasks)
+                filter(lambda task: task["status"].lower() == status_filter.lower(), current_tasks)
             )
 
         return jsonify({"data": current_tasks}), 200
     
     except ValueError as ex:
-        return jsonify(message=str(ex)), 400
+        print(str(ex))
+        return jsonify({"message": "Invalid input"}), 400
+
     except Exception as ex:
-        return jsonify(message=str(ex)), 500
+        print(str(ex))
+        return jsonify({"message": "There was a problem getting the tasks"}), 500
 
 
 @app.route("/tasks", methods=["POST"])
@@ -80,12 +82,17 @@ def create_task():
 
         current_tasks.append(asdict(task))
         save_json_file(current_tasks)
-        return jsonify({"message": "Task created"}), 201
+        return jsonify({
+            "message": f"Task with ID {task.identifier} created successfully"
+        }), 201
 
     except ValueError as ex:
-        return jsonify(message=str(ex)), 400
+        print(str(ex))
+        return jsonify({"message": "Invalid input"}), 400
+
     except Exception as ex:
-        return jsonify(message=str(ex)), 500
+        print(str(ex))
+        return jsonify({"message": "Error while creating your task."}), 500
 
 @app.route("/tasks/<identifier>", methods=["PUT","PATCH"])
 def update_task(identifier):
@@ -107,7 +114,7 @@ def update_task(identifier):
                     if data["status"].strip().lower() not in allowed_statuses:
                         return jsonify({"error":"Invalid status. Must be 'To Do', 'In Progress' or 'Completed'"}), 400
                     element["status"]=data["status"]
-                update_task=element.copy()
+                updated_task=element.copy()
                 task_found=True
                 break
                 
@@ -117,14 +124,16 @@ def update_task(identifier):
         save_json_file(current_tasks)
 
         return jsonify({
-            "message": "Task updated",
-            "task":update_task
+            "message": f"Task with ID {identifier} was updated successfully"
         }), 200
     
     except ValueError as ex:
-        return jsonify(message=str(ex)), 400
+        print(str(ex))
+        return jsonify({"message": "Invalid input"}), 400
+
     except Exception as ex:
-        return jsonify(message=str(ex)), 500
+        print(str(ex))
+        return jsonify({"message": "Error while updating your task."}), 500
 
 
 @app.route("/tasks/<identifier>", methods=["DELETE"])
@@ -145,14 +154,16 @@ def delete_task(identifier):
         save_json_file(new_tasks)
 
         return jsonify({
-            "message": "Task deleted",
-            "deleted_task": deleted_task
+            "message": f"Task with ID {identifier} was deleted successfully"
         }), 200
     
     except ValueError as ex:
-        return jsonify(message=str(ex)), 400
+        print(str(ex))
+        return jsonify({"message": "Invalid input"}), 400
+
     except Exception as ex:
-        return jsonify(message=str(ex)), 500
+        print(str(ex))
+        return jsonify({"message": "Error while deleting your task."}), 500
 
 
 if __name__ == "__main__":
