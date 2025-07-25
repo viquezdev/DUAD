@@ -47,18 +47,20 @@ class TaskAPI(MethodView):
                 return jsonify({"data": [], "message": "No tasks found"}), 200
 
             status_filter = request.args.get("status")
-            task_objects = [Task(**task_dict) for task_dict in current_tasks]
             if status_filter:
                 current_tasks=list(
-                    filter(lambda status:status["status"].lower()==status_filter.lower(),current_tasks)
+                    filter(lambda task: task["status"].lower() == status_filter.lower(), current_tasks)
                 )
 
             return jsonify({"data": current_tasks}), 200
     
         except ValueError as ex:
-            return jsonify(message=str(ex)), 400
+            print(str(ex))
+            return jsonify({"message": "Invalid input"}), 400
+
         except Exception as ex:
-            return jsonify(message=str(ex)), 500
+            print(str(ex))
+            return jsonify({"message": "There was a problem getting the tasks"}), 500
         
 
     def post(self,identifier=None):
@@ -78,12 +80,17 @@ class TaskAPI(MethodView):
 
             current_tasks.append(asdict(task))
             save_json_file(current_tasks)
-            return jsonify({"message": "Task created"}), 201
+            return jsonify({
+                "message": f"Task with ID {task.identifier} created successfully"
+            }), 201
 
         except ValueError as ex:
-            return jsonify(message=str(ex)), 400
+            print(str(ex))
+            return jsonify({"message": "Invalid input"}), 400
+
         except Exception as ex:
-            return jsonify(message=str(ex)), 500
+            print(str(ex))
+            return jsonify({"message": "Error while creating your task."}), 500
     
 
     def put(self,identifier):
@@ -105,7 +112,7 @@ class TaskAPI(MethodView):
                         if data["status"].strip().lower() not in allowed_statuses:
                             return jsonify({"error":"Invalid status. Must be 'To Do', 'In Progress' or 'Completed'"}), 400
                         element["status"]=data["status"]
-                    update_task=element.copy()
+                    updated_task=element.copy()
                     task_found=True
                     break
                     
@@ -115,14 +122,16 @@ class TaskAPI(MethodView):
             save_json_file(current_tasks)
 
             return jsonify({
-                "message": "Task updated",
-                "task":update_task
+                "message": f"Task with ID {identifier} was updated successfully"
             }), 200
     
         except ValueError as ex:
-            return jsonify(message=str(ex)), 400
+            print(str(ex))
+            return jsonify({"message": "Invalid input"}), 400
+
         except Exception as ex:
-            return jsonify(message=str(ex)), 500
+            print(str(ex))
+            return jsonify({"message": "Error while updating your task."}), 500
         
     def patch(self,identifier):
         try:
@@ -143,7 +152,7 @@ class TaskAPI(MethodView):
                         if data["status"].strip().lower() not in allowed_statuses:
                             return jsonify({"error":"Invalid status. Must be 'To Do', 'In Progress' or 'Completed'"}), 400
                         element["status"]=data["status"]
-                    update_task=element.copy()
+                    updated_task=element.copy()
                     task_found=True
                     break
                     
@@ -153,14 +162,16 @@ class TaskAPI(MethodView):
             save_json_file(current_tasks)
 
             return jsonify({
-                "message": "Task updated",
-                "task":update_task
+                "message": f"Task with ID {identifier} was updated successfully"
             }), 200
     
         except ValueError as ex:
-            return jsonify(message=str(ex)), 400
+            print(str(ex))
+            return jsonify({"message": "Invalid input"}), 400
+
         except Exception as ex:
-            return jsonify(message=str(ex)), 500
+            print(str(ex))
+            return jsonify({"message": "Error while updating your task."}), 500
 
     def delete(self,identifier):
         try:
@@ -179,15 +190,17 @@ class TaskAPI(MethodView):
             save_json_file(new_tasks)
 
             return jsonify({
-                "message": "Task deleted",
-                "deleted_task": deleted_task
-            }), 200
+            "message": f"Task with ID {identifier} was deleted successfully"
+        }), 200
     
         except ValueError as ex:
-            return jsonify(message=str(ex)), 400
+            print(str(ex))
+            return jsonify({"message": "Invalid input"}), 400
+
         except Exception as ex:
-            return jsonify(message=str(ex)), 500
-        
+            print(str(ex))
+            return jsonify({"message": "Error while deleting your task."}), 500
+            
 
 task_view = TaskAPI.as_view('task_api')
 app.add_url_rule('/tasks', defaults={'identifier': None},view_func=task_view, methods=['GET', 'POST'])
