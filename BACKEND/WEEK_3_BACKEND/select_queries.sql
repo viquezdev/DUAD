@@ -1,0 +1,27 @@
+-- SQLite
+
+
+-- ALL PRODUCTS
+
+SELECT * FROM products;
+
+--All PRODUCTS WITH PRICE GREATER THAN 50000
+
+SELECT * FROM products WHERE PRICE>50000;
+
+--ALL PURCHASES OF THE SAME PRODUCT BY ID
+SELECT * FROM invoices_products WHERE product_id=1;
+
+--ALL PURCHASES GROUPED BY PRODUCT, SHOWING THE TOTAL QUANTITY PURCHASED
+SELECT product_id,SUM(quantity) AS total_quantity
+    FROM invoices_products
+    GROUP BY product_id;
+
+--ALL INVOICES BY THE SAME BUYER
+SELECT * FROM invoices WHERE buyer_email='juan@example.com';
+
+--ALL INVOICES ORDER BY TOTAL AMOUNT DESC
+SELECT * FROM invoices ORDER BY total_amount DESC;
+
+-- A SINGLE INVOICE BY INVOICE NUMBER
+SELECT * FROM invoices WHERE number='F1003';
