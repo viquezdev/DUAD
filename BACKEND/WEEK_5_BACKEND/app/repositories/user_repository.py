@@ -47,6 +47,66 @@ class UserRepository:
         except Exception as error:
             print("Error getting a user from the database: ", error)
             return False
+    
+    def get_by_name(self, _name):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,name, email,username, password,birth_date,account_status FROM lyfter_car_rental.users WHERE name = %s;",
+                (_name,),
+            )
+            formatted_result = self._format_user(results[0])
+            return formatted_result
+        except Exception as error:
+            print("Error getting a user from the database: ", error)
+            return False
+        
+    def get_by_email(self, _email):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,name, email,username, password,birth_date,account_status FROM lyfter_car_rental.users WHERE email = %s;",
+                (_email,),
+            )
+            formatted_result = self._format_user(results[0])
+            return formatted_result
+        except Exception as error:
+            print("Error getting a user from the database: ", error)
+            return False
+        
+    def get_by_username(self, _username):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,name, email,username, password,birth_date,account_status FROM lyfter_car_rental.users WHERE username = %s;",
+                (_username,),
+            )
+            formatted_result = self._format_user(results[0])
+            return formatted_result
+        except Exception as error:
+            print("Error getting a user from the database: ", error)
+            return False
+        
+    def get_by_birth_date(self, _birth_date):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,name, email,username, password,birth_date,account_status FROM lyfter_car_rental.users WHERE birth_date = %s;",
+                (_birth_date,),
+            )
+            formatted_results = [self._format_user(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a user from the database: ", error)
+            return False
+        
+    def get_by_account_status(self, _account_status):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,name, email,username, password,birth_date,account_status FROM lyfter_car_rental.users WHERE account_status = %s;",
+                (_account_status,),
+            )
+            formatted_results = [self._format_user(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a user from the database: ", error)
+            return False
 
     def update(self, _id, name, email,username, password,birth_date,account_status):
         try:
@@ -85,12 +145,12 @@ class UserRepository:
     
     def flag_user_as_moroso(self, _id):
         try:
-            self.db_manager.execute_query(
+            result=self.db_manager.execute_query(
                 "UPDATE lyfter_car_rental.users SET account_status = %s WHERE ID = %s",
                 ("moroso",_id),
             )
             print("User flagged as moroso")
-            return True
+            return result
         except Exception as error:
             print("Failed to flag user as moroso: ", error)
             return False

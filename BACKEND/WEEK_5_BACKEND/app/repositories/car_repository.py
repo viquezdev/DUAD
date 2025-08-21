@@ -45,6 +45,54 @@ class CarRepository:
         except Exception as error:
             print("Error getting a car from the database: ", error)
             return False
+        
+    def get_by_make(self, _make):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,make,model,manufacture_year,car_status FROM lyfter_car_rental.cars WHERE make = %s;",
+                (_make,),
+            )
+            formatted_results = [self._format_car(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car from the database: ", error)
+            return False
+        
+    def get_by_model(self, _model):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,make,model,manufacture_year,car_status FROM lyfter_car_rental.cars WHERE model = %s;",
+                (_model,),
+            )
+            formatted_results = [self._format_car(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car from the database: ", error)
+            return False
+        
+    def get_by_manufacture_year(self, _manufacture_year):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,make,model,manufacture_year,car_status FROM lyfter_car_rental.cars WHERE manufacture_year = %s;",
+                (_manufacture_year,),
+            )
+            formatted_results = [self._format_car(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car from the database: ", error)
+            return False
+        
+    def get_by_car_status(self, _car_status):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,make,model,manufacture_year,car_status FROM lyfter_car_rental.cars WHERE car_status = %s;",
+                (_car_status,),
+            )
+            formatted_results = [self._format_car(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car from the database: ", error)
+            return False
 
     def update(self, _id,make,model,manufacture_year,car_status):
         try:
@@ -80,3 +128,5 @@ class CarRepository:
         except Exception as error:
             print("Error updating a car from the database: ", error)
             return False
+        
+    

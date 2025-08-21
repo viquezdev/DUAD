@@ -45,6 +45,54 @@ class CarRentalRepository:
         except Exception as error:
             print("Error getting a car rental from the database: ", error)
             return False
+        
+    def get_by_user_id(self, _user_id):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,user_id,car_id,rental_date,rental_status FROM lyfter_car_rental.car_rentals WHERE user_id = %s;",
+                (_user_id,),
+            )
+            formatted_results = [self._format_car_rental(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car rental from the database: ", error)
+            return False
+        
+    def get_by_car_id(self, _car_id):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,user_id,car_id,rental_date,rental_status FROM lyfter_car_rental.car_rentals WHERE car_id = %s;",
+                (_car_id,),
+            )
+            formatted_results = [self._format_car_rental(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car rental from the database: ", error)
+            return False
+        
+    def get_by_rental_date(self, _rental_date):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,user_id,car_id,rental_date,rental_status FROM lyfter_car_rental.car_rentals WHERE rental_date = %s;",
+                (_rental_date,),
+            )
+            formatted_results = [self._format_car_rental(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car rental from the database: ", error)
+            return False
+        
+    def get_by_rental_status(self, _rental_status):
+        try:
+            results = self.db_manager.execute_query(
+                "SELECT id,user_id,car_id,rental_date,rental_status FROM lyfter_car_rental.car_rentals WHERE rental_status = %s;",
+                (_rental_status,),
+            )
+            formatted_results = [self._format_car_rental(result) for result in results]
+            return formatted_results
+        except Exception as error:
+            print("Error getting a car rental from the database: ", error)
+            return False
 
     def update(self, _id,user_id,car_id,rental_date,rental_status):
         try:
