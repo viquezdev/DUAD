@@ -28,7 +28,7 @@ def create_user():
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
-@users_bp.route("/<int:user_id>/status", methods=["PUT","PATCH"])
+@users_bp.route("/<int:user_id>/status", methods=["PUT"])
 def update_user_status(user_id):
     try:   
         db_manager = PgManager(
@@ -51,7 +51,7 @@ def update_user_status(user_id):
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
-@users_bp.route("/<int:user_id>/moroso", methods=["PUT","PATCH"])
+@users_bp.route("/<int:user_id>/moroso", methods=["PUT"])
 def flag_user(user_id):
     try:
         db_manager = PgManager(

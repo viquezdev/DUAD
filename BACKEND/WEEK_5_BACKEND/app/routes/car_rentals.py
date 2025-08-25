@@ -28,7 +28,7 @@ def create_car_rental():
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
-@car_rentals_bp.route("/<int:car_rental_id>/status", methods=["PUT","PATCH"])
+@car_rentals_bp.route("/<int:car_rental_id>/status", methods=["PUT"])
 def update_car_rental_status(car_rental_id):
     try:    
         db_manager = PgManager(
@@ -49,7 +49,7 @@ def update_car_rental_status(car_rental_id):
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
-@car_rentals_bp.route("/<int:car_rental_id>/complete", methods=["PUT","PATCH"])
+@car_rentals_bp.route("/<int:car_rental_id>/complete", methods=["PUT"])
 def complete_rental(car_rental_id):
     try:    
         db_manager = PgManager(
