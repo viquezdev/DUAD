@@ -1,0 +1,23 @@
+id,make,model,manufacture_year,car_status
+1,Ford,F350,2003,reserved
+2,Suzuki,Sidekick,1992,reserved
+4,Dodge,Ram Van B150,1993,unavailable
+6,Ford,E150,2009,maintenance
+7,BMW,X5,2002,rented
+8,Honda,Element,2009,sold
+9,Mazda,626,1993,sold
+11,Volkswagen,GTI,2012,sold
+12,Mazda,MPV,1994,sold
+13,Chevrolet,Silverado 3500,2009,rented
+14,Toyota,T100 Xtra,1997,reserved
+16,Mercury,Marauder,2004,unavailable
+17,Saturn,VUE,2003,available
+18,Nissan,200SX,1996,available
+19,Mitsubishi,GTO,1998,reserved
+20,Lexus,SC,1998,unavailable
+21,TOYOTA,YARIS,2012,available
+5,Chrysler,LeBaron,1992,sold
+10,Nissan,Titan,2011,available
+15,BMW,Z3,1996,unavailable
+22,hyundai,elantra,2013,reserved
+3,BMW,7 Series,2010,suspended
