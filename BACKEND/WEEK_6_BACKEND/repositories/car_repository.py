@@ -12,9 +12,7 @@ class CarRepository:
 
     
     def create(self,make,model,year,user_id=None):
-        if not all([make, model,year]):
-            print("Error: missing fields")
-            return None
+
         user=None
         if user_id is not None:
             user=self.db.get(User,user_id)
@@ -43,7 +41,9 @@ class CarRepository:
 
     def get_all(self):
         try:
-            return self.db.query(Car).all()
+            stmt=select(Car)
+            cars= self.db.execute(stmt).scalars().all()
+            return [car.to_dict() for car in cars]
         except SQLAlchemyError as e:
             print(f"Error fetching cars: {e}")
             return []
@@ -53,46 +53,47 @@ class CarRepository:
     def get_by_id(self,car_id):
         
         try:
-            return self.db.get(Car,car_id)
+            stmt=select(Car).where(Car.id==car_id)
+            car=self.db.execute(stmt).scalar_one_or_none()
+            return car.to_dict()
         except SQLAlchemyError as e:
             print(f"Error fetching car by id {car_id}: {e}")
             return None
             
-
-    def update(self,car_id,**kwargs):
-        car=self.get_by_id(car_id)
-
-        if not car:
-            return None
+            
+    def update(self,car_id,make=None,model=None,year=None):
+        
         try:
-            for key,value in kwargs.items():
-                if key=="id":
-                    print(f"'{key}' cannot be updated")
-                    continue
-                
-                if key=="user_id" and value is not None:  
-                    if not self.db.get(User,value):
-                            print(f"user_id '{value}' not found.")
-                            continue
-                    
-                if hasattr(car,key):
-                    setattr(car,key,value)
-                else:
-                    print(f"'{key}' cannot be updated")
+            car=self.db.query(Car).filter_by(id=car_id).first()
+            if not car:
+                return None
+            
+            fields = {
+            "make": make,
+            "model": model,
+            "year": year
+            }
+            for attr, value in fields.items():
+                if value is not None:
+                    setattr(car, attr, value)
+
             self.db.commit()
             self.db.refresh(car)
             return car
+
         except SQLAlchemyError as e:
             self.db.rollback()
             print(f"Error updating car : {e}")
             return None
     
+    
 
     def delete(self, car_id):
-        car=self.get_by_id(car_id)
-        if not car:
-            return None
+        
         try:
+            car = self.db.get(Car, car_id)
+            if not car:
+                return None
             self.db.delete(car)
             self.db.commit()
             return car
@@ -103,20 +104,21 @@ class CarRepository:
 
 
     def assign_to_user(self,car_id,user_id):
-        car=self.get_by_id(car_id)
-        if not car:
-            print(f"Car {car_id} not found")
-            return None
-        user=self.db.get(User,user_id)
-        if not user:
-            print(f"User {user_id} not found")
-            return None
+        
 
         try:
+            car=self.db.get(Car,car_id)
+            if not car:
+                print(f"Car {car_id} not found")
+                return None
+            user=self.db.get(User,user_id)
+            if not user:
+                print(f"User {user_id} not found")
+                return None
             car.user_id=user.id
             self.db.commit()
             self.db.refresh(car)
-            return car
+            return car.to_dict()
 
         except SQLAlchemyError as e:
             self.db.rollback()

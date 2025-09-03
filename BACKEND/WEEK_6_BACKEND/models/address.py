@@ -15,3 +15,13 @@ class Address(Base):
     user_id=Column(Integer,ForeignKey("users.id",ondelete="CASCADE"),nullable=False)
 
     user=relationship("User",back_populates="addresses")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "street": self.street,
+            "city": self.city,
+            "postal_code": self.postal_code,
+            "country": self.country,
+            "user_id": self.user_id
+        }

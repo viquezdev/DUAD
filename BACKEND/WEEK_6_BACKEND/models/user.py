@@ -15,4 +15,12 @@ class User(Base):
     cars=relationship("Car",back_populates="user")
     addresses=relationship("Address",back_populates="user",cascade="all, delete-orphan")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "username": self.username
+        }
+
 

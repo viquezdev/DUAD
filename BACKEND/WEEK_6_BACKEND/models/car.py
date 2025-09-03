@@ -15,3 +15,11 @@ class Car(Base):
 
     user=relationship("User",back_populates="cars")
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "make": self.make,
+            "model": self.model,
+            "year": self.year,
+            "user_id": self.user_id
+        }

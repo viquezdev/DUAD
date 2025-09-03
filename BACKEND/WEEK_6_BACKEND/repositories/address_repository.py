@@ -12,9 +12,6 @@ class AddressRepository:
 
     
     def create(self,street,city,postal_code=None,country=None,user_id=None):
-        if not all([street, city, user_id]):
-            print("Error: missing fields")
-            return None
         
         
         user=self.db.get(User,user_id)
@@ -40,61 +37,61 @@ class AddressRepository:
             print(f"Error creating address : {e}")
             return None
 
-    
 
     def get_all(self):
         try:
-            return self.db.query(Address).all()
+            stmt=select(Address)
+            addresses= self.db.execute(stmt).scalars().all()
+            return [address.to_dict() for address in addresses]
         except SQLAlchemyError as e:
             print(f"Error fetching addresses: {e}")
             return []
 
     
-    
     def get_by_id(self,address_id):
         
         try:
-            return self.db.get(Address,address_id)
+            stmt=select(Address).where(Address.id==address_id)
+            address=self.db.execute(stmt).scalar_one_or_none()
+            return address.to_dict()
         except SQLAlchemyError as e:
             print(f"Error fetching address by id {address_id}: {e}")
             return None
-            
-
-    def update(self,address_id,**kwargs):
-        address=self.get_by_id(address_id)
-        if not address:
-            print(f"Address with id {address_id} not found")
-            return None
+        
+    
+    def update(self,address_id,street=None,city=None,postal_code=None,country=None):
+        
         try:
-            for key,value in kwargs.items():
-                if key=="id":
-                    print(f"'{key}' cannot be updated")
-                    continue
-                
-                if key=="user_id" and value is not None:  
-                    if not self.db.get(User,value):
-                        print(f"user_id '{value}' not found.")
-                        continue
-                
-                if hasattr(address,key):
-                    setattr(address,key,value)
-                else:
-                    print(f"'{key}' cannot be updated")
+            address=self.db.query(Address).filter_by(id=address_id).first()
+            if not address:
+                return None
+            
+            fields = {
+            "street": street,
+            "city": city,
+            "postal_code": postal_code,
+            "country":country
+            }
+            for attr, value in fields.items():
+                if value is not None:
+                    setattr(address, attr, value)
+
             self.db.commit()
             self.db.refresh(address)
             return address
+
         except SQLAlchemyError as e:
             self.db.rollback()
             print(f"Error updating address : {e}")
             return None
+            
     
-
     def delete(self, address_id):
-        address=self.get_by_id(address_id)
-        if not address:
-            print(f"Address with id {address_id} not found")
-            return None
+        
         try:
+            address = self.db.get(Address, address_id)
+            if not address:
+                return None
             self.db.delete(address)
             self.db.commit()
             return address
