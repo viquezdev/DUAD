@@ -1,17 +1,16 @@
-from sqlalchemy.orm import Session
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import select
+from sqlalchemy import func
 from models.user import User
-
+from models.car import Car
+from db import SessionLocal
 
 class UserRepository:
-    def __init__(self,session:Session):
-        self.db=session
 
-    
-    def create(self,name,email,username,password):
-        
+    @staticmethod
+    def create(name,email,username,password):
+
         user=User(
             name=name,
             email=email,
@@ -20,78 +19,109 @@ class UserRepository:
         )
         
         try:    
-            self.db.add(user)
-            self.db.commit()
-            self.db.refresh(user)
-            return user
+            with SessionLocal() as session:
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+                return user
         except IntegrityError as e:
-            self.db.rollback()
             print("Error: username or email already exists")
             return None
 
-    
-    def get_all(self):
+
+    @staticmethod
+    def get_all():
         try:
-            stmt=select(User)
-            users= self.db.execute(stmt).scalars().all()
-            return [user.to_dict() for user in users]
+            with SessionLocal() as session:
+                users=session.query(User).all()
+                return [user.to_dict() for user in users]
         except SQLAlchemyError as e:
             print(f"Error fetching users: {e}")
             return []
 
-    
-    def get_by_id(self,user_id):   
+
+    @staticmethod
+    def get_by_id(user_id):   
         try:
-            stmt=select(User).where(User.id==user_id)
-            user=self.db.execute(stmt).scalar_one_or_none()
-            return user.to_dict()
+            with SessionLocal() as session:
+                user=session.query(User).filter_by(id=user_id).one_or_none()
+                if user:
+                    return user.to_dict()
+                return None
         except SQLAlchemyError as e:
             print(f"Error fetching user by id {user_id}: {e}")
             return None
             
 
-    def update(self,user_id,name=None,email=None,username=None,password=None):
+    @staticmethod
+    def update(user_id,name=None,email=None,username=None,password=None):
         
         try:
-            user=self.db.query(User).filter_by(id=user_id).first()
-            if not user:
-                return None
-            
-            fields = {
-            "name": name,
-            "email": email,
-            "username": username,
-            "password": password,
-            }
-            for attr, value in fields.items():
-                if value is not None:
-                    setattr(user, attr, value)
-
-            self.db.commit()
-            self.db.refresh(user)
-            return user
+            with SessionLocal() as session:
+                user=session.query(User).filter_by(id=user_id).one_or_none()
+                if not user:
+                    return None
+                
+                fields = {
+                "name": name,
+                "email": email,
+                "username": username,
+                "password": password,
+                }
+                
+                for attr, value in fields.items():
+                    if value is not None:
+                        setattr(user, attr, value)
+                session.commit()
+                session.refresh(user)
+                return user
     
         except IntegrityError as e:
-            self.db.rollback()
             print("Error: username or email already exists")
             return None
 
         except SQLAlchemyError as e:
-            self.db.rollback()
             print(f"Error updating user : {e}")
             return None
     
 
-    def delete(self, user_id):
+    @staticmethod
+    def delete(user_id):
         
         try:
-            user = self.db.get(User, user_id)
-            if not user:
-                return None
-            self.db.delete(user)
-            self.db.commit()
-            return user
+            with SessionLocal() as session: 
+                user = session.query(User).filter_by(id=user_id).one_or_none()
+                if not user:
+                    return None
+                session.delete(user)
+                session.commit()
+                return user
         except SQLAlchemyError as e:
-            self.db.rollback()
             print(f"Error deleting user : {e}")
             return None
+
+
+    @staticmethod
+    def get_users_with_multiple_cars():
+        try:
+            with SessionLocal() as session:
+                users=session.query(User).join(Car,Car.user_id==User.id).group_by(User.id).having(func.count(Car.id)>1)
+                return [user.to_dict() for user in users]
+        except SQLAlchemyError as e:
+            print(f"Error fetching users: {e}")
+            return []
+        
+    
+    @staticmethod
+    def get_cars_addresses_from_user(user_id):
+        try:
+            with SessionLocal() as session:
+                user=session.query(User).filter_by(id=user_id).one_or_none()
+                if not user:
+                    return None
+                return {"cars":[car.to_dict() for car in user.cars],"addresses":[address.to_dict() for address in user.addresses]}
+        except SQLAlchemyError as e:
+            print(f"Error fetching users: {e}")
+            return []
+
+    

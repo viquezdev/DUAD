@@ -4,7 +4,7 @@ from .base import Base
 
 
 class Address(Base):
-    __tablename__="Addresses"
+    __tablename__="addresses"
 
     id=Column(Integer,primary_key=True)
     street=Column(String(100),nullable=False)

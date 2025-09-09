@@ -1,5 +1,7 @@
-from flask import request, g, jsonify, Blueprint
+
+from flask import request, jsonify, Blueprint
 from repositories.user_repository import UserRepository
+
 
 users_bp=Blueprint("users",__name__)
 
@@ -13,8 +15,7 @@ def create_user():
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
     
-        users_repo = UserRepository(g.db)
-        new_user=users_repo.create(**user_data)
+        new_user=UserRepository.create(**user_data)
         if new_user:
             return jsonify({"message":"User created succesfully"}),201
         return jsonify({"error":"username or email already exists"}),409 
@@ -25,8 +26,8 @@ def create_user():
 @users_bp.route("/", methods=["GET"])
 def get_all_users():
     try:
-        users_repo = UserRepository(g.db)
-        data_users=users_repo.get_all()
+        
+        data_users=UserRepository.get_all()
         
         if not data_users:
             return jsonify({"data": [], "message": "No users found"}), 404
@@ -39,13 +40,14 @@ def get_all_users():
 @users_bp.route("/<identifier>", methods=["GET"])
 def get_by_id(identifier):
     try:
-        users_repo = UserRepository(g.db)
-        data_users=users_repo.get_by_id(identifier)
+        
+        data_users=UserRepository.get_by_id(identifier)
         
         if not data_users:
             return jsonify({"data": [], "message": "No user found"}), 404
         
         return jsonify({"data": data_users}), 200
+        
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
     
@@ -53,8 +55,8 @@ def get_by_id(identifier):
 @users_bp.route("/<identifier>", methods=["DELETE"])
 def delete_user(identifier):
     try:
-        users_repo = UserRepository(g.db)
-        data_users=users_repo.delete(identifier)
+        
+        data_users=UserRepository.delete(identifier)
 
         if data_users is None:
             return jsonify({"data": [], "message": "No user found"}), 404
@@ -71,9 +73,10 @@ def delete_user(identifier):
 @users_bp.route("/<identifier>", methods=["PUT"])
 def update_user(identifier):
     try:
+        
         data_user=request.get_json()
-        users_repo = UserRepository(g.db)
-        updated_user=users_repo.update(
+    
+        updated_user=UserRepository.update(
             user_id=identifier,
             name=data_user.get("name"),
             email=data_user.get("email"),
@@ -89,3 +92,31 @@ def update_user(identifier):
     except Exception as ex:
         print(str(ex))
         return jsonify({"message": "Error updating user."}), 500
+
+
+@users_bp.route("/multiple-cars", methods=["GET"])
+def get_multiple_cars():
+    try:
+        
+        data_users=UserRepository.get_users_with_multiple_cars()
+        
+        if not data_users:
+            return jsonify({"data": [], "message": "No users found"}), 404
+        
+        return jsonify({"data": data_users}), 200
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+    
+
+@users_bp.route("/<identifier>/relations", methods=["GET"])
+def get_cars_addresses_from_user(identifier):
+    try:
+        
+        data_users=UserRepository.get_cars_addresses_from_user(identifier)
+        
+        if not data_users:
+            return jsonify({"data": [], "message": "No users found"}), 404
+        
+        return jsonify({"data": data_users}), 200
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500

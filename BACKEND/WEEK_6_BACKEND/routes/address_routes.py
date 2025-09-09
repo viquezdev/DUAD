@@ -1,4 +1,5 @@
-from flask import request, g, jsonify, Blueprint
+
+from flask import request, jsonify, Blueprint
 from repositories.address_repository import AddressRepository
 
 addresses_bp=Blueprint("addresses",__name__)
@@ -13,8 +14,7 @@ def create_address():
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
 
-        addresses_repo = AddressRepository(g.db)
-        new_addres=addresses_repo.create(**addresses_data)
+        new_addres=AddressRepository.create(**addresses_data)
         if new_addres:
             return jsonify({"message":"Address created succesfully"}),201
         return jsonify({"error":"error creating addres"}),400
@@ -25,8 +25,8 @@ def create_address():
 @addresses_bp.route("/", methods=["GET"])
 def get_all_addresses():
     try:
-        addresses_repo = AddressRepository(g.db)
-        data_addresses=addresses_repo.get_all()
+    
+        data_addresses=AddressRepository.get_all()
         
         if not data_addresses:
             return jsonify({"data": [], "message": "No addresess found"}), 404
@@ -39,8 +39,8 @@ def get_all_addresses():
 @addresses_bp.route("/<identifier>", methods=["GET"])
 def get_by_id(identifier):
     try:
-        addresses_repo = AddressRepository(g.db)
-        data_addresses=addresses_repo.get_by_id(identifier)
+        
+        data_addresses=AddressRepository.get_by_id(identifier)
         
         if not data_addresses:
             return jsonify({"data": [], "message": "No address found"}), 404
@@ -53,8 +53,8 @@ def get_by_id(identifier):
 @addresses_bp.route("/<identifier>", methods=["DELETE"])
 def delete_address(identifier):
     try:
-        adresses_repo = AddressRepository(g.db)
-        data_addresses=adresses_repo.delete(identifier)
+        
+        data_addresses=AddressRepository.delete(identifier)
 
         if data_addresses is None:
             return jsonify({"data": [], "message": "No address found"}), 404
@@ -71,8 +71,8 @@ def delete_address(identifier):
 def update_address(identifier):
     try:
         data_address=request.get_json()
-        addresses_repo = AddressRepository(g.db)
-        updated_address=addresses_repo.update(
+        
+        updated_address=AddressRepository.update(
             address_id=identifier,
             street=data_address.get("street"),
             city=data_address.get("city"),
@@ -88,3 +88,17 @@ def update_address(identifier):
     except Exception as ex:
         print(str(ex))
         return jsonify({"message": "Error updating address."}), 500
+    
+
+@addresses_bp.route("/search", methods=["GET"])
+def search_addresses():
+    try:
+        
+        data_addresses=AddressRepository.get_addresses_with_street()
+        
+        if not data_addresses:
+            return jsonify({"data": [], "message": "No addresess found"}), 404
+        
+        return jsonify({"data": data_addresses}), 200
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500

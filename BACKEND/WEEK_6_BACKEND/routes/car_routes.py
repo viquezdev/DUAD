@@ -1,4 +1,5 @@
-from flask import request, g, jsonify, Blueprint
+
+from flask import request, jsonify, Blueprint
 from repositories.car_repository import CarRepository
 
 cars_bp=Blueprint("cars",__name__)
@@ -13,8 +14,7 @@ def create_car():
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
 
-        cars_repo = CarRepository(g.db)
-        new_car=cars_repo.create(**car_data)
+        new_car=CarRepository.create(**car_data)
         if new_car:
             return jsonify({"message":"Car created succesfully"}),201
         return jsonify({"error":"error creating car"}),400
@@ -25,8 +25,8 @@ def create_car():
 @cars_bp.route("/", methods=["GET"])
 def get_all_cars():
     try:
-        cars_repo = CarRepository(g.db)
-        data_cars=cars_repo.get_all()
+        
+        data_cars=CarRepository.get_all()
         
         if not data_cars:
             return jsonify({"data": [], "message": "No cars found"}), 404
@@ -39,8 +39,8 @@ def get_all_cars():
 @cars_bp.route("/<identifier>", methods=["GET"])
 def get_by_id(identifier):
     try:
-        cars_repo = CarRepository(g.db)
-        data_cars=cars_repo.get_by_id(identifier)
+        
+        data_cars=CarRepository.get_by_id(identifier)
         
         if not data_cars:
             return jsonify({"data": [], "message": "No car found"}), 404
@@ -52,15 +52,15 @@ def get_by_id(identifier):
 @cars_bp.route("/<identifier>", methods=["DELETE"])
 def delete_car(identifier):
     try:
-        cars_repo = CarRepository(g.db)
-        data_cars=cars_repo.delete(identifier)
+            
+            data_cars=CarRepository.delete(identifier)
 
-        if data_cars is None:
-            return jsonify({"data": [], "message": "No car found"}), 404
+            if data_cars is None:
+                return jsonify({"data": [], "message": "No car found"}), 404
 
-        return jsonify({
-            "message": f"Car with ID {identifier} was deleted successfully"
-        }), 200
+            return jsonify({
+                "message": f"Car with ID {identifier} was deleted successfully"
+            }), 200
 
     except Exception as ex:
         print(str(ex))
@@ -71,8 +71,8 @@ def delete_car(identifier):
 def update_car(identifier):
     try:
         data_car=request.get_json()
-        cars_repo = CarRepository(g.db)
-        updated_car=cars_repo.update(
+        
+        updated_car=CarRepository.update(
             car_id=identifier,
             make=data_car.get("make"),
             model=data_car.get("model"),
@@ -85,8 +85,7 @@ def update_car(identifier):
         }), 200
 
     except Exception as ex:
-        print(str(ex))
-        return jsonify({"message": "Error updating car."}), 500
+        return jsonify({"error": "Error updating car", "details": str(ex)}), 500
     
 
 @cars_bp.route("/assign-user", methods=["PUT"])
@@ -100,8 +99,7 @@ def assign_car_to_user():
         if not car_id or not user_id:
             return jsonify({"error": "car_id and user_id are required"}), 400
 
-        cars_repo = CarRepository(g.db)
-        updated_car = cars_repo.assign_to_user(car_id, user_id)
+        updated_car = CarRepository.assign_to_user(car_id, user_id)
 
         if not updated_car:  
             return jsonify({"message": f"Car {car_id} or User {user_id} not found"}), 404
@@ -111,5 +109,18 @@ def assign_car_to_user():
             "car": updated_car
         }), 200
     
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+    
+
+@cars_bp.route("/unassigned", methods=["GET"])
+def get_cars_whithout_users():
+    try:
+        data_cars=CarRepository.get_cars_without_users()
+        
+        if not data_cars:
+            return jsonify({"data": [], "message": "No cars found"}), 404
+        
+        return jsonify({"data": data_cars}), 200
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500

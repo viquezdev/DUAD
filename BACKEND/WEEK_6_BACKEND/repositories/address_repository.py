@@ -1,102 +1,114 @@
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
+
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import select
 from models.address import Address
 from models.user import User
-
+from db import SessionLocal
 
 class AddressRepository:
-    def __init__(self,session:Session):
-        self.db=session
-
     
-    def create(self,street,city,postal_code=None,country=None,user_id=None):
+    @staticmethod
+    def create(street,city,postal_code=None,country=None,user_id=None):
         
-        
-        user=self.db.get(User,user_id)
-        if not user:
-            print(f"Error: User with id {user_id} not found")
-            return None
-        
-        address=Address(
-                street=street,
-                city=city,
-                postal_code=postal_code,
-                country=country,
-                user_id=user_id
-            )  
-        
-        try: 
-            self.db.add(address)
-            self.db.commit()
-            self.db.refresh(address)
-            return address
+        try:
+            with SessionLocal() as session:
+                user=session.query(User).filter_by(id=user_id).one_or_none()
+                if not user:
+                    return None
+                
+                address=Address(
+                        street=street,
+                        city=city,
+                        postal_code=postal_code,
+                        country=country,
+                        user_id=user_id
+                    )  
+            
+                session.add(address)
+                session.commit()
+                session.refresh(address)
+                return address
         except SQLAlchemyError as e:
-            self.db.rollback()
             print(f"Error creating address : {e}")
             return None
 
 
-    def get_all(self):
+    @staticmethod
+    def get_all():
         try:
-            stmt=select(Address)
-            addresses= self.db.execute(stmt).scalars().all()
-            return [address.to_dict() for address in addresses]
+            with SessionLocal() as session:
+                addresses= session.query(Address).all()
+                return [address.to_dict() for address in addresses]
         except SQLAlchemyError as e:
             print(f"Error fetching addresses: {e}")
             return []
 
-    
-    def get_by_id(self,address_id):
+
+    @staticmethod
+    def get_by_id(address_id):
         
         try:
-            stmt=select(Address).where(Address.id==address_id)
-            address=self.db.execute(stmt).scalar_one_or_none()
-            return address.to_dict()
+            with SessionLocal() as session:
+                address=session.query(Address).filter_by(id=address_id).one_or_none()
+                if address:
+                    return address.to_dict()
+                return None
         except SQLAlchemyError as e:
             print(f"Error fetching address by id {address_id}: {e}")
             return None
         
-    
-    def update(self,address_id,street=None,city=None,postal_code=None,country=None):
+
+    @staticmethod
+    def update(address_id,street=None,city=None,postal_code=None,country=None):
         
         try:
-            address=self.db.query(Address).filter_by(id=address_id).first()
-            if not address:
-                return None
-            
-            fields = {
-            "street": street,
-            "city": city,
-            "postal_code": postal_code,
-            "country":country
-            }
-            for attr, value in fields.items():
-                if value is not None:
-                    setattr(address, attr, value)
+            with SessionLocal() as session:    
+                address=session.query(Address).filter_by(id=address_id).one_or_none()
+                if not address:
+                    return None
+                
+                fields = {
+                "street": street,
+                "city": city,
+                "postal_code": postal_code,
+                "country":country
+                }
 
-            self.db.commit()
-            self.db.refresh(address)
-            return address
+                for attr, value in fields.items():
+                    if value is not None:
+                        setattr(address, attr, value)
+                session.commit()
+                session.refresh(address)
+                return address
 
         except SQLAlchemyError as e:
-            self.db.rollback()
             print(f"Error updating address : {e}")
             return None
             
     
-    def delete(self, address_id):
+    @staticmethod
+    def delete(address_id):
         
         try:
-            address = self.db.get(Address, address_id)
-            if not address:
-                return None
-            self.db.delete(address)
-            self.db.commit()
-            return address
+            with SessionLocal() as session:    
+                address =session.query(Address).filter_by(id=address_id).one_or_none() 
+                if not address:
+                    return None
+                session.delete(address)
+                session.commit()
+                return address
         except SQLAlchemyError as e:
-            self.db.rollback()
             print(f"Error deleting address : {e}")
             return None
+
+
+    @staticmethod
+    def get_addresses_with_street():
+        try:
+            with SessionLocal() as session:
+                addresses= session.query(Address).filter(Address.street.ilike("%street%")).all()
+                return [address.to_dict() for address in addresses]
+        except SQLAlchemyError as e:
+            print(f"Error fetching addresses: {e}")
+            return []
+
 
