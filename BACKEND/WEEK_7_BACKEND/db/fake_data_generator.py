@@ -33,11 +33,15 @@ def seed_database():
             email=fake.email()
             contact_repo.create(user_id,name,phone,email)
         
-
-        for _ in range(20):
-            name = fake.word().capitalize()        
-            price = round(random.uniform(1, 500), 2)
-            entry_date = fake.date_between(start_date='-2y',   end_date='today'  ) 
+        fruits = [
+            "apple", "banana", "orange", "pear", "grape", "kiwi", "mango",
+            "strawberry", "watermelon", "pineapple", "cherry", "melon", "lemon", "mandarin",
+            "peach", "papaya", "blueberry", "raspberry", "guava", "coconut"
+        ]
+        
+        for name in fruits:      
+            price = round(random.uniform(500, 1500), 2)
+            entry_date = fake.date_between(start_date='-30d', end_date='today')
             quantity = random.randint(1,15)
             product_repo.create(name, price,entry_date,quantity) 
 
