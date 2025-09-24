@@ -1,6 +1,6 @@
 
 from flask import request, jsonify, Blueprint
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,timezone
 from repositories.user_repository import UserRepository
 from services.password_manager import PasswordManager
 from services.jwt_manager import JwtManager
@@ -32,7 +32,7 @@ def login():
         token_payload = {
             "sub": user.id,
             "role": user.role,
-            "exp": datetime.utcnow() + timedelta(minutes=15)
+            "exp":  datetime.now(timezone.utc) + timedelta(minutes=15) + timedelta(minutes=15)
 
         }
         token=jwt_manager.encode(token_payload)
