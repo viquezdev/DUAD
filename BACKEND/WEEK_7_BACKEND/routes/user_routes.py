@@ -1,11 +1,44 @@
 
 from flask import request, jsonify, Blueprint
+from datetime import datetime, timedelta
 from repositories.user_repository import UserRepository
-from services.security import PasswordManager
-password_manager = PasswordManager()
-user_repo = UserRepository(password_manager=password_manager)
+from services.password_manager import PasswordManager
+from services.jwt_manager import JwtManager
+from pathlib import Path
 
+base_path = Path(__file__).resolve().parent.parent
+with open(base_path / "keys" / "private.pem", "rb") as f:
+    private_key = f.read()
+
+with open(base_path / "keys" / "public.pem", "rb") as f:
+    public_key = f.read()
+
+jwt_manager=JwtManager(private_key=private_key,public_key=public_key)
+
+password_manager = PasswordManager()
+
+user_repo = UserRepository(password_manager=password_manager)
 users_bp=Blueprint("users",__name__)
+
+@users_bp.route("/login",methods=["POST"])
+def login():
+    try:
+        user_data=request.get_json()
+        username=user_data.get("username")
+        password=user_data.get("password")
+        user=user_repo.get_by_username(username)
+        if not user or not password_manager.verify_password(password,user.password):
+            return jsonify({"error": "Invalid credentials"}), 401
+        token_payload = {
+            "sub": user.id,
+            "role": user.role,
+            "exp": datetime.utcnow() + timedelta(minutes=15)
+
+        }
+        token=jwt_manager.encode(token_payload)
+        return jsonify({"access_token": token}), 200
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
 @users_bp.route("/", methods=["POST"])
 def create_user():

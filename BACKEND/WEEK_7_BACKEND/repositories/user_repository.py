@@ -52,6 +52,19 @@ class UserRepository:
         except SQLAlchemyError as e:
             print(f"Error fetching user by id {user_id}: {e}")
             return None
+        
+    def get_by_username(self,username):
+        try:
+            with self.session_factory() as session:
+                user=session.query(User).filter_by(username=username).one_or_none()
+                if user:
+                    return user
+                return None
+        except SQLAlchemyError as e:
+            print(f"Error fetching user by username {username}: {e}")
+            return None
+
+        
             
 #tengo que mejorar el update
     def update(self,user_id,username=None,role=None):

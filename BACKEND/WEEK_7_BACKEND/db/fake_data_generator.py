@@ -4,7 +4,7 @@ from repositories.product_repository import ProductRepository
 from repositories.invoice_repository import InvoiceRepository
 from repositories.invoice_products_repository import InvoiceProductsRepository
 from repositories.contact_repository import ContactRepository
-from services.security import PasswordManager
+from services.password_manager import PasswordManager
 from faker import Faker
 import random
 from datetime import date
