@@ -13,6 +13,8 @@ def roles_required(*allowed_roles):
             token = auth_header.split(" ")[1]
             try:
                 payload = jwt_manager.decode(token)
+                if not payload:
+                    return jsonify({"error": "Invalid token"}), 401
                 user_role = payload.get("role")
                 if user_role not in allowed_roles:
                     return jsonify({"error": "Access denied"}), 403

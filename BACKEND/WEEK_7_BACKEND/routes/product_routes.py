@@ -2,6 +2,7 @@
 from flask import request, jsonify, Blueprint
 from repositories.product_repository import ProductRepository
 from services.jwt_manager import JwtManager
+from services.decorators import roles_required
 from pathlib import Path
 
 base_path = Path(__file__).resolve().parent.parent
@@ -19,6 +20,7 @@ products_bp=Blueprint("products",__name__)
 
 
 @products_bp.route("/", methods=["POST"])
+@roles_required("administrator")
 def create_product():
     try:
         product_data=request.get_json()
@@ -39,6 +41,7 @@ def create_product():
 
 
 @products_bp.route("/", methods=["GET"])
+@roles_required("administrator","user")
 def get_all_products():
     try:
         
@@ -53,6 +56,7 @@ def get_all_products():
     
 
 @products_bp.route("/<identifier>", methods=["GET"])
+@roles_required("administrator","user")
 def get_by_id(identifier):
     try:
         
@@ -68,6 +72,7 @@ def get_by_id(identifier):
     
 
 @products_bp.route("/<identifier>", methods=["DELETE"])
+@roles_required("administrator")
 def delete_product(identifier):
     try:
         
@@ -86,6 +91,7 @@ def delete_product(identifier):
     
 
 @products_bp.route("/<identifier>", methods=["PUT"])
+@roles_required("administrator")
 def update_product(identifier):
     try:
         

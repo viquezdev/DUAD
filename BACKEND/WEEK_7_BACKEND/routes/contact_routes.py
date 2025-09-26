@@ -1,7 +1,8 @@
 
 from flask import request, jsonify, Blueprint
-from repositories.product_repository import ContactRepository
+from repositories.contact_repository import ContactRepository
 from services.jwt_manager import JwtManager
+from services.decorators import roles_required
 from pathlib import Path
 
 base_path = Path(__file__).resolve().parent.parent
@@ -19,6 +20,7 @@ contacts_bp=Blueprint("contacts",__name__)
 
 
 @contacts_bp.route("/", methods=["POST"])
+@roles_required("administrator")
 def create_contact():
     try:
         contact_data=request.get_json()
@@ -39,6 +41,7 @@ def create_contact():
 
 
 @contacts_bp.route("/", methods=["GET"])
+@roles_required("administrator")
 def get_all_contacts():
     try:
         
@@ -53,6 +56,7 @@ def get_all_contacts():
     
 
 @contacts_bp.route("/<identifier>", methods=["GET"])
+@roles_required("administrator")
 def get_by_id(identifier):
     try:
         
@@ -68,6 +72,7 @@ def get_by_id(identifier):
     
 
 @contacts_bp.route("/<identifier>", methods=["DELETE"])
+@roles_required("administrator")
 def delete_product(identifier):
     try:
         
@@ -86,6 +91,7 @@ def delete_product(identifier):
     
 
 @contacts_bp.route("/<identifier>", methods=["PUT"])
+@roles_required("administrator")
 def update_contact(identifier):
     try:
         

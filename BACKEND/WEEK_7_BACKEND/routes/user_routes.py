@@ -3,17 +3,10 @@ from flask import request, jsonify, Blueprint
 from datetime import datetime, timedelta,timezone
 from repositories.user_repository import UserRepository
 from services.password_manager import PasswordManager
-from services.jwt_manager import JwtManager
-from pathlib import Path
+from services.decorators import roles_required
+from services.jwt_manager import jwt_manager 
 
-base_path = Path(__file__).resolve().parent.parent
-with open(base_path / "keys" / "private.pem", "rb") as f:
-    private_key = f.read()
 
-with open(base_path / "keys" / "public.pem", "rb") as f:
-    public_key = f.read()
-
-jwt_manager=JwtManager(private_key=private_key,public_key=public_key)
 
 password_manager = PasswordManager()
 
@@ -30,9 +23,9 @@ def login():
         if not user or not password_manager.verify_password(password,user.password):
             return jsonify({"error": "Invalid credentials"}), 401
         token_payload = {
-            "sub": user.id,
+            "sub": str(user.id),
             "role": user.role,
-            "exp":  datetime.now(timezone.utc) + timedelta(minutes=15) + timedelta(minutes=15)
+            "exp":  datetime.now(timezone.utc)  + timedelta(minutes=15)
 
         }
         token=jwt_manager.encode(token_payload)
@@ -41,6 +34,7 @@ def login():
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
 @users_bp.route("/", methods=["POST"])
+@roles_required("administrator")
 def create_user():
     try:
         user_data=request.get_json()
@@ -61,6 +55,7 @@ def create_user():
 
 
 @users_bp.route("/", methods=["GET"])
+@roles_required("administrator")
 def get_all_users():
     try:
         
@@ -75,6 +70,7 @@ def get_all_users():
     
 
 @users_bp.route("/<identifier>", methods=["GET"])
+@roles_required("administrator")
 def get_by_id(identifier):
     try:
         
@@ -90,6 +86,7 @@ def get_by_id(identifier):
     
 
 @users_bp.route("/<identifier>", methods=["DELETE"])
+@roles_required("administrator")
 def delete_user(identifier):
     try:
         
@@ -108,6 +105,7 @@ def delete_user(identifier):
     
 
 @users_bp.route("/<identifier>", methods=["PUT"])
+@roles_required("administrator")
 def update_user(identifier):
     try:
         
