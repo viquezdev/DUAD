@@ -1,136 +1,127 @@
 
 from flask import request, jsonify, Blueprint
-from repositories.product_repository import ContactRepository
-from services.jwt_manager import JwtManager
-from pathlib import Path
+from repositories.invoice_repository import InvoiceRepository
+from services.decorators import roles_required, get_jwt_identity
 
-base_path = Path(__file__).resolve().parent.parent
-with open(base_path / "keys" / "private.pem", "rb") as f:
-    private_key = f.read()
-
-with open(base_path / "keys" / "public.pem", "rb") as f:
-    public_key = f.read()
-
-jwt_manager=JwtManager(private_key=private_key,public_key=public_key)
-
-contact_repo = ContactRepository()
-contacts_bp=Blueprint("contacts",__name__)
+invoice_repo = InvoiceRepository()
+invoices_bp = Blueprint("invoices", __name__)
 
 
-
-@contacts_bp.route("/", methods=["POST"])
-def create_contact():
+@invoices_bp.route("/", methods=["POST"])
+@roles_required("administrator", "user")
+def create_invoice():
     try:
-        contact_data=request.get_json()
-        required_fields = ["user_id", "name","phone","email"]
-        missing_fields = [field for field in required_fields if field not in contact_data]
+        user_data = get_jwt_identity()
+        invoice_data = request.get_json()
 
+        required_fields = ["user_id", "total_amount", "invoice_date"]
+        missing_fields = [field for field in required_fields if field not in invoice_data]
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
-        
-        
-        new_contact=contact_repo.create(**contact_data)
 
-        if new_contact:
-            return jsonify({"message":"Contact created succesfully"}),201
-        return jsonify({"error":"error creating contact"}),400
+        if user_data["role"] == "user" and str(user_data["sub"]) != str(invoice_data["user_id"]):
+            return jsonify({"error": "Access denied"}), 403
+
+        new_invoice = invoice_repo.create(**invoice_data)
+        if new_invoice:
+            return jsonify({
+                "message": "Invoice created successfully",
+                "invoice": new_invoice.to_dict()
+            }), 201
+
+        return jsonify({"error": "Error creating invoice"}), 400
+
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
 
-@contacts_bp.route("/", methods=["GET"])
-def get_all_contacts():
+@invoices_bp.route("/", methods=["GET"])
+@roles_required("administrator", "user")
+def get_all_invoices():
     try:
-        
-        data_contacts=contact_repo.get_all()
-        
-        if not data_contacts:
-            return jsonify({"data": [], "message": "No contacts found"}), 404
-        
-        return jsonify([contact.to_dict() for contact in data_contacts]), 200
+        user_data = get_jwt_identity()
+
+        if user_data["role"] == "user":
+            invoices = invoice_repo.get_by_user(user_data["sub"])
+        else:
+            invoices = invoice_repo.get_all()
+
+        if not invoices:
+            return jsonify({"data": [], "message": "No invoices found"}), 404
+
+        return jsonify([invoice.to_dict() for invoice in invoices]), 200
+
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
 
-@contacts_bp.route("/<identifier>", methods=["GET"])
-def get_by_id(identifier):
+
+@invoices_bp.route("/<invoice_id>", methods=["GET"])
+@roles_required("administrator", "user")
+def get_invoice_by_id(invoice_id):
     try:
-        
-        data_contact=contact_repo.get_by_id(identifier)
-        
-        if not data_contact:
-            return jsonify({"data": [], "message": "No contact found"}), 404
-        
-        return jsonify({"data": data_contact.to_dict()}), 200
-        
+        user_data = get_jwt_identity()
+        invoice = invoice_repo.get_by_id(invoice_id)
+
+        if not invoice:
+            return jsonify({"error": "Invoice not found"}), 404
+
+
+        if user_data["role"] == "user" and str(user_data["sub"]) != str(invoice.user_id):
+            return jsonify({"error": "Access denied"}), 403
+
+        return jsonify({"invoice": invoice.to_dict()}), 200
+
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
 
-@contacts_bp.route("/<identifier>", methods=["DELETE"])
-def delete_product(identifier):
+
+@invoices_bp.route("/<invoice_id>", methods=["PUT"])
+@roles_required("administrator", "user")
+def update_invoice(invoice_id):
     try:
-        
-        data_contact=contact_repo.delete(identifier)
+        user_data = get_jwt_identity()
+        data = request.get_json()
 
-        if data_contact is None:
-            return jsonify({"data": [], "message": "No contact found"}), 404
+        invoice_owner_id = invoice_repo.get_user_id(invoice_id)
+        if invoice_owner_id is None:
+            return jsonify({"error": "Invoice not found"}), 404
 
-        return jsonify({
-            "message": f"Contact with ID {identifier} was deleted successfully"
-        }), 200
+        if user_data["role"] == "user" and str(user_data["sub"]) != str(invoice_owner_id):
+            return jsonify({"error": "Access denied"}), 403
 
-    except Exception as ex:
-        print(str(ex))
-        return jsonify({"message": "Error while deleting a contact."}), 500
-    
-
-@contacts_bp.route("/<identifier>", methods=["PUT"])
-def update_contact(identifier):
-    try:
-        
-        data_contact=request.get_json()
-    
-        updated_contact=contact_repo.update(
-            contact_id=identifier,
-            name=data_contact.get("name"),
-            phone=data_contact.get("phone"),
-            email=data_contact.get("email")
+        updated_invoice = invoice_repo.update(
+            invoice_id=invoice_id,
+            total_amount=data.get("total_amount"),
+            invoice_date=data.get("invoice_date")
         )
-        if not updated_contact:
-            return jsonify({"error": "Contact not found"}), 404
+
         return jsonify({
-            "message": f"Contact with ID {identifier} was updated successfully"
+            "message": f"Invoice with ID {invoice_id} was updated successfully",
+            "invoice": updated_invoice.to_dict()
         }), 200
 
-    except Exception as ex:
-        print(str(ex))
-        return jsonify({"message": "Error updating contact."}), 500
+    except Exception as e:
+        return jsonify({"error": "Error updating invoice", "details": str(e)}), 500
 
 
-# @users_bp.route("/multiple-cars", methods=["GET"])
-# def get_multiple_cars():
-#     try:
-        
-#         data_users=UserRepository.get_users_with_multiple_cars()
-        
-#         if not data_users:
-#             return jsonify({"data": [], "message": "No users found"}), 404
-        
-#         return jsonify({"data": data_users}), 200
-#     except Exception as e:
-#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
+@invoices_bp.route("/<invoice_id>", methods=["DELETE"])
+@roles_required("administrator", "user")
+def delete_invoice(invoice_id):
+    try:
+        user_data = get_jwt_identity()
+        invoice_owner_id = invoice_repo.get_user_id(invoice_id)
 
-# @users_bp.route("/<identifier>/relations", methods=["GET"])
-# def get_cars_addresses_from_user(identifier):
-#     try:
-        
-#         data_users=UserRepository.get_cars_addresses_from_user(identifier)
-        
-#         if not data_users:
-#             return jsonify({"data": [], "message": "No users found"}), 404
-        
-#         return jsonify({"data": data_users}), 200
-#     except Exception as e:
-#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+        if invoice_owner_id is None:
+            return jsonify({"error": "Invoice not found"}), 404
+
+        if user_data["role"] == "user" and str(user_data["sub"]) != str(invoice_owner_id):
+            return jsonify({"error": "Access denied"}), 403
+
+        invoice_repo.delete(invoice_id)
+
+        return jsonify({
+            "message": f"Invoice with ID {invoice_id} was deleted successfully"
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error deleting invoice", "details": str(e)}), 500

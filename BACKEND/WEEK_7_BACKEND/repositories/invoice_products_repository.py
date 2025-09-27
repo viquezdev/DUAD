@@ -1,124 +1,125 @@
 
 from sqlalchemy.exc import SQLAlchemyError
-from models.user import User
-from db import SessionLocal
 from models.invoice import Invoice
 from models.product import Product
 from models.invoice_product import InvoiceProducts
+from db import SessionLocal
 
 class InvoiceProductsRepository:
-    def __init__(self,session_factory=SessionLocal):
-        self.session_factory=session_factory
+    def __init__(self, session_factory=SessionLocal):
+        self.session_factory = session_factory
 
 
-    def create(self, invoice_id,product_id,quantity,subtotal):
-        
+    def create(self, invoice_id, product_id, quantity, subtotal):
         try:
             with self.session_factory() as session:
-                invoice=session.query(Invoice).filter_by(id=invoice_id).one_or_none()
+                invoice = session.query(Invoice).filter_by(id=invoice_id).one_or_none()
                 if not invoice:
                     return None
                 
-                product=session.query(Product).filter_by(id=product_id).one_or_none()
+                product = session.query(Product).filter_by(id=product_id).one_or_none()
                 if not product:
                     return None
                 
-                invoice_products=InvoiceProducts(
+                invoice_product = InvoiceProducts(
                     invoice_id=invoice_id,
                     product_id=product_id,
                     quantity=quantity,
                     subtotal=subtotal
-                    )  
-            
-                session.add(invoice_products)
+                )
+                session.add(invoice_product)
                 session.commit()
-                session.refresh(invoice_products)
-                return invoice
+                session.refresh(invoice_product)
+                return invoice_product
         except SQLAlchemyError as e:
-            print(f"Error creating invoice : {e}")
+            print(f"Error creating invoice product: {e}")
             return None
 
 
     def get_all(self):
         try:
             with self.session_factory() as session:
-                invoice_products= session.query(InvoiceProducts).all()
-                return invoice_products
+                return session.query(InvoiceProducts).all()
         except SQLAlchemyError as e:
-            print(f"Error fetching invoices: {e}")
+            print(f"Error fetching invoice products: {e}")
             return []
 
 
-    def get_by_id(self,invoice_products_id):
-        
+    def get_by_id(self, invoice_product_id):
         try:
             with self.session_factory() as session:
-                invoice_products=session.query(InvoiceProducts).filter_by(id=invoice_products_id).one_or_none()
-                if invoice_products:
-                    return invoice_products
-                return None
+                return session.query(InvoiceProducts).filter_by(id=invoice_product_id).one_or_none()
         except SQLAlchemyError as e:
-            print(f"Error fetching invoice by id {invoice_products_id}: {e}")
-            return None
-        
-
-    def update(self,invoice_product_id,invoice_id,product_id,quantity,subtotal):
-        
-        try:
-            with self.session_factory() as session:    
-                invoice_products=session.query(InvoiceProducts).filter_by(id=invoice_product_id).one_or_none()
-                if not invoice_products:
-                    return None
-                
-                invoice=session.query(Invoice).filter_by(id=invoice_id).one_or_none()
-                if not invoice:
-                    return None
-                
-                product=session.query(Product).filter_by(id=product_id).one_or_none()
-                if not product:
-                    return None
-                
-                fields = {
-                "invoice_id": invoice_id,
-                "product_id": product_id,
-                "quantity": quantity,
-                "subtotal": subtotal
-                }
-
-                for attr, value in fields.items():
-                    if value is not None:
-                        setattr(invoice_products, attr, value)
-                session.commit()
-                session.refresh(invoice_products)
-                return invoice_products
-
-        except SQLAlchemyError as e:
-            print(f"Error updating invoice : {e}")
-            return None
-            
-    
-    def delete(self,invoice_products_id):
-        
-        try:
-            with self.session_factory() as session:    
-                invoice_products =session.query(InvoiceProducts).filter_by(id=invoice_products_id).one_or_none() 
-                if not invoice_products:
-                    return None
-                session.delete(invoice_products)
-                session.commit()
-                return invoice_products
-        except SQLAlchemyError as e:
-            print(f"Error deleting invoice : {e}")
+            print(f"Error fetching invoice product by id {invoice_product_id}: {e}")
             return None
 
-""" 
-    def get_addresses_with_street():
+
+    def get_by_invoice(self, invoice_id):
         try:
-            with SessionLocal() as session:
-                addresses= session.query(Address).filter(Address.street.ilike("%street%")).all()
-                return [address.to_dict() for address in addresses]
+            with self.session_factory() as session:
+                return session.query(InvoiceProducts).filter_by(invoice_id=invoice_id).all()
         except SQLAlchemyError as e:
-            print(f"Error fetching addresses: {e}")
+            print(f"Error fetching products for invoice {invoice_id}: {e}")
             return []
 
-"""
+
+    def update(self, invoice_product_id, invoice_id=None, product_id=None, quantity=None, subtotal=None):
+        try:
+            with self.session_factory() as session:
+                invoice_product = session.query(InvoiceProducts).filter_by(id=invoice_product_id).one_or_none()
+                if not invoice_product:
+                    return None
+                
+                if invoice_id:
+                    invoice = session.query(Invoice).filter_by(id=invoice_id).one_or_none()
+                    if not invoice:
+                        return None
+                    invoice_product.invoice_id = invoice_id
+
+                if product_id:
+                    product = session.query(Product).filter_by(id=product_id).one_or_none()
+                    if not product:
+                        return None
+                    invoice_product.product_id = product_id
+
+                if quantity is not None:
+                    invoice_product.quantity = quantity
+                if subtotal is not None:
+                    invoice_product.subtotal = subtotal
+
+                session.commit()
+                session.refresh(invoice_product)
+                return invoice_product
+        except SQLAlchemyError as e:
+            print(f"Error updating invoice product: {e}")
+            return None
+
+
+    def delete(self, invoice_product_id):
+        try:
+            with self.session_factory() as session:
+                invoice_product = session.query(InvoiceProducts).filter_by(id=invoice_product_id).one_or_none()
+                if not invoice_product:
+                    return None
+                session.delete(invoice_product)
+                session.commit()
+                return invoice_product
+        except SQLAlchemyError as e:
+            print(f"Error deleting invoice product: {e}")
+            return None
+
+
+    def delete_by_invoice_and_product(self, invoice_id, product_id):
+        try:
+            with self.session_factory() as session:
+                invoice_product = session.query(InvoiceProducts).filter_by(
+                    invoice_id=invoice_id, product_id=product_id
+                ).one_or_none()
+                if not invoice_product:
+                    return None
+                session.delete(invoice_product)
+                session.commit()
+                return invoice_product
+        except SQLAlchemyError as e:
+            print(f"Error deleting invoice product {invoice_id}-{product_id}: {e}")
+            return None

@@ -6,12 +6,11 @@ from services.password_manager import PasswordManager
 from services.decorators import roles_required
 from services.jwt_manager import jwt_manager 
 
-
-
 password_manager = PasswordManager()
 
 user_repo = UserRepository(password_manager=password_manager)
 users_bp=Blueprint("users",__name__)
+
 
 @users_bp.route("/login",methods=["POST"])
 def login():
@@ -127,29 +126,3 @@ def update_user(identifier):
         return jsonify({"message": "Error updating user."}), 500
 
 
-# @users_bp.route("/multiple-cars", methods=["GET"])
-# def get_multiple_cars():
-#     try:
-        
-#         data_users=UserRepository.get_users_with_multiple_cars()
-        
-#         if not data_users:
-#             return jsonify({"data": [], "message": "No users found"}), 404
-        
-#         return jsonify({"data": data_users}), 200
-#     except Exception as e:
-#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
-
-# @users_bp.route("/<identifier>/relations", methods=["GET"])
-# def get_cars_addresses_from_user(identifier):
-#     try:
-        
-#         data_users=UserRepository.get_cars_addresses_from_user(identifier)
-        
-#         if not data_users:
-#             return jsonify({"data": [], "message": "No users found"}), 404
-        
-#         return jsonify({"data": data_users}), 200
-#     except Exception as e:
-#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500

@@ -20,5 +20,5 @@ class InvoiceProducts(Base):
             "invoice_id": self.invoice_id,
             "product_id": self.product_id,
             "quantity": self.quantity,
-            "subtotal": self.price
+            "subtotal": self.subtotal
         }

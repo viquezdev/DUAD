@@ -3,20 +3,9 @@ from flask import request, jsonify, Blueprint
 from repositories.product_repository import ProductRepository
 from services.jwt_manager import JwtManager
 from services.decorators import roles_required
-from pathlib import Path
-
-base_path = Path(__file__).resolve().parent.parent
-with open(base_path / "keys" / "private.pem", "rb") as f:
-    private_key = f.read()
-
-with open(base_path / "keys" / "public.pem", "rb") as f:
-    public_key = f.read()
-
-jwt_manager=JwtManager(private_key=private_key,public_key=public_key)
 
 product_repo = ProductRepository()
 products_bp=Blueprint("products",__name__)
-
 
 
 @products_bp.route("/", methods=["POST"])
@@ -115,29 +104,3 @@ def update_product(identifier):
         return jsonify({"message": "Error updating product."}), 500
 
 
-# @users_bp.route("/multiple-cars", methods=["GET"])
-# def get_multiple_cars():
-#     try:
-        
-#         data_users=UserRepository.get_users_with_multiple_cars()
-        
-#         if not data_users:
-#             return jsonify({"data": [], "message": "No users found"}), 404
-        
-#         return jsonify({"data": data_users}), 200
-#     except Exception as e:
-#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
-
-# @users_bp.route("/<identifier>/relations", methods=["GET"])
-# def get_cars_addresses_from_user(identifier):
-#     try:
-        
-#         data_users=UserRepository.get_cars_addresses_from_user(identifier)
-        
-#         if not data_users:
-#             return jsonify({"data": [], "message": "No users found"}), 404
-        
-#         return jsonify({"data": data_users}), 200
-#     except Exception as e:
-#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500

@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, jsonify
+from flask import request, jsonify,g
 from services.jwt_manager import jwt_manager 
 
 def roles_required(*allowed_roles):
@@ -18,9 +18,15 @@ def roles_required(*allowed_roles):
                 user_role = payload.get("role")
                 if user_role not in allowed_roles:
                     return jsonify({"error": "Access denied"}), 403
+            
+                g.current_user=payload
             except Exception as e:
                 return jsonify({"error": "Invalid token", "details": str(e)}), 401
 
             return f(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def get_jwt_identity():
+    return getattr(g, "current_user", None)

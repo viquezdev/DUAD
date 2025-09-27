@@ -55,6 +55,30 @@ class ContactRepository:
             print(f"Error fetching contact by id {contact_id}: {e}")
             return None
         
+    def get_by_user(self,user_id):
+        
+        try:
+            with self.session_factory() as session:
+                contacts=session.query(Contact).filter_by(user_id=user_id).all()
+                if contacts:
+                    return contacts
+                return None
+        except SQLAlchemyError as e:
+            print(f"Error fetching contacts: {e}")
+            return None
+        
+    def get_user_id(self,contact_id):
+        
+        try:
+            with self.session_factory() as session:
+                contact=session.query(Contact).filter_by(id=contact_id).one_or_none()
+                if contact:
+                    return contact.user_id
+                return None
+        except SQLAlchemyError as e:
+            print(f"Error fetching contact by id {contact_id}: {e}")
+            return None
+        
 
     def update(self,contact_id,name,phone,email):
         
@@ -96,14 +120,3 @@ class ContactRepository:
             print(f"Error deleting invoice : {e}")
             return None
 
-""" 
-    def get_addresses_with_street():
-        try:
-            with SessionLocal() as session:
-                addresses= session.query(Address).filter(Address.street.ilike("%street%")).all()
-                return [address.to_dict() for address in addresses]
-        except SQLAlchemyError as e:
-            print(f"Error fetching addresses: {e}")
-            return []
-
-"""

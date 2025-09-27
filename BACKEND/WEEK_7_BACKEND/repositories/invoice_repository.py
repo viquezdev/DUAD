@@ -54,6 +54,30 @@ class InvoiceRepository:
             print(f"Error fetching invoice by id {invoice_id}: {e}")
             return None
         
+    def get_by_user(self,user_id):
+        
+        try:
+            with self.session_factory() as session:
+                invoices=session.query(Invoice).filter_by(user_id=user_id).all()
+                if invoices:
+                    return invoices
+                return None
+        except SQLAlchemyError as e:
+            print(f"Error fetching contacts: {e}")
+            return None
+        
+    def get_user_id(self,invoice_id):
+        
+        try:
+            with self.session_factory() as session:
+                invoice=session.query(Invoice).filter_by(id=invoice_id).one_or_none()
+                if invoice:
+                    return invoice.user_id
+                return None
+        except SQLAlchemyError as e:
+            print(f"Error fetching invoice by id {invoice_id}: {e}")
+            return None
+        
 
     def update(self,invoice_id,total_amount=None,invoice_date=None):
         
@@ -108,14 +132,3 @@ class InvoiceRepository:
             print(f"DB error: {e}")
             return False
 
-""" 
-    def get_addresses_with_street():
-        try:
-            with SessionLocal() as session:
-                addresses= session.query(Address).filter(Address.street.ilike("%street%")).all()
-                return [address.to_dict() for address in addresses]
-        except SQLAlchemyError as e:
-            print(f"Error fetching addresses: {e}")
-            return []
-
-"""
