@@ -13,6 +13,7 @@ class User(Base):
 
     invoices=relationship("Invoice",back_populates="user")
     contacts=relationship("Contact",back_populates="user")
+    login_history = relationship("LoginHistory", back_populates="user")
 
     def to_dict(self):
         return {

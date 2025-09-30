@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.base import Base
-from models import user, product, invoice,invoice_product, contact
+from models import user, product, invoice,invoice_product, contact,login_history
 
 
 engine = create_engine("postgresql+psycopg2://postgres:VKVLLNTL2U@localhost:5432/postgres",echo=True)

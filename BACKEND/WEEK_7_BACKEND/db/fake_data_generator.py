@@ -4,6 +4,7 @@ from repositories.product_repository import ProductRepository
 from repositories.invoice_repository import InvoiceRepository
 from repositories.invoice_products_repository import InvoiceProductsRepository
 from repositories.contact_repository import ContactRepository
+from repositories.login_history_repository import LoginHistoryRepository
 from services.password_manager import PasswordManager
 from faker import Faker
 import random
@@ -19,6 +20,7 @@ def seed_database():
         invoice_repo = InvoiceRepository()
         invoice_products_repo = InvoiceProductsRepository()
         contact_repo=ContactRepository()
+        login_repo=LoginHistoryRepository()
         
         for _ in range(10):
             username = fake.user_name()
@@ -32,6 +34,13 @@ def seed_database():
             phone = fake.phone_number()
             email=fake.email()
             contact_repo.create(user_id,name,phone,email)
+
+        for _ in range(5):
+            user_id=random.randint(1,10)
+            login_at=fake.date_time()
+            ip_address = fake.ipv4()
+            is_successful=fake.boolean()
+            login_repo.create(user_id,login_at,ip_address,is_successful)
         
         fruits = [
             "apple", "banana", "orange", "pear", "grape", "kiwi", "mango",

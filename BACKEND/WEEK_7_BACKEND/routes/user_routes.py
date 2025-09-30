@@ -2,6 +2,7 @@
 from flask import request, jsonify, Blueprint
 from datetime import datetime, timedelta,timezone
 from repositories.user_repository import UserRepository
+from repositories.login_history_repository import LoginHistoryRepository
 from services.password_manager import PasswordManager
 from services.decorators import roles_required
 from services.jwt_manager import jwt_manager 
@@ -9,6 +10,7 @@ from services.jwt_manager import jwt_manager
 password_manager = PasswordManager()
 
 user_repo = UserRepository(password_manager=password_manager)
+login_history_repo=LoginHistoryRepository()
 users_bp=Blueprint("users",__name__)
 
 
@@ -20,6 +22,8 @@ def login():
         password=user_data.get("password")
         user=user_repo.get_by_username(username)
         if not user or not password_manager.verify_password(password,user.password):
+            if user:
+                login_history_repo.create(user.id,datetime.utcnow(),request.remote_addr,False)
             return jsonify({"error": "Invalid credentials"}), 401
         
         access_payload = {
@@ -39,7 +43,7 @@ def login():
         }
 
         refresh_token=jwt_manager.encode(refresh_payload)
-
+        login_history_repo.create(user.id,datetime.utcnow(),request.remote_addr,True)
         return jsonify({
             "access_token": access_token,
             "refresh_token": refresh_token
