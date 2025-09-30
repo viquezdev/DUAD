@@ -21,14 +21,55 @@ def login():
         user=user_repo.get_by_username(username)
         if not user or not password_manager.verify_password(password,user.password):
             return jsonify({"error": "Invalid credentials"}), 401
-        token_payload = {
+        
+        access_payload = {
             "sub": str(user.id),
             "role": user.role,
-            "exp":  datetime.now(timezone.utc)  + timedelta(minutes=15)
+            "exp":  datetime.now(timezone.utc)  + timedelta(minutes=15),
+            "type":"access"
 
         }
-        token=jwt_manager.encode(token_payload)
-        return jsonify({"access_token": token}), 200
+        access_token=jwt_manager.encode(access_payload)
+
+        refresh_payload={
+            "sub": str(user.id),
+            "role": user.role,
+            "exp":  datetime.now(timezone.utc)  + timedelta(days=7),
+            "type":"refresh"
+        }
+
+        refresh_token=jwt_manager.encode(refresh_payload)
+
+        return jsonify({
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }), 200
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+
+@users_bp.route("/refresh-token",methods=["POST"])
+def refresh_token():
+    try:
+        auth_header=request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify({"error":"Refresh token requerido"}),401
+        
+        refresh_token=auth_header.split(" ")[1]
+        payload=jwt_manager.decode(refresh_token)
+
+        if payload.get("type")!="refresh":
+            return jsonify({"error":"token invalido"}),403
+        
+        new_access_payload={
+            "sub": payload["sub"],
+            "role": payload["role"],
+            "exp":  datetime.now(timezone.utc)  + timedelta(minutes=15),
+            "type":"access"
+        }
+
+        new_access_token=jwt_manager.encode(new_access_payload)
+        
+        return jsonify({"access_token": new_access_token}), 200
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
