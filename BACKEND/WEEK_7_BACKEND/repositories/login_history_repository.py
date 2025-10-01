@@ -41,4 +41,16 @@ class LoginHistoryRepository:
         except SQLAlchemyError as e:
             print(f"Error fetching login_history: {e}")
             return []
+        
+
+    def get_by_id(self,user_id):   
+        try:
+            with self.session_factory() as session:
+                login_history=session.query(LoginHistory).filter_by(user_id=user_id).all()
+                if login_history:
+                    return login_history
+                return None
+        except SQLAlchemyError as e:
+            print(f"Error fetching login history {user_id}: {e}")
+            return None
 

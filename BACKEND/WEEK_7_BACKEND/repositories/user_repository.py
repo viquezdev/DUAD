@@ -65,8 +65,6 @@ class UserRepository:
             return None
 
         
-            
-#tengo que mejorar el update
     def update(self,user_id,username=None,role=None):
         
         try:

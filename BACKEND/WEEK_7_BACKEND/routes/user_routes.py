@@ -169,5 +169,19 @@ def update_user(identifier):
     except Exception as ex:
         print(str(ex))
         return jsonify({"message": "Error updating user."}), 500
+    
 
-
+@users_bp.route("/<identifier>/login-history",methods=["GET"])
+@roles_required("administrator")
+def login_history(identifier):
+    try:
+        
+        data_login_history=login_history_repo.get_by_id(identifier)
+        
+        if not data_login_history:
+            return jsonify({"data": [], "message": "No user found"}), 404
+        
+        return jsonify([login.to_dict() for login in data_login_history]), 200
+        
+    except Exception as e:
+        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
