@@ -20,3 +20,4 @@ app.register_blueprint(invoice_products_bp,url_prefix="/invoice_products")
 if __name__ == "__main__":
     seed_database()
     app.run(host="localhost",port=5000,debug=False)
+

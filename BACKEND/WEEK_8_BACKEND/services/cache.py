@@ -61,3 +61,9 @@ class CacheManager:
                 self.delete_data(key)
         except redis.RedisError as error:
             print(f"An error ocurred while deleting data from Redis: {error}")
+
+    def refresh_ttl(self, key, time_to_live):
+        try:
+            self.redis_client.expire(key, time_to_live)
+        except redis.RedisError as error:
+            print(f"Error refreshing TTL for {key}: {error}")

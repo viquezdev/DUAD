@@ -28,6 +28,10 @@ def seed_database():
             role=random.choice(["user","administrator"])
             user_repo.create(username,password,role)
 
+        #user_repo.create('dakin5','dako3113','administrator')
+        #user_repo.create('dakin6','dako3113','user')
+
+
         for _ in range(5):
             user_id=random.randint(1,10)
             name=fake.name()
