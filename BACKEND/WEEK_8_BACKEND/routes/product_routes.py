@@ -1,7 +1,7 @@
 
 from flask import request, jsonify, Blueprint
 from repositories.product_repository import ProductRepository
-from services.decorators import roles_required
+from services.decorators import roles_required,verify_cache
 from services.cache import CacheManager
 import json
 
@@ -9,9 +9,9 @@ product_repo = ProductRepository()
 products_bp=Blueprint("products",__name__)
 
 cache_manager = CacheManager(
-    host="PLACEHOLDER",
+    host="placeholder",
     port=15228,
-    password="PLACEHOLDER",
+    password="placeholder",
 )
 
 def generate_cache_fruit_key(fruit_id):
@@ -46,24 +46,14 @@ def create_product():
 
 @products_bp.route("/", methods=["GET"])
 @roles_required("administrator","user")
+@verify_cache(cache_manager,key_func=lambda:generate_cache_fruits_all_key())
 def get_all_products():
     try:
-        all_key = generate_cache_fruits_all_key()
-
-        
-        if cache_manager.check_key(all_key):
-            cached_data = cache_manager.get_data(all_key)
-            if cached_data:
-                data = json.loads(cached_data)
-                return jsonify(data), 200
-
         data_products = product_repo.get_all()
         if not data_products:
             return jsonify({"data": [], "message": "No products found"}), 404
 
         serialized = [p.to_dict() for p in data_products]
-        cache_manager.store_data(all_key, json.dumps(serialized))
-
         return jsonify(serialized), 200
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
@@ -71,24 +61,15 @@ def get_all_products():
 
 @products_bp.route("/<int:fruit_id>", methods=["GET"])
 @roles_required("administrator","user")
+@verify_cache(cache_manager,key_func=lambda fruit_id:generate_cache_fruit_key(fruit_id),time_to_live=600)
 def get_by_id(fruit_id):
     try:
-        key=generate_cache_fruit_key(fruit_id)
-        if cache_manager.check_key(key):
-            cached_data=cache_manager.get_data(key)
-            if cached_data:
-                cache_manager.refresh_ttl(key,time_to_live=600)
-                data = json.loads(cached_data)
-                return jsonify(data), 200
-
-
         data_product=product_repo.get_by_id(fruit_id)
         
         if not data_product:
             return jsonify({"data": [], "message": "No product found"}), 404
         
         serialized=data_product.to_dict()
-        cache_manager.store_data(key,json.dumps(serialized),time_to_live=600)
         return jsonify(serialized), 200
         
     except Exception as e:
