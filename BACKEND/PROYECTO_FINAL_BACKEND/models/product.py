@@ -1,4 +1,5 @@
 from sqlalchemy import Column,Integer,String,Numeric,Text
+from sqlalchemy.orm import relationship
 from .base import Base
 
 
@@ -10,3 +11,6 @@ class Product(Base):
     price=Column(Numeric(10,2),nullable=False)
     description=Column(Text)
     quantity=Column(Integer,nullable=False,default=0)
+
+    shopping_cart_products=relationship("ShoppingCartProduct",back_populates="product")
+    returns=relationship("Return",back_populates="product")
