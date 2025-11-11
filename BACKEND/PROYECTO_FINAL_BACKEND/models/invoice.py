@@ -20,3 +20,16 @@ class Invoice(Base):
     shopping_cart=relationship("ShoppingCart",back_populates="invoice")
 
     returns=relationship("Return",back_populates="invoice")
+
+    def to_dict(self):
+        return{
+            "id":self.id,
+            "invoice_number":self.invoice_number,
+            "user_id":self.user_id,
+            "shopping_cart_id":self.shopping_cart_id,
+            "created_at":self.created_at,
+            "billing_address":self.billing_address,
+            "payment_method":self.payment_method,
+            "payment_status":self.payment_status,
+            "total_amount":self.total_amount
+        }

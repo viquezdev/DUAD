@@ -1,4 +1,4 @@
-from sqlalchemy import Column,Integer,Boolean,DateTime,func,Numeric,ForeignKey,Text
+from sqlalchemy import Column,Integer,Boolean,DateTime,func,ForeignKey,Text
 from sqlalchemy.orm import relationship
 from .base import Base
 
@@ -14,5 +14,16 @@ class Return(Base):
     reason=Column(Text)
     processed=Column(Boolean,nullable=False,default=False)
 
-    invoice=relationship
-    product=
+    invoice=relationship("Invoice",back_populates="returns")
+    product=relationship("Product",back_populates="returns")
+
+    def to_dict(self):
+        return{
+            "id":self.id,
+            "invoice_id":self.invoice_id,
+            "product_id":self.product_id,
+            "quantity_returned":self.quantity_returned,
+            "return_date":self.return_date,
+            "reason":self.reason,
+            "processed":self.processed
+        }
