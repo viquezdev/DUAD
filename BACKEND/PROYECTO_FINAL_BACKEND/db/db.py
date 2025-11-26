@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.base import Base
-from models import user,product,shopping_cart,shopping_cart_product,invoice,returns
+from models import user,product,shopping_cart,shopping_cart_product,invoice,returns,login_history
 
 
 

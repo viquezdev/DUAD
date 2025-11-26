@@ -45,6 +45,8 @@ def seed_database():
             new_user=user_repo.create(username,password,email,is_admin,created_at,updated_at)
             user_ids.append(new_user.id)
 
+        user_repo.create("dakodako","1234","dako@gmail.com",True,date.today(),date.today())
+
         products_names=[
             "Premium Dry Dog Food for Adult Dogs",
             "Balanced Cat Food for Neutered Cats",

@@ -15,6 +15,7 @@ class User(Base):
 
     shopping_carts=relationship("ShoppingCart",back_populates="user")
     invoices=relationship("Invoice",back_populates="user")
+    login_history = relationship("LoginHistory", back_populates="user")
 
     def to_dict(self):
         return{
