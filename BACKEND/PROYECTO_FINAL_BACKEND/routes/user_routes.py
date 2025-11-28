@@ -3,13 +3,18 @@ from datetime import datetime,timedelta,timezone
 from repositories.user_repository import UserRepository
 from repositories.login_history_repository import LoginHistoryRepository
 from services.password_manager import PasswordManager
-from services.decorators import roles_required
+from services.decorators import roles_required,verify_cache
+from cache_utils.manager import cache_manager
+from cache_utils.user_keys import generate_cache_user_key, generate_cache_users_all_key
+import json
 from services.jwt_manager import jwt_manager
 
 password_manager=PasswordManager()
 users_repo=UserRepository(password_manager=password_manager)
 login_history_repo=LoginHistoryRepository()
 users_bp=Blueprint("users",__name__)
+
+
 
 
 @users_bp.route("/login",methods=["POST"])
@@ -70,6 +75,7 @@ def refresh_token():
 
 @users_bp.route("/users", methods=["GET"])
 @roles_required(True)
+@verify_cache(cache_manager,key_func=lambda:generate_cache_users_all_key())
 def get_all_users():
     try:
         data_users=users_repo.get_all()
@@ -82,6 +88,7 @@ def get_all_users():
 
 @users_bp.route("/users/<id>", methods=["GET"])
 @roles_required(True)
+@verify_cache(cache_manager,key_func=lambda id:generate_cache_user_key(id),time_to_live=600)
 def get_user_by_id(id):
     try:
         data_user=users_repo.get_by_id(id)

@@ -1,6 +1,8 @@
 from flask import request,jsonify,Blueprint
 from repositories.shopping_cart_repository import ShoppingCart
 from repositories.shopping_cart_product_repository import ShoppingCartProduct
+from cache_utils.manager import cache_manager
+from cache_utils.cart_keys import generate_cache_cart_key, generate_cache_carts_all_key
 
 
 shopping_cart_repo=ShoppingCart()
