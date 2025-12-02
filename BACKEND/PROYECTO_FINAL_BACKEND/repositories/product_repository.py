@@ -83,15 +83,15 @@ class ProductRepository:
             return []
 
 
-    def get_by_id(self,product_id):
+    def get_by_id(self,id):
         try:
             with self.session_factory() as session:
-                    product=session.query(Product).filter_by(id=product_id).one_or_none()
+                    product=session.query(Product).filter_by(id=id).one_or_none()
                     if not product:
                         return None
                     return product
         except SQLAlchemyError as e:
-            print(f"Error fetching product by id {product_id}: {e}")
+            print(f"Error fetching product by id {id}: {e}")
             return None
     
         

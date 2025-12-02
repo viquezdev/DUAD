@@ -13,6 +13,8 @@ class ShoppingCartProduct(Base):
 
     product=relationship("Product", back_populates="shopping_cart_products")
     shopping_cart=relationship("ShoppingCart",back_populates="shopping_cart_products")
+    shopping_cart = relationship("ShoppingCart",back_populates="products"
+)
 
     def to_dict(self):
         return{

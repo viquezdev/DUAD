@@ -81,6 +81,18 @@ class ShoppingCartRepository:
         except SQLAlchemyError as e:
             print(f"Error fetching shopping carts: {e}")
             return []
+        
+    
+    def get_by_id(self,id):
+        try:
+            with self.session_factory() as session:
+                    shopping_cart=session.query(ShoppingCart).filter_by(id=id).one_or_none()
+                    if not shopping_cart:
+                        return None
+                    return shopping_cart
+        except SQLAlchemyError as e:
+            print(f"Error fetching shopping cart by id {id}: {e}")
+            return None
 
 
     def get_by_user_id(self,user_id):

@@ -14,7 +14,7 @@ class ShoppingCart(Base):
     user=relationship("User",back_populates="shopping_carts")
     shopping_cart_products=relationship("ShoppingCartProduct",back_populates="shopping_cart")
     invoice=relationship("Invoice",back_populates="shopping_cart",uselist=False)
-
+    products = relationship("ShoppingCartProduct",back_populates="shopping_cart",cascade="all, delete-orphan")
     def to_dict(self):
         return{
             "id":self.id,

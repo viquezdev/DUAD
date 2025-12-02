@@ -6,7 +6,6 @@ from services.password_manager import PasswordManager
 from services.decorators import roles_required,verify_cache
 from cache_utils.manager import cache_manager
 from cache_utils.user_keys import generate_cache_user_key, generate_cache_users_all_key
-import json
 from services.jwt_manager import jwt_manager
 
 password_manager=PasswordManager()

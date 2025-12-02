@@ -3,7 +3,7 @@ from repositories.product_repository import ProductRepository
 from services.decorators import roles_required,verify_cache
 from cache_utils.manager import cache_manager
 from cache_utils.product_keys import generate_cache_product_key, generate_cache_products_all_key
-import json
+
 
 
 product_repo=ProductRepository()
@@ -27,7 +27,7 @@ def get_all_products():
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
     
 
-@products_bp.route("/products/<id>", methods=["GET"])
+@products_bp.route("/products/<int:id>", methods=["GET"])
 @roles_required()
 @verify_cache(cache_manager,key_func=lambda id:generate_cache_product_key(id),time_to_live=600)
 def get_product_by_id(id):

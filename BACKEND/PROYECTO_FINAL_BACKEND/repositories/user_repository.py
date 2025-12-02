@@ -119,3 +119,6 @@ class UserRepository:
     def count(self):
         with self.session_factory() as session:
             return session.query(User).count()
+        
+    
+    
