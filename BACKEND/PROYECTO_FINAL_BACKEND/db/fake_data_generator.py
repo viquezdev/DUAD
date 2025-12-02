@@ -101,8 +101,7 @@ def seed_database():
         for cart_id in shopping_cart_ids:
             product_id=random.choice(product_ids)
             quantity=random.randint(1,5)
-            subtotal=(product_repo.get_by_id(product_id).price)*quantity
-            shopping_cart_product_repo.create(cart_id,product_id,quantity,subtotal)
+            shopping_cart_product_repo.create(cart_id,product_id,quantity)
 
         for _ in range(5):
             invoice_number= fake.bothify("INV-####-??")
