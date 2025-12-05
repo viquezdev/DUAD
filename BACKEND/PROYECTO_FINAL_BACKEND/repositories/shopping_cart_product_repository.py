@@ -45,7 +45,7 @@ class ShoppingCartProductRepository:
             print(f"Error creating shopping cart product: {e}")
             return None
 
-    def update(self,id,shopping_cart_id=None,product_id=None,quantity=None,subtotal=None):
+    def update(self,id,shopping_cart_id,product_id,quantity):
         try:
             with self.session.factory() as session:
                 found_shopping_cart_product=session.query(ShoppingCartProduct).filter_by(id=id).one_or_none()
@@ -62,6 +62,13 @@ class ShoppingCartProductRepository:
                     if not found_product:
                         print(f"Product with id {product_id} not found.")
                         return None
+                    
+                if quantity <= 0:
+                    print("Quantity must be greater than 0.")
+                    return None
+
+                subtotal = found_product.price * quantity
+                
                 fields={
                     "shopping_cart_id":shopping_cart_id,
                     "product_id":product_id,

@@ -1,6 +1,7 @@
 from flask import request,jsonify,Blueprint
 from repositories.shopping_cart_repository import ShoppingCartRepository
 from repositories.product_repository import ProductRepository
+from repositories.user_repository import UserRepository
 from repositories.shopping_cart_product_repository import ShoppingCartProduct
 from services.decorators import roles_required,verify_cache,get_jwt_identity
 from cache_utils.manager import cache_manager
@@ -9,6 +10,7 @@ from cache_utils.cart_keys import generate_cache_cart_key, generate_cache_carts_
 
 shopping_cart_repo=ShoppingCartRepository()
 product_repo=ProductRepository()
+user_repo=UserRepository()
 shopping_cart_product_repo=ShoppingCartProduct()
 shopping_carts_bp=Blueprint("shopping_carts",__name__)
 
@@ -70,7 +72,11 @@ def create_cart():
         missing_fields = [field for field in required_fields if field not in cart_data]
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
-
+        
+        found_user=user_repo.get_by_id(cart_data["user_id"])
+        if not found_user:
+            return jsonify({"error": "User not found"}), 404
+        
         new_shopping_cart = shopping_cart_repo.create(**cart_data)
         request_user_role = "admin" if user_data["is_admin"] else "user"
         cache_key_requester = generate_cache_carts_all_key(
@@ -248,7 +254,53 @@ def add_product_to_cart(cart_id):
 @roles_required()
 def update_product_quantity_in_modify_cart(cart_id,product_id):
     try:
-        pass
+        user_data = get_jwt_identity()
+
+        cart_id = int(cart_id)
+        product_id = int(product_id)
+
+
+        shopping_cart = shopping_cart_repo.get_by_id(cart_id)
+        if not shopping_cart:
+            return jsonify({"error": "Shopping cart not found"}), 404
+
+        if not user_data["is_admin"] and str(user_data["sub"]) != str(shopping_cart.user_id):
+            return jsonify({"error": "Access denied"}), 403
+
+
+        cart_product = shopping_cart_product_repo.get_product_in_cart(cart_id, product_id)
+        if not cart_product:
+            return jsonify({"error": "Product not found in this cart"}), 404
+
+
+        data = request.get_json()
+        new_quantity = data.get("quantity")
+
+        if new_quantity is None or type(new_quantity) is not int or new_quantity <= 0:
+            return jsonify({"error": "Quantity must be a positive integer"}), 400
+
+        product = product_repo.get_by_id(product_id)
+        if not product:
+            return jsonify({"error": "Product not found"}), 404
+
+
+        stock_disponible = product.quantity + cart_product.quantity
+
+        if new_quantity > stock_disponible:
+            return jsonify({"error": "Not enough stock"}), 400
+
+        new_subtotal = product.price * new_quantity
+
+        updated_item = shopping_cart_product_repo.update(
+            id=cart_product.id,
+            quantity=new_quantity,
+            subtotal=new_subtotal
+        )
+
+        return jsonify({
+            "message": f"Product {product_id} updated in cart {cart_id}",
+            "shopping_cart_product": updated_item.to_dict()
+        }), 200
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
     
@@ -257,6 +309,27 @@ def update_product_quantity_in_modify_cart(cart_id,product_id):
 @roles_required(True)
 def remove_product_from_cart(cart_id,product_id):
     try:
-        pass
+        user_data = get_jwt_identity()
+
+        cart_id = int(cart_id)
+        product_id = int(product_id)
+
+        shopping_cart = shopping_cart_repo.get_by_id(cart_id)
+        if not shopping_cart:
+            return jsonify({"error": "Shopping cart not found"}), 404
+
+        if not user_data["is_admin"] and str(user_data["sub"]) != str(shopping_cart.user_id):
+            return jsonify({"error": "Access denied"}), 403
+
+        found_item = shopping_cart_product_repo.get_product_in_cart(cart_id, product_id)
+        if not found_item:
+            return jsonify({"error": "Product not found in this cart"}), 404
+
+        deleted_item = shopping_cart_product_repo.delete(found_item.id)
+
+        return jsonify({
+            "message": f"Product with ID {product_id} was removed from cart {cart_id}"
+        }), 200
+        
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
