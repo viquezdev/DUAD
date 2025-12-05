@@ -2,7 +2,7 @@ from flask import request,jsonify,Blueprint
 from repositories.shopping_cart_repository import ShoppingCartRepository
 from repositories.product_repository import ProductRepository
 from repositories.user_repository import UserRepository
-from repositories.shopping_cart_product_repository import ShoppingCartProduct
+from repositories.shopping_cart_product_repository import ShoppingCartProductRepository
 from services.decorators import roles_required,verify_cache,get_jwt_identity
 from cache_utils.manager import cache_manager
 from cache_utils.cart_keys import generate_cache_cart_key, generate_cache_carts_all_key
@@ -11,7 +11,7 @@ from cache_utils.cart_keys import generate_cache_cart_key, generate_cache_carts_
 shopping_cart_repo=ShoppingCartRepository()
 product_repo=ProductRepository()
 user_repo=UserRepository()
-shopping_cart_product_repo=ShoppingCartProduct()
+shopping_cart_product_repo=ShoppingCartProductRepository()
 shopping_carts_bp=Blueprint("shopping_carts",__name__)
 
 
@@ -219,7 +219,7 @@ def add_product_to_cart(cart_id):
             return jsonify({"error": "Product not found"}), 404
         
         desired_quantity = product_data["quantity"]
-        if product.stock < desired_quantity:
+        if product.quantity < desired_quantity:
             return jsonify({"error": "Not enough stock"}), 400
 
         existing = shopping_cart_product_repo.get_product_in_cart(cart_id, product.id)
@@ -227,7 +227,7 @@ def add_product_to_cart(cart_id):
         if existing:
             new_quantity = existing.quantity + desired_quantity
 
-            if product.stock < new_quantity:
+            if product.quantity < new_quantity:
                 return jsonify({"error": "Not enough stock to increase quantity"}), 400
 
             updated_item = shopping_cart_product_repo.update_quantity(
@@ -259,11 +259,12 @@ def update_product_quantity_in_modify_cart(cart_id,product_id):
         cart_id = int(cart_id)
         product_id = int(product_id)
 
-
+    
         shopping_cart = shopping_cart_repo.get_by_id(cart_id)
         if not shopping_cart:
             return jsonify({"error": "Shopping cart not found"}), 404
 
+    
         if not user_data["is_admin"] and str(user_data["sub"]) != str(shopping_cart.user_id):
             return jsonify({"error": "Access denied"}), 403
 
@@ -279,22 +280,20 @@ def update_product_quantity_in_modify_cart(cart_id,product_id):
         if new_quantity is None or type(new_quantity) is not int or new_quantity <= 0:
             return jsonify({"error": "Quantity must be a positive integer"}), 400
 
+    
         product = product_repo.get_by_id(product_id)
         if not product:
             return jsonify({"error": "Product not found"}), 404
 
-
+    
         stock_disponible = product.quantity + cart_product.quantity
-
         if new_quantity > stock_disponible:
             return jsonify({"error": "Not enough stock"}), 400
 
-        new_subtotal = product.price * new_quantity
 
-        updated_item = shopping_cart_product_repo.update(
-            id=cart_product.id,
-            quantity=new_quantity,
-            subtotal=new_subtotal
+        updated_item = shopping_cart_product_repo.update_quantity(
+            cart_product_id=cart_product.id,
+            quantity=new_quantity
         )
 
         return jsonify({
