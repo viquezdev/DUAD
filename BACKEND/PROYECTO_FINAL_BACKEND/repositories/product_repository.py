@@ -57,6 +57,22 @@ class ProductRepository:
         except SQLAlchemyError as e:
             print(f"Error updating product: {e}")
             return None
+        
+    def update_quantity(self, product_id, new_quantity):
+        try:
+            with self.session_factory() as session:
+                product = session.query(Product).filter_by(id=product_id).one_or_none()
+                if not product:
+                    print(f"Product with id {product_id} not found.")
+                    return None
+                product.quantity = new_quantity
+                session.commit()
+                session.refresh(product)
+                return product
+
+        except SQLAlchemyError as e:
+            print(f"Error updating product quantity: {e}")
+            return None
 
 
     def delete(self,id):

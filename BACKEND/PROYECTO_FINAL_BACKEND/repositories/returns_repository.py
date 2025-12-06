@@ -39,7 +39,7 @@ class ReturnsRepository:
 
     def update(self,id,invoice_id=None,product_id=None,quantity_returned=None,return_date=None,reason=None,processed=None):
         try:
-            with self.session.factory() as session:
+            with self.session_factory() as session:
                 found_return=session.query(Return).filter_by(id=id).one_or_none()
                 if not found_return:
                     print(f"Return with id {id} not found.")
@@ -67,6 +67,7 @@ class ReturnsRepository:
                         setattr(found_return,attr,value)
                 session.commit()
                 session.refresh(found_return)
+                return found_return
         except SQLAlchemyError as e:
             print(f"Error updating return: {e}")
     
@@ -93,6 +94,18 @@ class ReturnsRepository:
         except SQLAlchemyError as e:
             print(f"Error fetching returns: {e}")
             return []
+        
+
+    def get_by_id(self,id):
+        try:
+            with self.session_factory() as session:
+                    found_return=session.query(Return).filter_by(id=id).one_or_none()
+                    if not found_return:
+                        return None
+                    return found_return
+        except SQLAlchemyError as e:
+            print(f"Error fetching return by id {id}: {e}")
+            return None
 
 
     def get_by_invoice_id(self,invoice_id):
