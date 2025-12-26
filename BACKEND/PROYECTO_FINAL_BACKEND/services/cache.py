@@ -71,3 +71,12 @@ class CacheManager:
             self.redis_client.expire(key,time_to_live)
         except redis.RedisError as error:
             print(f"Error refreshing TTL for {key}: {error}")
+
+
+    def clear_all(self):
+        try:
+            self.redis_client.flushdb()
+            return True
+        except redis.RedisError as error:
+            print(f"An error occurred while clearing the Redis database: {error}")
+            return False
