@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <form action="https://dummyjson.com/test" method="POST">
+    <h1>Elecciones Presidenciales 2026</h1>
+    <p>Información requerida</p>
+
+    <label for="full_name">Nombre completo</label>
+    <br />
+    <input type="text" id="full_name" name="fullName" />
+    <br />
+    <label for="email">Correo electrónico</label>
+    <br />
+    <input type="text" id="email" name="email" />
+    <br />
+    <label for="identification">Numero de identificación</label>
+    <br />
+    <input
+      type="text"
+      id="identification"
+      name="identification"
+      placeholder="Ej: 206720938"
+    />
+    <br />
+    <label for="phone_number">Teléfono</label>
+    <br />
+    <input
+      type="tel"
+      id="phone_number"
+      name="phoneNumber"
+      placeholder="Ej: +506 8888 1234"
+    />
+    <br />
+    <label for="type">Seleccione el candidato:</label>
+    <br />
+    <select name="type" id="type">
+      <option hidden>Select one</option>
+      <option value="ca_1">Candidato #1</option>
+      <option value="ca_2">Candidato #2</option>
+      <option value="ca_3">Candidato #3</option>
+    </select>
+
+    <br />
+    <br />
+    <input type="submit" value="Enviar mi voto" />
+    <br />
+    <br />
+  </form>
+</html>

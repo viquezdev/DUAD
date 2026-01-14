@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <form action="gracias.html" method="GET">
+    <h1>Inscripción al curso</h1>
+    <p>Información requerida</p>
+
+    <label for="full_name">Nombre completo</label>
+    <br />
+    <input type="text" id="full_name" name="fullName" />
+    <br />
+    <label for="email">Correo electrónico</label>
+    <br />
+    <input type="text" id="email" name="email" />
+    <br />
+    <label for="identification">Numero de identificación</label>
+    <br />
+    <input
+      type="text"
+      id="identification"
+      name="identification"
+      placeholder="Ej: 206720938"
+    />
+    <br />
+    <label for="type">Seleccione el curso:</label>
+    <br />
+    <select name="type" id="type">
+      <option hidden>Select one</option>
+      <option value="web">Desarrollo Web</option>
+      <option value="redes">Redes</option>
+      <option value="cyber">Ciberseguridad</option>
+    </select>
+    <br />
+    <br />
+    <label for="terms">Acepto los términos y condiciones</label>
+    <input type="checkbox" id="terms" required />
+
+    <br />
+    <br />
+    <input type="submit" value="Inscribir curso" />
+    <br />
+    <br />
+  </form>
+</html>

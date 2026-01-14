@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <form action="confirmacion.html" method="GET">
+    <h1>Hotel Reservation</h1>
+    <p>Required Information</p>
+
+    <label for="name">Full Name</label>
+    <br />
+    <input type="text" id="name" name="name" />
+    <br />
+    <br />
+    <label for="email">Email Address</label>
+    <br />
+    <input type="email" id="email" name="email" />
+    <br />
+    <br />
+    <label for="check-in">Check-in Date</label>
+    <br />
+    <input type="date" id="check-in" name="check-in" />
+    <br />
+    <br />
+    <label for="check-out">Check-out Date</label>
+    <br />
+    <input type="date" id="check-out" name="check-out" />
+    <br />
+    <br />
+    <label for="type">Choose your room type:</label>
+    <br />
+    <input type="radio" id="standard" name="room" value="standard" />
+    <label for="standard">Standard</label>
+
+    <input type="radio" id="premium" name="room" value="premium" />
+    <label for="premium">Premium</label>
+
+    <input type="radio" id="suite" name="room" value="suite" />
+    <label for="suite">Suite</label>
+    <br />
+    <br />
+    <label for="type">Additional Services:</label>
+    <br />
+    <input type="checkbox" id="breakfast" name="service" value="breakfast" />
+    <label for="breakfast">Breakfast</label>
+
+    <input type="checkbox" id="wifi" name="service" value="wifi" />
+    <label for="wifi">Wi-Fi</label>
+
+    <input type="checkbox" id="parking" name="service" value="parking" />
+    <label for="parking">Parking</label>
+    <br />
+    <br />
+    <input type="submit" value="Reservation Confirmation" />
+    <br />
+    <br />
+  </form>
+</html>
