@@ -1,0 +1,154 @@
+.global-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: gainsboro;
+  padding: 2rem;
+  align-items: baseline;
+  font-size: 4rem;
+}
+
+.line {
+  height: 0.8rem;
+  width: 24rem;
+  background-color: white;
+  margin: 1rem;
+}
+
+p {
+  font-weight: bold;
+}
+
+.tm-symbol::after {
+  content: "\2122";
+  font-size: 1rem;
+  font-weight: bold;
+  vertical-align: super;
+}
+
+.table-container {
+  display: flex;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+td img {
+  width: 200px;
+  height: 200px;
+}
+
+.number {
+  background-color: black;
+  color: white;
+  text-align: center;
+  font-size: 3rem;
+}
+
+.header-row {
+  background-color: blue;
+  color: white;
+}
+
+.header-row th {
+  padding: 2rem;
+  font-size: 2rem;
+}
+
+td p {
+  background-color: yellow;
+  width: 2.5rem;
+  text-align: center;
+}
+
+.song {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+}
+
+td span {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.plus-symbol {
+  font-size: 2rem;
+  -webkit-text-stroke: 2px gray;
+}
+
+.author {
+  text-align: left;
+  font-weight: normal;
+  font-size: 1.5rem;
+}
+
+.star {
+  width: 10px;
+  height: 10px;
+  border: 2px solid black;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: black;
+  padding: 1rem;
+}
+
+.gray-column {
+  background-color: gainsboro;
+  font-size: 3rem;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+td {
+  padding: 2rem;
+}
+
+.down-arrow {
+  background-color: red;
+  width: 2.5rem;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 2rem;
+  -webkit-text-stroke: 2px white;
+}
+
+.right-arrow {
+  background-color: gray;
+  width: 2.5rem;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 2rem;
+  -webkit-text-stroke: 2px white;
+}
+
+tbody tr:nth-child(1) {
+  font-size: 1.2rem;
+}
+
+tbody tr:nth-child(1) img {
+  width: 260px;
+  height: auto;
+}
+
+tbody tr:nth-child(1) span {
+  font-size: 4rem;
+}
+
+.header-row th:first-child {
+  border-left: none;
+}
+
+.header-row th:first-child {
+  border-left: none;
+}

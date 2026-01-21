@@ -1,0 +1,101 @@
+html {
+  font-size: 20px;
+}
+
+body {
+  margin: 0;
+}
+
+.global-container {
+  background-color: white;
+  padding: 4rem;
+  margin: 0 auto;
+}
+
+.text-container {
+  background-color: white;
+  padding: 6rem;
+  text-align: center;
+  width: 40rem;
+  margin: 0 auto;
+}
+.blog-post-subtitle {
+  font-weight: normal;
+}
+
+.social-share {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  margin: 1rem 0 2rem 0;
+}
+
+img {
+  width: 100%;
+  padding: 0;
+}
+
+p {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+section {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.article-information {
+  display: flex;
+}
+
+.author-info {
+  margin-bottom: 1.5rem;
+}
+
+.img-ref {
+  margin-top: 2rem;
+}
+
+.link-x {
+  background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg");
+}
+
+.link-in {
+  background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linkedin.svg");
+}
+
+.link-reddit {
+  background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/reddit.svg");
+}
+
+.social-share a {
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.post-ad {
+  background-color: orange;
+  border-radius: 0.5rem;
+  width: 12rem;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.learn-btn {
+  display: inline-block;
+  background-color: black;
+  color: white;
+  padding: 0.5rem;
+  margin-top: 1rem;
+}
+
+.content-ad {
+  display: flex;
+  gap: 2rem;
+}
