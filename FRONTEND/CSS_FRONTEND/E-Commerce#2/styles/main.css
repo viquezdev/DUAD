@@ -1,0 +1,239 @@
+@import url(main.css);
+.contain {
+  padding: 0 10%;
+}
+html {
+  font-family: Arial, Helvetica, sans-serif;
+}
+body {
+  margin: 0;
+}
+
+.navbar {
+  padding-top: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: rgb(225, 225, 225);
+  padding: 1rem 0;
+  .nav-main {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .input-search {
+    border: none;
+    height: 2rem;
+    width: 12rem;
+    padding: 0 0.5rem;
+    background-color: rgb(225, 225, 225);
+    border-radius: 4px;
+  }
+
+  a {
+    margin: 0.2rem;
+  }
+  .nav-button {
+    border: none;
+    background: none;
+    color: rgb(146, 145, 145);
+    cursor: pointer;
+  }
+  .nav-button:hover,
+  .nav-button:active,
+  .nav-button:focus {
+    font-weight: bold;
+    color: black;
+  }
+  .nav-brand {
+    margin-right: 2rem;
+    width: min-content;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .brand-image {
+    width: 4rem;
+  }
+}
+
+.banner {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: burlywood;
+  margin-top: 2rem;
+
+  .banner-image {
+    height: 20rem;
+    margin: 0 2rem;
+  }
+  .banner-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    p {
+      margin: 0.2rem;
+    }
+    .sup-text {
+      font-weight: normal;
+      font-size: 1rem;
+    }
+    .main-text {
+      color: black;
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    .price-text {
+      color: rgb(227, 27, 177);
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    .buy-button {
+      background-color: rgb(227, 27, 177);
+      color: white;
+      width: 7rem;
+      height: 2rem;
+      margin-top: 1rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 0.5rem;
+    }
+  }
+}
+
+.catalog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem;
+  padding: 4rem 0;
+  p {
+    margin: 0;
+  }
+  .title-container {
+    margin: 1rem 0;
+  }
+  .main-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .sub-title {
+    font-size: 0.8rem;
+  }
+  .product-rows {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .product {
+    width: 23%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+    margin: 0 0.7rem 1rem 0;
+    border: 1px solid rgb(233, 230, 230);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    .product-image {
+      width: 100%;
+    }
+    p {
+      text-align: center;
+    }
+    .product-info {
+      padding: 0 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      .main-row {
+        display: flex;
+        justify-content: space-between;
+      }
+      .info-name {
+        font-weight: bold;
+      }
+      .buy-button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        background-color: black;
+        color: white;
+        width: 5rem;
+        padding: 0.3rem;
+        border-radius: 0.5rem;
+        margin: 1rem;
+      }
+      .price {
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: burlywood;
+  margin-top: 2rem;
+
+  padding: 4rem 0;
+  .banner-image {
+    height: 20rem;
+    margin: 0 2rem;
+  }
+  .footer-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    p {
+      margin: 0.2rem;
+    }
+    .input-email {
+      border: none;
+      height: 2rem;
+      width: 12rem;
+      padding: 0 0.5rem;
+    }
+    .sup-text {
+      font-weight: normal;
+      font-size: 1rem;
+    }
+    .main-text {
+      color: black;
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    .price-text {
+      color: rgb(227, 27, 177);
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    .send-button {
+      background-color: rgb(227, 27, 177);
+      color: white;
+      width: 7rem;
+      height: 2rem;
+      margin-top: 1rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 0.5rem;
+    }
+  }
+}
