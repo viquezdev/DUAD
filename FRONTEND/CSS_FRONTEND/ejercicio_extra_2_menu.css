@@ -1,0 +1,35 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.global-container {
+  justify-content: center;
+  padding: 2rem;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  background-color: burlywood;
+}
+
+.option {
+  background-color: burlywood;
+  font-size: 3rem;
+  margin: 0;
+
+  padding: 1rem;
+}
+
+.option:hover {
+  background-color: chocolate;
+}
+
+.option a {
+  color: white;
+  text-decoration: none;
+}
