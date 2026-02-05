@@ -1,0 +1,120 @@
+import url(main.css);
+.contain {
+  padding: 0 10%;
+}
+html {
+  font-family: Arial, Helvetica, sans-serif;
+}
+body {
+  margin: 0;
+  background-color: rgb(232, 228, 228);
+}
+
+
+
+.navbar{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+   font-size: 2rem;
+   
+   align-items: center;
+   .brand-image{
+    height: 5rem;
+    width: 5rem;
+   }
+   .nav-left{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 5rem;
+    padding-right: 7rem;
+   }
+   .nav-right{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 5rem;
+   }
+
+   .nav-button:hover{
+    font-weight: bold;
+   }
+
+   .nav-left p:hover{
+    font-weight: bold;
+   }
+
+   .get-button{
+    background-color: rgb(65, 127, 189);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 0.2rem;
+    border-radius: 5px;
+   }
+
+   .get-button:hover{
+     background-color: rgb(14, 96, 179);
+   }
+}
+
+.banner {
+background-color:rgb(65, 127, 189) ;
+  background: linear-gradient(rgba(44, 85, 134, 0.5), rgba(60, 114, 154, 0.5)), 
+              url('../imgs/reunion.png');  
+  
+  background-size: cover;      
+  background-position: center;  
+  width: 100%;                 
+  height: 800px;              
+  display: flex;
+  flex-direction: column;
+  justify-content: center;     
+  align-items: center;         
+  text-align: center;
+  color: white;     
+  
+  .main-text{
+    font-size: 7rem;
+  }
+  .subtitle{
+    font-size: 5rem;
+  }
+}
+
+
+.benefits-container {
+  display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;     
+  padding: 5rem;
+  justify-content: center;
+
+  .benefit-card .icon {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.benefit-card {
+  
+  
+  
+  background: #f9f9f9;
+  padding: 30px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1s);
+}
+}
+
+
+
+.footer{
+    background-color: rgb(31, 95, 141);
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    padding: 1rem;
+    margin:0
+}
