@@ -1,4 +1,4 @@
-import url(main.css);
+@import url(main.css);
 .contain {
   padding: 0 10%;
 }
@@ -7,165 +7,154 @@ html {
 }
 body {
   margin: 0;
-  background-color: rgb(232, 228, 228);
 }
 
+.navbar {
+  background-color: rgb(81, 128, 190);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
 
-.navbar{
-    background-color: rgb(81, 128, 190);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: baseline;
-    
-    .system-name{
-        display: flex;
-        justify-content: left;
-        padding: 1rem;
-        align-items: center;
-        .nav-name{
-            font-size: 3rem;
-            color: white;
-        }
-    }
-    .user-session{
-        display: flex;
-        flex-direction: row;
-        justify-content: right;
-      
-        padding-right: 1rem;
-        align-items: center;
-
-        .profile-image{
-            height: 32px;
-            width: 32px;
-            margin-right: 0.5rem;
-        }
-    }
-    
-}
-
-
-.sidebar{
-    background-color: rgb(49, 48, 48);
-    width: 250px;
-    min-width: 250px;
-    position: sticky;
-    .nav-main{
-        display: flex;
-        flex-direction: column;
-        top: 0;
-        height: 100vh;
-        color: white;
-        gap: 15px;
-       
-    }
-    .nav-button{
-        text-align: center;
-        padding: 1rem;
-        font-size: 1.5rem;
-    }
-    .nav-button:hover{
-        background-color: rgb(49, 96, 161);
-    }
-
-}
-
-.main-contain{
-    display: grid;
-    grid-template-columns: 0.5fr 1fr 1fr;
-   
-    .cards-content{
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-
-        .card-blue{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background-color: rgb(31, 95, 141);
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            padding: 2rem;
-            
-            margin: 2rem;
-            box-shadow: 5px grey;
-            .card-image{
-                width: 32px;
-                height: 32px;
-                margin-right: 1rem;
-            }
-        }
-        .card-green{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background-color: rgb(90, 200, 138);
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            padding: 2rem;
-            border-radius: 4px;
-            margin: 2rem;
-            .card-image{
-                width: 32px;
-                height: 32px;
-                margin-right: 1rem;
-            }
-        }
-        .card-yellow{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background-color: rgb(238, 215, 98);
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            padding: 2rem;
-            border-radius: 4px;
-            margin: 2rem;
-            .card-image{
-                width: 32px;
-                height: 32px;
-                margin-right: 1rem;
-            }
-        }
-    }
-}
-
-
-
-.project-content{
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-
-        .card-project{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background-color: white;
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            padding: 2rem;
-            
-            margin: 2rem;
-            box-shadow: 5px grey;
-            .project-info{
-
-                .proyect-name{
-                    font-weight: bold;
-                    font-size: 2rem;
-                }
-                
-            }
-        }
-
-    }
-
-.footer{
-    background-color: rgb(31, 95, 141);
-    text-align: center;
-    color: white;
-    font-size: 2rem;
+  .system-name {
+    display: flex;
+    justify-content: left;
     padding: 1rem;
-    margin:0
+    align-items: center;
+    .nav-name {
+      font-size: 3rem;
+      color: white;
+    }
+  }
+  .user-session {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+
+    padding-right: 1rem;
+    align-items: center;
+
+    .profile-image {
+      height: 32px;
+      width: 32px;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.sidebar {
+  background-color: rgb(49, 48, 48);
+  width: 250px;
+  min-width: 250px;
+  position: sticky;
+  .nav-main {
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    height: 100vh;
+    color: white;
+    gap: 15px;
+  }
+  .nav-button {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.5rem;
+  }
+  .nav-button:hover {
+    background-color: rgb(49, 96, 161);
+  }
+}
+
+.main-contain {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr;
+
+  .cards-content {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+
+    .card-blue {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: rgb(31, 95, 141);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      padding: 2rem;
+
+      margin: 2rem;
+      box-shadow: 5px grey;
+      .card-image {
+        width: 32px;
+        height: 32px;
+        margin-right: 1rem;
+      }
+    }
+    .card-green {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: rgb(90, 200, 138);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      padding: 2rem;
+      border-radius: 4px;
+      margin: 2rem;
+      .card-image {
+        width: 32px;
+        height: 32px;
+        margin-right: 1rem;
+      }
+    }
+    .card-yellow {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: rgb(238, 215, 98);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      padding: 2rem;
+      border-radius: 4px;
+      margin: 2rem;
+      .card-image {
+        width: 32px;
+        height: 32px;
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+.project-content {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+
+  .card-project {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 2rem;
+
+    margin: 2rem;
+    box-shadow: 5px grey;
+    .project-info {
+      .proyect-name {
+        font-weight: bold;
+        font-size: 2rem;
+      }
+    }
+  }
+}
+
+.footer {
+  background-color: rgb(31, 95, 141);
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+  padding: 1rem;
+  margin: 0;
 }
