@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="ejercicio_1_form.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="global-container">
+      <div class="form-container">
+        <form action="https://dummyjson.com/test" method="POST">
+          <div class="line-container"></div>
+          <h1>Contact us!</h1>
+          <p>Got something to say? Fire away!</p>
+
+          <br />
+          <input
+            class="input-element"
+            type="text"
+            id="first_name"
+            name="firstName"
+            placeholder="First name *"
+            required
+          />
+          <br />
+
+          <br />
+          <input
+            class="input-element"
+            type="text"
+            id="last_name"
+            name="lastName"
+            placeholder="Last name *"
+            required
+          />
+          <br />
+
+          <br />
+          <input
+            class="input-element"
+            type="text"
+            id="email"
+            name="email"
+            placeholder="Email address *"
+            required
+          />
+          <br />
+
+          <br />
+          <select class="input-element" name="type" id="type" required>
+            <option hidden>What's your message about? *</option>
+            <option value="question">Question</option>
+            <option value="suggestion">Suggestion</option>
+          </select>
+          <br />
+
+          <br />
+          <textarea
+            class="input-element"
+            id="message"
+            name="message"
+            placeholder="Fire away! *"
+            required
+          ></textarea>
+          <br />
+          <br />
+
+          <input class="submit-btn" type="submit" value="Send my message" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
