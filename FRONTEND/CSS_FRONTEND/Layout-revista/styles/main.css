@@ -1,0 +1,183 @@
+@import url(main.css);
+.contain {
+  padding: 0 10%;
+}
+html {
+  font-family: Arial, Helvetica, sans-serif;
+}
+body {
+  margin: 0;
+  background-color: rgb(232, 228, 228);
+}
+
+.navbar {
+  background-color: blue;
+  padding-top: 2rem !important;
+
+  align-items: center;
+
+  .nav-main {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+    align-items: baseline;
+    padding-bottom: 2rem;
+  }
+
+  .nav-button {
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    font-size: 2rem;
+  }
+  .nav-button:hover,
+  .nav-button:active,
+  .nav-button:focus {
+    font-weight: bold;
+  }
+  .nav-name {
+    font-size: 3rem;
+
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: white;
+  }
+  .nav-name:focus {
+    font-weight: bold;
+  }
+}
+
+.main-contain {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  .categories-content {
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    color: blue;
+    background-color: rgb(255, 255, 255);
+    margin: 6rem;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    height: 40rem;
+  }
+  .nav-button {
+    text-decoration: wavy;
+    font-size: 3rem;
+  }
+  .nav-button:hover {
+    font-weight: bold;
+  }
+  .main-title {
+    color: black;
+    font-size: 4rem;
+  }
+
+  .articles-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 2rem;
+    padding: 4rem 0;
+
+    p {
+      margin: 0;
+    }
+
+    .sub-title {
+      font-size: 2rem;
+    }
+
+    .article {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      background-color: white;
+      border: 1px solid rgb(233, 230, 230);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      margin-bottom: 2rem;
+      .article-image {
+        width: 100%;
+        align-items: left;
+      }
+
+      .article-info {
+        padding-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .main-row {
+          display: flex;
+          justify-content: space-between;
+        }
+        .article-name {
+          font-weight: bold;
+          text-align: center;
+          font-size: 3rem;
+        }
+        p {
+          padding-top: 1rem;
+          text-align: center;
+          font-size: 2rem;
+        }
+        .read-button {
+          border: none;
+          background: none;
+          cursor: pointer;
+          background-color: black;
+          color: white;
+          width: 15rem;
+          padding: 0.3rem;
+          border-radius: 0.5rem;
+          margin: 1rem;
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+}
+
+.footer {
+  background-color: rgb(100, 100, 185);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  text-align: center;
+  .main-text {
+    font-size: 2rem;
+    color: white;
+  }
+  .sub-text {
+    font-size: 1rem;
+    color: white;
+  }
+  .link-x {
+    background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg");
+  }
+
+  .link-in {
+    background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linkedin.svg");
+  }
+  .social-share {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    margin: 1rem 0 2rem 0;
+  }
+
+  .link-reddit {
+    background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/reddit.svg");
+  }
+  .social-share a {
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+}
