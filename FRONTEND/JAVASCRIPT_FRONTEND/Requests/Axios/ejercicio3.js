@@ -1,30 +1,28 @@
+const axios = require("axios");
 
+async function getObject(id) {
+  try {
+    const response = await axios.get(
+      `https://api.restful-api.dev/objects/${id}`,
+    );
 
-async function getObject(id){
-	try {
-		const response = await fetch(`https://api.restful-api.dev/objects/${id}`);
-		
-		if (!response.ok) {
-    		throw new Error(`HTTP error: ${response.status}`);
-		}
-		const data=await response.json();
-		return data;
-		
-		
-	} catch (error) {
-		console.log("error fetching object");
-		throw error;
-	}
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.log("Objeto no encontrado");
+    } else {
+      console.log("Error obteniendo datos");
+    }
+  }
 }
 
 async function fetchObject(id) {
-	try {
-	const objectData= await getObject(id)
-	console.log(objectData);
-} catch (error) {
-	console.log(error);
+  try {
+    const objectData = await getObject(id);
+    console.log(objectData);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-}
-
-fetchObject(120);
+fetchObject(600);
