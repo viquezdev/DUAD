@@ -50,5 +50,21 @@
     .login-btn:hover {
       background-color: rgb(230, 230, 230);
     }
+
+    .signup-btn {
+      width: 8rem;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      background-color: white;
+      color: blue;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .signup-btn:hover {
+      background-color: rgb(230, 230, 230);
+    }
   }
 }
