@@ -14,6 +14,7 @@ const sessionLimit = 5 * 60 * 1000;
 
 if (now - loginTime > sessionLimit) {
   localStorage.removeItem("sessionUser");
+  alert("Sesión expirada, vuelva a iniciar sesión");
   window.location.href = "login.html?expired=true";
 }
 
