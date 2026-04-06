@@ -1,0 +1,52 @@
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-right {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-image {
+  width: 4rem;
+}
+
+.nav-button {
+  border: none;
+  background: none;
+  color: rgb(146, 145, 145);
+  cursor: pointer;
+}
+.nav-button:hover,
+.nav-button:active,
+.nav-button:focus {
+  font-weight: bold;
+  color: black;
+}
+
+.btn-products {
+  background-color: rgb(22, 74, 96);
+  color: white;
+  width: 7rem;
+  height: 2rem;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
