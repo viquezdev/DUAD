@@ -38,7 +38,7 @@ p {
 }
 
 a {
-  color: white;
+  color: rgb(88, 176, 164);
 }
 
 a:hover {
@@ -56,6 +56,6 @@ a:hover {
   border-radius: 0.5rem;
 }
 
-.btn-link {
-  color: rgb(88, 176, 164);
+.btn-register:hover {
+  background-color: rgb(64, 130, 160);
 }

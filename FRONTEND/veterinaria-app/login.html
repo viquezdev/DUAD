@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/login.css" />
+    <script src="js/pages/index.js" defer></script>
+  </head>
+  <header>
+    <nav class="navbar-container">
+      <div class="nav-left">
+        <a class="nav-brand"
+          ><img src="assets/icons/logo.png" alt="logo" class="brand-image"
+        /></a>
+        <a href="index.html" class="nav-button">PetStore</a>
+      </div>
+      <div class="nav-center">
+        <a href="index.html" class="nav-button">Inicio</a>
+        <a class="nav-button">Productos</a>
+        <a class="nav-button">Acerca de</a>
+      </div>
+      <div class="nav-right">
+        <button id="btnLogin" class="btn">Iniciar sesión</button>
+      </div>
+    </nav>
+  </header>
+  <body>
+    <section>
+      <div class="banner-global">
+        <div class="main-container">
+          <form action="">
+            <div class="form-container">
+              <p class="main-text">Iniciar sesión</p>
+              <p class="message"></p>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Correo electrónico"
+                required
+              />
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Contraseña"
+                required
+              />
+
+              <button class="btn-register">Ingresar</button>
+              <p>
+                ¿No tienes una cuenta?
+                <a class="btn-link" href="register.html">Crear cuenta</a>
+              </p>
+              <p>
+                <a href="index.html">Volver a inicio</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

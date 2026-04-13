@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/pages/index.css" />
+    <script type="module" src="./js/pages/index.js" defer></script>
   </head>
   <header>
     <nav class="navbar-container">
@@ -11,21 +12,21 @@
         <a class="nav-brand"
           ><img src="assets/icons/logo.png" alt="logo" class="brand-image"
         /></a>
-        <a class="nav-button">PetStore</a>
+        <a href="index.html" class="nav-button">PetStore</a>
       </div>
       <div class="nav-center">
-        <a class="nav-button">Inicio</a>
+        <a href="index.html" class="nav-button">Inicio</a>
         <a class="nav-button">Productos</a>
         <a class="nav-button">Acerca de</a>
       </div>
       <div class="nav-right">
-        <button class="btn">Iniciar sesión</button>
+        <button id="btnLogin" class="btn">Iniciar sesión</button>
       </div>
     </nav>
   </header>
   <body>
     <section>
-      <div class="banner-container">
+      <div class="banner-global">
         <div class="banner-content">
           <h1>Bienvenido a PetStore</h1>
 
@@ -34,7 +35,7 @@
             queridas mascotas: desde alimentos y juguetes hasta accesorios y
             salud.
           </p>
-          <button class="btn-products">Ver productos</button>
+          <button class="btn">Ver productos</button>
         </div>
       </div>
     </section>

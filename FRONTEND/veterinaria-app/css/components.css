@@ -52,3 +52,22 @@
   cursor: pointer;
   border-radius: 0.5rem;
 }
+
+.btn:hover {
+  background-color: rgb(64, 130, 160);
+}
+
+.banner-global {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-image:
+    linear-gradient(rgba(70, 162, 148, 0.6), rgba(70, 162, 148, 0.6)),
+    url("../assets/images/image.PNG");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
