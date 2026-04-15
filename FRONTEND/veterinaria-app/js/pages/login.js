@@ -4,23 +4,37 @@ const message = document.querySelector(".error-message");
 form.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const email = document.querySelector("#email").value;
+  const username = document.querySelector("#username").value;
   const password = document.querySelector("#password").value;
 
-  const registeredUser = JSON.parse(localStorage.getItem("registeredUser"));
-
-  if (!registeredUser) {
-    message.textContent = "Usuario no existe";
-    return;
-  }
-
-  if (
-    Number(userId) === registeredUser.id &&
-    password === registeredUser.password
-  ) {
-    localStorage.setItem("sessionUser", JSON.stringify(registeredUser));
-    window.location.href = "profile.html";
-  } else {
-    message.textContent = "ID o contraseña incorrectos";
-  }
+  loginUser(username, password);
 });
+
+async function loginUser(username, password) {
+  try {
+    const url = "http://localhost:5000/users/login";
+
+    const userData = {
+      username: username,
+      password: password,
+    };
+
+    const response = await axios.post(url, userData);
+
+    const data = response.data;
+    localStorage.setItem("access_token", data.access_token);
+    alert("Login exitoso");
+    window.location.href = "index.html";
+    console.log(data);
+
+  } catch (error) {
+    console.log(error);
+
+    if (error.response) {
+      message.textContent = error.response.data.message;
+    } else {
+      message.textContent = "Error al conectar con el servidor";
+    }
+  }
+}
+
