@@ -1,3 +1,4 @@
-import { setupNavbar } from "../ui/navbar.js";
+import { renderNavbar, setupNavbar } from "../ui/navbar.js";
 
 setupNavbar();
+renderNavbar();

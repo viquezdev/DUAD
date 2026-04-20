@@ -1,3 +1,5 @@
+import { saveSession } from "../services/sessionService.js";
+
 const form = document.querySelector(".login-form");
 const message = document.querySelector(".error-message");
 
@@ -22,7 +24,7 @@ async function loginUser(username, password) {
     const response = await axios.post(url, userData);
 
     const data = response.data;
-    localStorage.setItem("access_token", data.access_token);
+    saveSession(data);
     alert("Login exitoso");
     window.location.href = "index.html";
     console.log(data);

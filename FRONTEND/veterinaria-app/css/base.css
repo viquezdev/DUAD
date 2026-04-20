@@ -13,3 +13,7 @@ body {
   font-family: "Quicksand";
   font-size: 2rem;
 }
+
+.hidden {
+  display: none;
+}
