@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/pages/register.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="./js/pages/register.js" defer></script>
   </head>
   <header>
@@ -30,7 +31,7 @@
     <section>
       <div class="banner-global">
         <div class="main-container">
-          <form action="">
+          <form class="login-form" action="">
             <div class="form-container">
               <p class="main-text">Crear cuenta</p>
               <p>Crea tu cuenta para acceder a todas las funciones.</p>
@@ -62,6 +63,7 @@
                 placeholder="Confirmar contraseña"
                 required
               />
+              <p class="error-message"></p>
               <button class="btn-register">Registrarse</button>
               <p>
                 ¿Ya tienes una cuenta? <a href="login.html">Iniciar sesión</a>
