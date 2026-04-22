@@ -25,6 +25,8 @@ form.addEventListener("submit", function (event) {
 
 async function registerUser(username, email, password) {
   try {
+    const ahora = new Date();
+    const timestamp = ahora.toISOString().slice(0, -1);
     const url = "http://localhost:5000/users/users";
 
     const userData = {
@@ -32,22 +34,22 @@ async function registerUser(username, email, password) {
       email: email,
       password: password,
       is_admin: false,
-      created_at: "",
-      updated_at: "",
+      created_at: timestamp,
+      updated_at: timestamp,
     };
 
     const response = await axios.post(url, userData);
 
     const data = response.data;
 
-    alert(data);
+    alert("Registro exitoso, ya puedes iniciar sesión.");
     window.location.href = "login.html";
     console.log(data);
   } catch (error) {
     console.log(error);
 
     if (error.response) {
-      message.textContent = error.response.data.message;
+      message.textContent = error.response.data.error;
     } else {
       message.textContent = "Error al conectar con el servidor";
     }
