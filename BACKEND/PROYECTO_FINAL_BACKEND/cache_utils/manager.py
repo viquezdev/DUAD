@@ -1,7 +1,7 @@
 from services.cache import CacheManager
 
 cache_manager = CacheManager(
-    host="redis-10935.c276.us-east-1-2.ec2.cloud.redislabs.com",
-    port=10935,
-    password="L961DGge8hKSqKHVYLlhlqvZb71p6xHt",
+    host="redis-16572.c240.us-east-1-3.ec2.cloud.redislabs.com",
+    port=16572,
+    password="tfJPzfzSpDxcfvr7CAB0J61cw2BsBs0L",
 )

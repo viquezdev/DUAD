@@ -44,7 +44,13 @@ def login():
         login_history_repo.create(user.id,datetime.utcnow(),request.remote_addr,True)
         return jsonify({
             "access_token": access_token,
-            "refresh_token": refresh_token
+            "refresh_token": refresh_token,
+            "user":{
+                "id":user.id,
+                "username":user.username,
+                "is_admin":user.is_admin
+            }
+
         }), 200
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}),500
@@ -99,21 +105,42 @@ def get_user_by_id(id):
     
 
 @users_bp.route("/users", methods=["POST"])
-@roles_required(True)
 def create_user():
     try:
-        user_data=request.get_json()
-        required_fields = ["username","password","email","is_admin","created_at","updated_at"]
-        missing_fields = [field for field in required_fields if field not in user_data]
+        user_data = request.get_json()
+
+        required_fields = ["username", "password", "email"]
+
+        missing_fields = [
+            field for field in required_fields
+            if field not in user_data
+        ]
+
         if missing_fields:
-            return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
-        new_user=users_repo.create(**user_data)
+            return jsonify({
+                "error": f"Missing fields: {', '.join(missing_fields)}"
+            }), 400
+
+        user_data["is_admin"] = False
+        user_data["created_at"] = datetime.utcnow()
+        user_data["updated_at"] = datetime.utcnow()
+
+        new_user = users_repo.create(**user_data)
+
         if new_user:
-            return jsonify({"message":"User created succesfully"}),201
-        return jsonify({"error":"username already exists"}),409 
+            return jsonify({
+                "message": "User created successfully"
+            }), 201
+
+        return jsonify({
+            "error": "username already exists"
+        }), 409
+
     except Exception as e:
-        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
+        return jsonify({
+            "error": "Unexpected error",
+            "details": str(e)
+        }), 500
 
 @users_bp.route("/users/<id>", methods=["PUT"])
 @roles_required(True)

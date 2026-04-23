@@ -5,10 +5,11 @@ from routes.product_routes import products_bp
 from routes.shopping_cart_routes import shopping_carts_bp
 from routes.invoice_routes import invoices_bp
 from routes.returns_routes import returns_bp
-
+from flask_cors import CORS
 
 
 app=Flask(__name__)
+CORS(app, resources={r"/users/*": {"origins": "*"}})
 app.register_blueprint(users_bp,url_prefix="/users")
 app.register_blueprint(products_bp,url_prefix="/products")
 app.register_blueprint(shopping_carts_bp,url_prefix="/shopping_carts")

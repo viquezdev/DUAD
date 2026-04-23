@@ -33,25 +33,20 @@ async function registerUser(username, email, password) {
       username: username,
       email: email,
       password: password,
-      is_admin: false,
-      created_at: timestamp,
-      updated_at: timestamp,
     };
 
     const response = await axios.post(url, userData);
 
     const data = response.data;
 
-    alert("Registro exitoso, ya puedes iniciar sesión.");
+    alert("Registro exitoso");
     window.location.href = "login.html";
     console.log(data);
   } catch (error) {
-    console.log(error);
-
     if (error.response) {
-      message.textContent = error.response.data.error;
+      message.textContent = error.response.data.error || "Error al registrar";
     } else {
-      message.textContent = "Error al conectar con el servidor";
+      message.textContent = "Error al conectar con servidor";
     }
   }
 }
