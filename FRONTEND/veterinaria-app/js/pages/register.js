@@ -25,8 +25,6 @@ form.addEventListener("submit", function (event) {
 
 async function registerUser(username, email, password) {
   try {
-    const ahora = new Date();
-    const timestamp = ahora.toISOString().slice(0, -1);
     const url = "http://localhost:5000/users/users";
 
     const userData = {

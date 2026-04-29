@@ -13,7 +13,6 @@ products_bp=Blueprint("products",__name__)
 
 
 @products_bp.route("/products", methods=["GET"])
-@roles_required()
 @verify_cache(cache_manager,key_func=lambda:generate_cache_products_all_key())
 def get_all_products():
     try:

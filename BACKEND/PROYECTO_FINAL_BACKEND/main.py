@@ -9,7 +9,10 @@ from flask_cors import CORS
 
 
 app=Flask(__name__)
-CORS(app, resources={r"/users/*": {"origins": "*"}})
+CORS(app, resources={
+    r"/users/*": {"origins": "*"},
+    r"/products/*": {"origins": "*"}
+})
 app.register_blueprint(users_bp,url_prefix="/users")
 app.register_blueprint(products_bp,url_prefix="/products")
 app.register_blueprint(shopping_carts_bp,url_prefix="/shopping_carts")

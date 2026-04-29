@@ -70,15 +70,16 @@
 }
 
 .banner-global {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 3rem;
 
   background-image:
     linear-gradient(rgba(70, 162, 148, 0.6), rgba(70, 162, 148, 0.6)),
     url("../assets/images/image.PNG");
-
+  background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
