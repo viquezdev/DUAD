@@ -27,7 +27,6 @@ def get_all_products():
     
 
 @products_bp.route("/products/<int:id>", methods=["GET"])
-@roles_required()
 @verify_cache(cache_manager,key_func=lambda id:generate_cache_product_key(id),time_to_live=600)
 def get_product_by_id(id):
     try:

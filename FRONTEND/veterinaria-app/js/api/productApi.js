@@ -10,3 +10,13 @@ export async function getProducts() {
     throw error;
   }
 }
+
+
+export async function getProductById(id) {
+  const url = `http://localhost:5000/products/products/${id}`;
+
+  const response = await axios.get(url);
+
+  return response.data;
+}
+

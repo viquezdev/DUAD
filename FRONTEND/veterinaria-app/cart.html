@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/cart.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="./js/pages/cart.js" defer></script>
+  </head>
+  <header>
+    <nav class="navbar-container">
+      <div class="nav-left">
+        <a class="nav-brand"
+          ><img src="assets/icons/logo.png" alt="logo" class="brand-image"
+        /></a>
+        <a href="index.html" class="nav-button">PetStore</a>
+      </div>
+      <div class="nav-center">
+        <a href="index.html" class="nav-button">Inicio</a>
+        <a href="products.html" class="nav-button">Productos</a>
+        <a class="nav-button">Acerca de</a>
+      </div>
+      <div class="nav-right">
+        <button id="btnLogin" class="btn">Iniciar sesión</button>
+        <p id="userInfo" class="hidden"></p>
+        <button id="btnLogout" class="btn hidden">Cerrar sesión</button>
+        <div class="cart-icon" id="cartIcon" class="hidden">
+          🛒
+          <span id="cartCount" class="cart-count hidden">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <body>
+    <h1>Carrito de compras</h1>
+
+    <div id="cartContainer"></div>
+
+    <h2 id="total"></h2>
+  </body>
+</html>
