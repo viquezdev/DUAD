@@ -1,11 +1,12 @@
-import { removeFromCart} from "../services/cartService.js";
+import { removeFromCart } from "../services/cartService.js";
 import { updateCartCount } from "./navbar.js";
 import { getCart } from "../services/cartService.js";
 
 export function renderCart(cart) {
   const container = document.querySelector("#cartContainer");
-
+  const checkoutContainer = document.querySelector(".totalContainer");
   if (cart.length === 0) {
+    checkoutContainer.classList.add("hidden");
     container.innerHTML = `
       <div class="empty-cart">
         <img src="assets/icons/carrito.png" class="empty-cart-img"/>
@@ -16,10 +17,13 @@ export function renderCart(cart) {
     `;
 
     document.querySelector("#total").textContent = "";
-    return; 
+    return;
   }
-
-  container.innerHTML = cart.map(item => `
+  checkoutContainer.classList.remove("hidden");
+  container.innerHTML = cart
+    .map(
+      (item) => `
+    
     <div class="cart-item">
       <h3>${item.name}</h3>
       <p>Precio: ₡ ${item.price}</p>
@@ -28,7 +32,9 @@ export function renderCart(cart) {
         Eliminar
       </button>
     </div>
-  `).join("");
+  `,
+    )
+    .join("");
 
   const total = cart.reduce((acc, item) => {
     return acc + item.price * item.quantity;
@@ -40,15 +46,12 @@ export function renderCart(cart) {
 }
 
 export function setupRemove() {
-
-  
-  document.querySelectorAll(".btn-remove").forEach(btn => {
+  document.querySelectorAll(".btn-remove").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.dataset.id;
       removeFromCart(id);
       updateCartCount();
       loadCart();
-      
     });
   });
 }
@@ -56,5 +59,4 @@ export function setupRemove() {
 function loadCart() {
   const cart = getCart();
   renderCart(cart);
-
 }
