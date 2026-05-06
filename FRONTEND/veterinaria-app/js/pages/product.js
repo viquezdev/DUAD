@@ -1,5 +1,5 @@
 import { getProductById } from "../api/productApi.js";
-import { renderProduct } from "../ui/renderProducts.js";
+import { renderProduct,setupProductClick } from "../ui/renderProducts.js";
 import { setupNavbar,renderNavbar } from "../ui/navbar.js";
 import { updateCartCount } from "../ui/navbar.js";
 
@@ -15,4 +15,5 @@ async function loadProduct() {
   const product = await getProductById(id);
 
   renderProduct(product);
+  setupProductClick(product);
 }

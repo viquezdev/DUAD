@@ -1,5 +1,5 @@
 import { getSession, clearSession } from "../services/sessionService.js";
-import { getCartCount } from "../services/cartService.js";
+import { getCartCount,clearCart } from "../services/cartService.js";
 
 
 export function setupNavbar() {
@@ -28,6 +28,7 @@ export function setupNavbar() {
       );
       if (salir) {
         clearSession();
+        clearCart();
         window.location.href = "login.html";
       }
     });

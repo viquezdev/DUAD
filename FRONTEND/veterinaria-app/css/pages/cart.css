@@ -14,3 +14,29 @@
 .btn-remove {
   margin-top: 0.5rem;
 }
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  text-align: center;
+}
+
+.empty-cart-img {
+  width: 5rem;
+  height: 5rem;
+  display: block;
+  margin: 1rem auto;
+}
+
+.empty-cart h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-cart p {
+  color: gray;
+  margin-bottom: 1rem;
+}

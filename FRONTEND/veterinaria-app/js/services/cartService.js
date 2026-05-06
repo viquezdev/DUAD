@@ -40,3 +40,9 @@ export function getCartCount() {
     return acc + item.quantity;
   }, 0);
 }
+
+
+export function clearCart(){
+    localStorage.removeItem("cart");
+}
+

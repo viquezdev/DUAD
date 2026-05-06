@@ -88,3 +88,30 @@ export function renderProduct(product) {
     </div>
   `;
 }
+
+
+export function setupProductClick(product) {
+  const container = document.querySelector("#productDetail");
+  const session=getSession();
+
+  if (!container) return;
+
+  container.addEventListener("click", (e) => {
+
+  
+    if (e.target.classList.contains("btn")) {
+
+      if(session){
+      addToCart(product);
+      updateCartCount();
+      alert("Producto agregado al carrito");
+      }
+      else{
+        alert("Debes iniciar sesion para poder agregar productos al carrito");
+      }
+    }
+
+
+
+  });
+}

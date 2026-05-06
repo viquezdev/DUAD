@@ -6,9 +6,17 @@ export function renderCart(cart) {
   const container = document.querySelector("#cartContainer");
 
   if (cart.length === 0) {
-    container.innerHTML = "<p>Carrito vacío</p>";
+    container.innerHTML = `
+      <div class="empty-cart">
+        <img src="assets/icons/carrito.png" class="empty-cart-img"/>
+        <h2>Tu carrito está vacío</h2>
+        <p>Agrega productos desde el catálogo.</p>
+        <a href="products.html" class="btn-products">Ver productos</a>
+      </div>
+    `;
+
     document.querySelector("#total").textContent = "";
-    return;
+    return; 
   }
 
   container.innerHTML = cart.map(item => `
@@ -22,17 +30,14 @@ export function renderCart(cart) {
     </div>
   `).join("");
 
-
   const total = cart.reduce((acc, item) => {
     return acc + item.price * item.quantity;
   }, 0);
 
   document.querySelector("#total").textContent = "Total: ₡ " + total;
 
-
   setupRemove();
 }
-
 
 export function setupRemove() {
 
