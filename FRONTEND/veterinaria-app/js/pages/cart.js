@@ -13,3 +13,8 @@ function loadCart() {
   const cart = getCart();
   renderCart(cart);
 }
+
+const btnCheckout = document.querySelector(".btn-checkout");
+btnCheckout.addEventListener("click", () => {
+  window.location.href = "checkout.html";
+});
