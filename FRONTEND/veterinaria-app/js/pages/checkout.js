@@ -1,9 +1,11 @@
 import { setupNavbar,renderNavbar } from "../ui/navbar.js";
 import { getCart } from "../services/cartService.js";
+import { updateCartCount } from "../ui/navbar.js";
+
 
 setupNavbar();
 renderNavbar();
-
+updateCartCount();
 
 loadCheckout();
 
@@ -49,4 +51,61 @@ function renderSummary(cart) {
 
   document.querySelector("#checkoutTotal").textContent =
     "₡" + subtotal.toFixed(2);
+}
+
+
+const confirmBtn = document.querySelector("#btnConfirm");
+
+confirmBtn.addEventListener("click", confirmCheckout);
+
+
+async function confirmCheckout() {
+
+  try {
+
+    const cart = getCart();
+
+    if (cart.length === 0) {
+      alert("El carrito está vacío");
+      return;
+    }
+
+    const address = document.querySelector("#address").value;
+
+    const paymentMethod =
+      document.querySelector("#paymentMethod").value;
+
+    if (!address || !paymentMethod) {
+      alert("Completa todos los campos");
+      return;
+    }
+
+    const total = cart.reduce((acc, item) => {
+      return acc + item.price * item.quantity;
+    }, 0);
+
+    const products = cart.map(item => ({
+      id: item.id,
+      quantity: item.quantity
+    }));
+
+    const checkoutData = {
+
+      billing_address: address,
+
+      payment_method: paymentMethod,
+
+      total_amount: total,
+
+      products: products
+    };
+
+    console.log(checkoutData);
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Error al procesar compra");
+  }
 }
