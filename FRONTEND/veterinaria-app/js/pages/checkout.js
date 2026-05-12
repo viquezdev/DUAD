@@ -1,9 +1,8 @@
-import { setupNavbar,renderNavbar } from "../ui/navbar.js";
+import { setupNavbar, renderNavbar } from "../ui/navbar.js";
 import { getCart } from "../services/cartService.js";
 import { updateCartCount } from "../ui/navbar.js";
 
 import { createCart } from "../api/cartApi.js";
-
 
 setupNavbar();
 renderNavbar();
@@ -12,17 +11,17 @@ updateCartCount();
 loadCheckout();
 
 function loadCheckout() {
-
   const cart = getCart();
 
   renderSummary(cart);
 }
 
 function renderSummary(cart) {
-
   const container = document.querySelector("#summaryContainer");
 
-  container.innerHTML = cart.map(item => `
+  container.innerHTML = cart
+    .map(
+      (item) => `
   
     <div class="summary-item">
 
@@ -42,29 +41,26 @@ function renderSummary(cart) {
   </div>
     </div>
 
-  `).join("");
+  `,
+    )
+    .join("");
 
   const subtotal = cart.reduce((acc, item) => {
     return acc + item.price * item.quantity;
   }, 0);
 
-  document.querySelector("#subtotal").textContent =
-    "₡" + subtotal.toFixed(2);
+  document.querySelector("#subtotal").textContent = "₡" + subtotal.toFixed(2);
 
   document.querySelector("#checkoutTotal").textContent =
     "₡" + subtotal.toFixed(2);
 }
 
-
 const confirmBtn = document.querySelector("#btnConfirm");
 
 confirmBtn.addEventListener("click", confirmCheckout);
 
-
 async function confirmCheckout() {
-
   try {
-
     const cart = getCart();
 
     if (cart.length === 0) {
@@ -74,8 +70,7 @@ async function confirmCheckout() {
 
     const address = document.querySelector("#address").value;
 
-    const paymentMethod =
-      document.querySelector("#paymentMethod").value;
+    const paymentMethod = document.querySelector("#paymentMethod").value;
 
     if (!address || !paymentMethod) {
       alert("Completa todos los campos");
@@ -86,32 +81,23 @@ async function confirmCheckout() {
       return acc + item.price * item.quantity;
     }, 0);
 
-    const products = cart.map(item => ({
+    const products = cart.map((item) => ({
       id: item.id,
-      quantity: item.quantity
+      quantity: item.quantity,
     }));
 
     const checkoutData = {
-
-      user_id:cart.user_id,
-
-      status:"active",
-
-      created_at:"",
-
       billing_address: address,
 
       payment_method: paymentMethod,
 
       total_amount: total,
 
-      products: products
+      products: products,
     };
 
-   createCart(checkoutData);
-
+    createCart(checkoutData);
   } catch (error) {
-
     console.log(error);
 
     alert("Error al procesar compra");
