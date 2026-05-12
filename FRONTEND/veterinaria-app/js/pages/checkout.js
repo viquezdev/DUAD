@@ -2,6 +2,8 @@ import { setupNavbar,renderNavbar } from "../ui/navbar.js";
 import { getCart } from "../services/cartService.js";
 import { updateCartCount } from "../ui/navbar.js";
 
+import { createCart } from "../api/cartApi.js";
+
 
 setupNavbar();
 renderNavbar();
@@ -91,6 +93,12 @@ async function confirmCheckout() {
 
     const checkoutData = {
 
+      user_id:cart.user_id,
+
+      status:"active",
+
+      created_at:"",
+
       billing_address: address,
 
       payment_method: paymentMethod,
@@ -100,7 +108,7 @@ async function confirmCheckout() {
       products: products
     };
 
-    console.log(checkoutData);
+   createCart(checkoutData);
 
   } catch (error) {
 
