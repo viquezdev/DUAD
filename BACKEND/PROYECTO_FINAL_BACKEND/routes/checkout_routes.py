@@ -4,6 +4,8 @@ from repositories.product_repository import ProductRepository
 from repositories.shopping_cart_repository import ShoppingCartRepository
 from repositories.shopping_cart_product_repository import ShoppingCartProductRepository
 from repositories.invoice_repository import InvoiceRepository
+from datetime import datetime
+from faker import Faker
 from db.db import SessionLocal
 
 
@@ -21,7 +23,8 @@ checkout_bp=Blueprint("checkout",__name__)
 @checkout_bp.route("/checkout", methods=["POST"])
 @roles_required(True)
 def checkout():
-
+    fake=Faker()
+    session=SessionLocal()
     try:
         user_data=get_jwt_identity()
 
@@ -57,7 +60,7 @@ def checkout():
             if item["quantity"] > product.quantity:
                 return jsonify({
                     "error":
-                    f"Insufficient stock for {product.name}"
+                    f"Insufficient stock for {product.na }"
                 }), 400
             subtotal = (
                 product.price * item["quantity"]
@@ -71,3 +74,52 @@ def checkout():
 
                 "subtotal": subtotal
             })
+
+        new_cart=shopping_cart_repo.create(user_id=user_data["sub"],status="active",created_at=datetime.utcnow())
+        for item in validated_products:
+            shopping_cart_product_repo.create(
+                shopping_cart_id=new_cart.id,
+                product_id=item["product"].id,
+                quantity=item["quantity"],
+                subtotal=item["subtotal"]
+            )
+            item["product"].quantity = (item["product"].quantity - item["quantity"])
+
+        new_invoice = invoice_repo.create(
+            invoice_number=fake.bothify("INV-####-??"),
+            user_id=user_data["sub"],
+            shopping_cart_id=new_cart.id,
+            created_at=datetime.utcnow(),
+            billing_address=data["billing_address"],
+            payment_method=data["payment_method"],
+            payment_status="pending",
+            total_amount=total_amount
+        )
+
+        session.commit()
+
+        return jsonify({
+
+            "message":
+            "Checkout completed successfully",
+
+            "shopping_cart":
+            new_cart.to_dict(),
+
+            "invoice":
+            new_invoice.to_dict()
+
+        }), 201
+    except Exception as e:
+
+        session.rollback()
+
+        return jsonify({
+            "error": "Unexpected error",
+            "details": str(e)
+        }), 500
+    
+    finally:
+
+        session.close()
+    
