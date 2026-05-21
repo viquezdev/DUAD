@@ -9,90 +9,94 @@ class ShoppingCartProductRepository:
     def __init__(self,session_factory=SessionLocal):
         self.session_factory=session_factory
 
-    def create(self, shopping_cart_id, product_id, quantity):
+    def create(self, session,shopping_cart_id, product_id, quantity):
         try:
-            with self.session_factory() as session:
-                found_cart = session.query(ShoppingCart).filter_by(id=shopping_cart_id).one_or_none()
-                if not found_cart:
-                    print(f"Shopping cart with id {shopping_cart_id} not found.")
-                    return None
+            found_cart = session.query(ShoppingCart).filter_by(id=shopping_cart_id).one_or_none()
+            if not found_cart:
+                print(f"Shopping cart with id {shopping_cart_id} not found.")
+                return None
 
-                found_product = session.query(Product).filter_by(id=product_id).one_or_none()
-                if not found_product:
-                    print(f"Product with id {product_id} not found.")
-                    return None
+            found_product = session.query(Product).filter_by(id=product_id).one_or_none()
+            if not found_product:
+                print(f"Product with id {product_id} not found.")
+                return None
 
-                if quantity <= 0:
-                    print("Quantity must be greater than 0.")
-                    return None
+            if quantity <= 0:
+                print("Quantity must be greater than 0.")
+                return None
 
-                subtotal = found_product.price * quantity
+            subtotal = found_product.price * quantity
 
-                new_item = ShoppingCartProduct(
-                    shopping_cart_id=shopping_cart_id,
-                    product_id=product_id,
-                    quantity=quantity,
-                    subtotal=subtotal
-                )
+            new_item = ShoppingCartProduct(
+                shopping_cart_id=shopping_cart_id,
+                product_id=product_id,
+                quantity=quantity,
+                subtotal=subtotal
+            )
 
-                session.add(new_item)
-                session.commit()
-                session.refresh(new_item)
+            session.add(new_item)
+            session.flush()
 
-                return new_item
+            return new_item
 
         except SQLAlchemyError as e:
             print(f"Error creating shopping cart product: {e}")
             return None
 
-    def update(self,id,shopping_cart_id,product_id,quantity):
+    def update(self,session,id,shopping_cart_id=None,product_id=None,quantity=None):
         try:
-            with self.session.factory() as session:
-                found_shopping_cart_product=session.query(ShoppingCartProduct).filter_by(id=id).one_or_none()
-                if not found_shopping_cart_product:
-                    print(f"Shopping cart product with id {id} not found.")
+            found_shopping_cart_product=session.query(ShoppingCartProduct).filter_by(id=id).one_or_none()
+            if not found_shopping_cart_product:
+                print(f"Shopping cart product with id {id} not found.")
+                return None
+            found_product=None
+            if shopping_cart_id:
+                found_shopping_cart=session.query(ShoppingCart).filter_by(id=shopping_cart_id).one_or_none()
+                if not found_shopping_cart:
+                    print(f"Shopping cart with id {shopping_cart_id} not found.")
                     return None
-                if shopping_cart_id:
-                    found_shopping_cart=session.query(ShoppingCart).filter_by(id=shopping_cart_id).one_or_none()
-                    if not found_shopping_cart:
-                        print(f"Shopping cart with id {shopping_cart_id} not found.")
-                        return None
-                if product_id:
-                    found_product=session.query(Product).filter_by(id=product_id).one_or_none()
-                    if not found_product:
-                        print(f"Product with id {product_id} not found.")
-                        return None
-                    
+            if product_id:
+                found_product=session.query(Product).filter_by(id=product_id).one_or_none()
+                if not found_product:
+                    print(f"Product with id {product_id} not found.")
+                    return None
+            if quantity is not None:
                 if quantity <= 0:
                     print("Quantity must be greater than 0.")
                     return None
 
-                subtotal = found_product.price * quantity
-                
-                fields={
-                    "shopping_cart_id":shopping_cart_id,
-                    "product_id":product_id,
-                    "quantity":quantity,
-                    "subtotal":subtotal
-                }
-                for attr,value in fields.items():
-                    if value is not None:
-                        setattr(found_shopping_cart_product,attr,value)
-                session.commit()
-                session.refresh(found_shopping_cart_product)
+            subtotal = found_shopping_cart_product.subtotal
+
+            if quantity is not None:
+                if found_product:
+                    subtotal=(found_product.price*quantity)
+                else:
+                    current_product=session.query(Product).filter_by(id=found_shopping_cart_product.product_id).one_or_none()
+                    subtotal=(current_product.price*quantity)
+            
+            fields={
+                "shopping_cart_id":shopping_cart_id,
+                "product_id":product_id,
+                "quantity":quantity,
+                "subtotal":subtotal
+            }
+            for attr,value in fields.items():
+                if value is not None:
+                    setattr(found_shopping_cart_product,attr,value)
+            session.flush()
+            return found_shopping_cart_product
         except SQLAlchemyError as e:
             print(f"Error updating shopping cart product: {e}")
 
-    def delete(self,id):
+    def delete(self,session,id):
         try:
-            with self.session_factory() as session:
-                found_shopping_cart_product=session.query(ShoppingCartProduct).filter_by(id=id).one_or_none()
-                if not found_shopping_cart_product:
-                    print(f"Shopping cart product with id {id} not found.")
-                    return None
-                session.delete(found_shopping_cart_product)
-                session.commit()
-                return found_shopping_cart_product
+            found_shopping_cart_product=session.query(ShoppingCartProduct).filter_by(id=id).one_or_none()
+            if not found_shopping_cart_product:
+                print(f"Shopping cart product with id {id} not found.")
+                return None
+            session.delete(found_shopping_cart_product)
+            session.flush()
+            return found_shopping_cart_product
         except SQLAlchemyError as e:
             print(f"Error deleting return: {e}")
 
@@ -137,25 +141,23 @@ class ShoppingCartProductRepository:
             return None
 
     
-    def update_quantity(self, cart_product_id, quantity):
+    def update_quantity(self,session, cart_product_id, quantity):
         try:
-            with self.session_factory() as session:
-                item = session.query(ShoppingCartProduct).filter_by(id=cart_product_id).one_or_none()
-                if not item:
-                    print(f"Shopping cart product with id {cart_product_id} not found.")
-                    return None
+            item = session.query(ShoppingCartProduct).filter_by(id=cart_product_id).one_or_none()
+            if not item:
+                print(f"Shopping cart product with id {cart_product_id} not found.")
+                return None
 
-                product = session.query(Product).filter_by(id=item.product_id).one_or_none()
-                if not product:
-                    print(f"Product with id {item.product_id} not found.")
-                    return None
+            product = session.query(Product).filter_by(id=item.product_id).one_or_none()
+            if not product:
+                print(f"Product with id {item.product_id} not found.")
+                return None
 
-                item.quantity = quantity
-                item.subtotal = product.price * quantity
+            item.quantity = quantity
+            item.subtotal = product.price * quantity
 
-                session.commit()
-                session.refresh(item)
-                return item
+            session.flush()
+            return item
 
         except SQLAlchemyError as e:
             print(f"Error updating quantity: {e}")

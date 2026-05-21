@@ -4,6 +4,7 @@ from repositories.product_repository import ProductRepository
 from repositories.shopping_cart_repository import ShoppingCartRepository
 from repositories.shopping_cart_product_repository import ShoppingCartProductRepository
 from repositories.invoice_repository import InvoiceRepository
+from models.product import Product
 from datetime import datetime
 from faker import Faker
 from db.db import SessionLocal
@@ -21,7 +22,7 @@ checkout_bp=Blueprint("checkout",__name__)
 
 
 @checkout_bp.route("/checkout", methods=["POST"])
-@roles_required(True)
+@roles_required()
 def checkout():
     fake=Faker()
     session=SessionLocal()
@@ -49,7 +50,7 @@ def checkout():
         validated_products=[]
 
         for item in products:
-            product = product_repo.get_by_id(item["id"])
+            product = session.query(Product).filter_by(id=item["id"]).one_or_none()
             if not product:
                 return jsonify({"error": f"Product {item['id']} not found"}), 404
             if item["quantity"] <= 0:
@@ -60,7 +61,7 @@ def checkout():
             if item["quantity"] > product.quantity:
                 return jsonify({
                     "error":
-                    f"Insufficient stock for {product.na }"
+                    f"Insufficient stock for {product.name }"
                 }), 400
             subtotal = (
                 product.price * item["quantity"]
@@ -75,17 +76,29 @@ def checkout():
                 "subtotal": subtotal
             })
 
-        new_cart=shopping_cart_repo.create(user_id=user_data["sub"],status="active",created_at=datetime.utcnow())
+        new_cart=shopping_cart_repo.create(session,user_id=user_data["sub"],status="active",created_at=datetime.utcnow())
+        if not new_cart:
+            session.rollback()
+
+            return jsonify({
+                "error": "Could not create cart"
+            }), 500
         for item in validated_products:
-            shopping_cart_product_repo.create(
+            new_cart_product = shopping_cart_product_repo.create(
+                session,
                 shopping_cart_id=new_cart.id,
                 product_id=item["product"].id,
-                quantity=item["quantity"],
-                subtotal=item["subtotal"]
+                quantity=item["quantity"]
             )
-            item["product"].quantity = (item["product"].quantity - item["quantity"])
+            if not new_cart_product:
+                session.rollback()
+                return jsonify({
+                    "error": "Could not create cart product"
+                }), 500
+            item["product"].quantity -= item["quantity"]
 
         new_invoice = invoice_repo.create(
+            session,
             invoice_number=fake.bothify("INV-####-??"),
             user_id=user_data["sub"],
             shopping_cart_id=new_cart.id,
@@ -95,6 +108,12 @@ def checkout():
             payment_status="pending",
             total_amount=total_amount
         )
+        if not new_invoice:
+            session.rollback()
+
+            return jsonify({
+                "error": "Could not create invoice"
+            }), 500
 
         session.commit()
 
