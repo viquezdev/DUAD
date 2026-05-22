@@ -40,7 +40,7 @@ export function renderCart(cart) {
     return acc + item.price * item.quantity;
   }, 0);
 
-  document.querySelector("#total").textContent = "Total: ₡ " + total;
+  document.querySelector("#total").textContent = "Total: ₡ " +Number(total.toFixed(2)) ;
 
   setupRemove();
 }

@@ -21,7 +21,7 @@ class Product(Base):
             "id":self.id,
             "sku":self.sku,
             "name":self.name,
-            "price":self.price,
+            "price":float(self.price),
             "description":self.description,
             "quantity":self.quantity
         }

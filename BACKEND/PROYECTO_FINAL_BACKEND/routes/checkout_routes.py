@@ -5,6 +5,8 @@ from repositories.shopping_cart_repository import ShoppingCartRepository
 from repositories.shopping_cart_product_repository import ShoppingCartProductRepository
 from repositories.invoice_repository import InvoiceRepository
 from models.product import Product
+from cache_utils.manager import cache_manager
+from cache_utils.product_keys import generate_cache_product_key, generate_cache_products_all_key
 from datetime import datetime
 from faker import Faker
 from db.db import SessionLocal
@@ -116,6 +118,9 @@ def checkout():
             }), 500
 
         session.commit()
+        for item in validated_products:
+            cache_manager.delete_data(generate_cache_product_key(item["product"].id))
+        cache_manager.delete_data(generate_cache_products_all_key())
 
         return jsonify({
 

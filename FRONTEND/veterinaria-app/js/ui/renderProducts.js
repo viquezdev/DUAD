@@ -6,6 +6,11 @@ import { updateCartCount } from "./navbar.js";
 export function renderProducts(products) {
   const container = document.querySelector("#productsContainer");
 
+  const formatter = new Intl.NumberFormat("es-CR", {
+    style: "currency",
+    currency: "CRC",
+  });
+
   container.innerHTML = products
     .map(
       (product) => `
@@ -15,20 +20,34 @@ export function renderProducts(products) {
       <p>${product.description}</p>
 
       <p class="price">
-        ₡ ${Number(product.price).toFixed(2)}
+        ${formatter.format(Number(product.price))}
       </p>
 
-      <p>Stock: ${product.quantity}</p>
+      <p class="${
+        product.quantity === 0 ? "out-stock" : "in-stock"
+      }">
+        ${
+          product.quantity === 0
+            ? "Agotado"
+            : `Stock: ${product.quantity}`
+        }
+      </p>
 
-      <button class="btn">
-        Agregar al carrito
+      <button 
+        class="btn"
+        ${product.quantity === 0 ? "disabled" : ""}
+      >
+        ${
+          product.quantity === 0
+            ? "Sin stock"
+            : "Agregar al carrito"
+        }
       </button>
     </div>
   `,
     )
     .join("");
 }
-
 
 
 export function setupCardClicks(products) {

@@ -13,7 +13,7 @@ export async function createCart(cartData) {
     const token = session.access_token;
 
     const url =
-      "http://localhost:5000/shopping_carts/shopping_carts";
+      "http://localhost:5000/checkout/checkout";
 
     const response = await axios.post(
       url,
