@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/admin-dashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="./js/pages/admin-dashboard.js" defer></script>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar-container">
+        <div class="nav-left">
+          <a class="nav-brand"
+            ><img src="assets/icons/logo.png" alt="logo" class="brand-image"
+          /></a>
+          <a href="index.html" class="nav-button">PetStore</a>
+        </div>
+        <div class="nav-center">
+          <a href="index.html" class="nav-button">Inicio</a>
+          <a href="products.html" class="nav-button">Productos</a>
+          <a class="nav-button">Acerca de</a>
+          <a
+            href="admin-dashboard.html"
+            id="adminLink"
+            class="nav-button hidden"
+            >Administración</a
+          >
+        </div>
+        <div class="nav-right">
+          <button id="btnLogin" class="btn">Iniciar sesión</button>
+          <p id="userInfo" class="hidden"></p>
+          <button id="btnLogout" class="btn hidden">Cerrar sesión</button>
+          <div class="cart-icon" id="cartIcon" class="hidden" hidden>
+            🛒
+            <span id="cartCount" class="cart-count hidden">0</span>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main class="admin-page">
+      <section class="list-products">
+        <h2>Listado de productos</h2>
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody id="productsTableBody"></tbody>
+        </table>
+      </section>
+
+      <section class="add-product">
+        <h2>Agregar producto</h2>
+        <form id="addProductForm">
+          <label for="sku"> SKU: </label>
+          <input type="text" id="sku" placeholder="SKU del producto" required />
+
+          <label for="name"> Nombre del producto: </label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Nombre del producto"
+            required
+          />
+
+          <label for="price"> Precio del producto: </label>
+          <input
+            type="text"
+            id="price"
+            placeholder="Precio del producto"
+            required
+          />
+
+          <label for="description"> Descripción del producto: </label>
+          <input
+            type="text"
+            id="description"
+            placeholder="Descripcion del producto"
+            required
+          />
+
+          <label for="quantity"> Cantidad: </label>
+          <input
+            type="number"
+            id="quantity"
+            placeholder="Cantidad del producto"
+            required
+          />
+
+          <button type="submit" class="btn">Agregar producto</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

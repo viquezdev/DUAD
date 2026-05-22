@@ -1,0 +1,48 @@
+.admin-page {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem;
+}
+
+.list-products,
+.add-product {
+  background: white;
+
+  width: 50rem;
+
+  padding: 2rem;
+
+  border-radius: 1rem;
+
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+#addProductForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#addProductForm label {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+#addProductForm input {
+  width: 100%;
+  font-size: 1.5rem;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+#addProductForm button {
+  margin-top: 1rem;
+}
+
+.products-table th {
+  padding: 1rem;
+}

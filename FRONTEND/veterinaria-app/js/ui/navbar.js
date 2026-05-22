@@ -1,6 +1,5 @@
 import { getSession, clearSession } from "../services/sessionService.js";
-import { getCartCount,clearCart } from "../services/cartService.js";
-
+import { getCartCount, clearCart } from "../services/cartService.js";
 
 export function setupNavbar() {
   const loginBtn = document.querySelector("#btnLogin");
@@ -40,6 +39,7 @@ export function renderNavbar() {
   const loginBtn = document.querySelector("#btnLogin");
   const userInfo = document.querySelector("#userInfo");
   const logoutBtn = document.querySelector("#btnLogout");
+  const adminLink = document.querySelector("#adminLink");
 
   if (session) {
     loginBtn.classList.add("hidden");
@@ -48,15 +48,19 @@ export function renderNavbar() {
     logoutBtn.classList.remove("hidden");
     cartIcon.classList.remove("hidden");
     cartCount.classList.remove("hidden");
+
+    if (session.user.is_admin) {
+      adminLink.classList.remove("hidden");
+    }
   } else {
     loginBtn.classList.remove("hidden");
     userInfo.classList.add("hidden");
     logoutBtn.classList.add("hidden");
     cartIcon.classList.add("hidden");
     cartCount.classList.add("hidden");
+    adminLink.classList.add("hidden");
   }
 }
-
 
 export function updateCartCount() {
   const count = getCartCount();
@@ -67,5 +71,3 @@ export function updateCartCount() {
 
   cartCount.textContent = count;
 }
-
-

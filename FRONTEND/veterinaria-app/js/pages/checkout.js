@@ -61,7 +61,6 @@ confirmBtn.addEventListener("click", confirmCheckout);
 
 async function confirmCheckout() {
   try {
-
     const cart = getCart();
 
     if (cart.length === 0) {
@@ -69,11 +68,9 @@ async function confirmCheckout() {
       return;
     }
 
-    const address =
-      document.querySelector("#address").value;
+    const address = document.querySelector("#address").value;
 
-    const paymentMethod =
-      document.querySelector("#paymentMethod").value;
+    const paymentMethod = document.querySelector("#paymentMethod").value;
 
     if (!address || !paymentMethod) {
       alert("Completa todos los campos");
@@ -99,8 +96,7 @@ async function confirmCheckout() {
       products: products,
     };
 
-    const response =
-      await createCart(checkoutData);
+    const response = await createCart(checkoutData);
 
     localStorage.setItem(
       "lastOrder",
@@ -108,16 +104,14 @@ async function confirmCheckout() {
         products: cart,
         total: total,
         invoice: response.invoice,
-      })
+      }),
     );
 
     localStorage.removeItem("cart");
+    alert("Su compra se realizó exitosamente");
 
-    window.location.href =
-      "order-confirmation.html";
-
+    window.location.href = "order-confirmation.html";
   } catch (error) {
-
     console.log(error);
 
     alert("Error al procesar compra");
