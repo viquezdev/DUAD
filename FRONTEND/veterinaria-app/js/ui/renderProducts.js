@@ -101,8 +101,26 @@ export function renderProduct(product) {
       <h1>${product.name}</h1>
       <p>${product.description}</p>
       <p class="price">₡ ${Number(product.price).toFixed(2)}</p>
-      <p>Stock: ${product.quantity}</p>
-      <button class="btn">Agregar al carrito</button>
+      <p class="${
+        product.quantity === 0 ? "out-stock" : "in-stock"
+      }">
+        ${
+          product.quantity === 0
+            ? "Agotado"
+            : `Stock: ${product.quantity}`
+        }
+      </p>
+
+      <button 
+        class="btn"
+        ${product.quantity === 0 ? "disabled" : ""}
+      >
+        ${
+          product.quantity === 0
+            ? "Sin stock"
+            : "Agregar al carrito"
+        }
+      </button>
       <a href="products.html">Regresar al catálogo de productos</a>
     </div>
   `;

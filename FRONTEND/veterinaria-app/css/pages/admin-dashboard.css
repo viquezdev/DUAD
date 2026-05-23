@@ -1,5 +1,7 @@
 .admin-page {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 2rem;
   padding: 3rem;
@@ -9,7 +11,7 @@
 .add-product {
   background: white;
 
-  width: 50rem;
+  width: 100%;
 
   padding: 2rem;
 
@@ -19,19 +21,20 @@
   text-align: center;
 }
 
-#addProductForm {
+.addProductForm {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  margin-top: 1.5 rem;
 }
 
-#addProductForm label {
+.addProductForm label {
   font-size: 1.8rem;
   font-weight: bold;
   text-align: left;
 }
 
-#addProductForm input {
+.addProductForm input {
   width: 100%;
   font-size: 1.5rem;
   padding: 0.8rem;
@@ -39,10 +42,15 @@
   border: 1px solid #ccc;
 }
 
-#addProductForm button {
+.addProductForm button {
   margin-top: 1rem;
 }
 
 .products-table th {
   padding: 1rem;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
 }

@@ -59,7 +59,7 @@
 
       <section class="add-product">
         <h2>Agregar producto</h2>
-        <form id="addProductForm">
+        <form class="addProductForm" action="">
           <label for="sku"> SKU: </label>
           <input type="text" id="sku" placeholder="SKU del producto" required />
 
@@ -73,9 +73,11 @@
 
           <label for="price"> Precio del producto: </label>
           <input
-            type="text"
+            type="number"
             id="price"
-            placeholder="Precio del producto"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
             required
           />
 
@@ -91,10 +93,13 @@
           <input
             type="number"
             id="quantity"
-            placeholder="Cantidad del producto"
+            min="1"
+            step="1"
+            placeholder="0"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57;"
             required
           />
-
+          <p class="error-message"></p>
           <button type="submit" class="btn">Agregar producto</button>
         </form>
       </section>

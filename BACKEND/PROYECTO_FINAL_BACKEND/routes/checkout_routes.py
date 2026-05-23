@@ -144,6 +144,5 @@ def checkout():
         }), 500
     
     finally:
-
         session.close()
     
