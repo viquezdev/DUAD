@@ -83,3 +83,37 @@ export async function deleteProductById(id) {
   }
   
 }
+
+
+export async function updateProduct(id,sku, name, price,description,quantity) {
+  try {
+
+    const url = `http://localhost:5000/products/products/${id}`;
+
+    const productData = {
+      sku: sku,
+      name: name,
+      price: price,
+      description:description,
+      quantity:quantity
+    };
+
+    const response = await axios.put(
+        url, 
+        productData,
+        {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    return response.data;
+
+   } catch (error) {
+
+    console.log(error);
+
+    throw error;
+  }
+}

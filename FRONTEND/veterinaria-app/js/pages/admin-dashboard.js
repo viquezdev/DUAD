@@ -1,7 +1,7 @@
 import { setupNavbar, renderNavbar } from "../ui/navbar.js";
 import { getSession } from "../services/sessionService.js";
 import { updateCartCount } from "../ui/navbar.js";
-import { registerProduct,getProducts,deleteProductById } from "../api/productApi.js";
+import { registerProduct,getProducts,deleteProductById,getProductById } from "../api/productApi.js";
 
 setupNavbar();
 renderNavbar();
@@ -10,16 +10,15 @@ showProducts();
 const form = document.querySelector(".addProductForm");
 const message = document.querySelector(".error-message");
 
+
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
-
+  message.textContent = "";
   const sku = document.querySelector("#sku").value.trim();
   const name = document.querySelector("#name").value.trim();
   const price = document.querySelector("#price").value;
   const description = document.querySelector("#description").value.trim();
   const quantity = document.querySelector("#quantity").value;
-
-  message.textContent = "";
 
   try {
     await registerProduct(
@@ -113,7 +112,7 @@ tableBody.addEventListener("click", async function (event) {
 
   if (event.target.classList.contains("btn-delete")) {
 
-    const productId = event.target.dataset.id;
+    const productId =event.target.dataset.id;
 
     const confirmDelete = confirm("¿Seguro que deseas eliminar este producto?");
 
@@ -125,10 +124,9 @@ tableBody.addEventListener("click", async function (event) {
 
       alert("Producto eliminado");
 
-      showProducts();
+      await showProducts();
 
-    }
-    catch (error) {
+    } catch (error) {
 
       console.log(error);
 
@@ -139,11 +137,13 @@ tableBody.addEventListener("click", async function (event) {
 
   if (event.target.classList.contains("btn")) {
 
-    const productId = event.target.dataset.id;
+    const productId =event.target.dataset.id;
 
-    console.log("Editar producto:", productId);
+    const confirmEdit = confirm("¿Seguro que deseas editar este producto?");
 
+    if (!confirmEdit) return;
+
+    window.location.href =
+      `edit-product.html?id=${productId}`;
   }
-
 });
-
