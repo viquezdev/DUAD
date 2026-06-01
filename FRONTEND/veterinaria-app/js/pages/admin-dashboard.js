@@ -2,10 +2,13 @@ import { setupNavbar, renderNavbar } from "../ui/navbar.js";
 import { getSession } from "../services/sessionService.js";
 import { updateCartCount } from "../ui/navbar.js";
 import { registerProduct,getProducts,deleteProductById,getProductById } from "../api/productApi.js";
+import {getSales} from "../api/salesApi.js";
+
 
 setupNavbar();
 renderNavbar();
 showProducts();
+showSales();
 
 const form = document.querySelector(".addProductForm");
 const message = document.querySelector(".error-message");
@@ -147,3 +150,40 @@ tableBody.addEventListener("click", async function (event) {
       `edit-product.html?id=${productId}`;
   }
 });
+
+
+
+
+async function showSales() {
+
+  try {
+
+    const sales = await getSales();
+    const tableBody = document.querySelector("#salesTableBody");
+
+    tableBody.innerHTML = sales
+      .map((sale) => `
+
+        <tr>
+
+          <td>${sale.invoice_number}</td>
+
+          <td>${sale.created_at}</td>
+
+          <td> ${sale.username} </td>
+
+          <td>${sale.payment_method}</td>
+
+          <td>${sale.payment_status}</td>
+
+          <td>${sale.total_amount}</td>
+        </tr>
+
+      `)
+      .join("");
+
+  } catch (error) {
+
+    console.log(error);
+  }
+}

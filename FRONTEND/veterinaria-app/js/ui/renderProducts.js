@@ -11,7 +11,9 @@ export function renderProducts(products) {
     currency: "CRC",
   });
 
-  container.innerHTML = products
+  if(products){
+    container.classList.add("products-grid");
+    container.innerHTML = products
     .map(
       (product) => `
     <div class="product-card" data-id="${product.id}">
@@ -47,6 +49,20 @@ export function renderProducts(products) {
   `,
     )
     .join("");
+  }
+  else{
+    container.classList.remove("products-grid");
+    container.innerHTML = `
+      <div class="empty-container">
+      <div class="empty-catalog">
+        <img src="assets/icons/stock-out.svg" class="empty-catalog-img"/>
+        <h2>El catálogo está vacío</h2>
+        <p>No existen productos disponibles.</p>
+        <a href="index.html" class="btn-products">Ir a inicio</a>
+      </div></div>
+    `;
+  }
+  
 }
 
 

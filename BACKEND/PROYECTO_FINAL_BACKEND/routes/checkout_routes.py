@@ -7,6 +7,8 @@ from repositories.invoice_repository import InvoiceRepository
 from models.product import Product
 from cache_utils.manager import cache_manager
 from cache_utils.product_keys import generate_cache_product_key, generate_cache_products_all_key
+from cache_utils.invoice_keys import generate_cache_invoices_all_key
+
 from datetime import datetime
 from faker import Faker
 from db.db import SessionLocal
@@ -107,7 +109,7 @@ def checkout():
             created_at=datetime.utcnow(),
             billing_address=data["billing_address"],
             payment_method=data["payment_method"],
-            payment_status="pending",
+            payment_status="completed",
             total_amount=total_amount
         )
         if not new_invoice:
@@ -118,6 +120,7 @@ def checkout():
             }), 500
 
         session.commit()
+        cache_manager.delete_data(generate_cache_invoices_all_key)
         for item in validated_products:
             cache_manager.delete_data(generate_cache_product_key(item["product"].id))
         cache_manager.delete_data(generate_cache_products_all_key())

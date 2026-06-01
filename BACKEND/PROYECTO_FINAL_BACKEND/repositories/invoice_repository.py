@@ -2,6 +2,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.invoice import Invoice
 from models.user import User
 from models.shopping_cart import ShoppingCart
+from sqlalchemy.orm import joinedload
 from repositories.shopping_cart_product_repository import ShoppingCartProductRepository
 from db.db import SessionLocal
 
@@ -94,7 +95,11 @@ class InvoiceRepository:
     def get_all(self):
         try:
             with self.session_factory() as session:
-                invoices=session.query(Invoice).all()
+                invoices = (
+                    session.query(Invoice)
+                    .options(joinedload(Invoice.user))
+                    .all()
+                )
                 return invoices
         except SQLAlchemyError as e:
             print(f"Error fetching invoices: {e}")

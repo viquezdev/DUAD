@@ -8,6 +8,7 @@
 }
 
 .list-products,
+.list-sales,
 .add-product {
   background: white;
 
@@ -46,7 +47,8 @@
   margin-top: 1rem;
 }
 
-.products-table th {
+.products-table,
+.sales-table th {
   padding: 1rem;
 }
 

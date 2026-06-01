@@ -4,11 +4,27 @@ import { saveSession } from "../services/sessionService.js";
 const form = document.querySelector(".login-form");
 const message = document.querySelector(".error-message");
 
+function validate(username,password){
+  if (!username.trim()) return "El usuario no puede estar vacío.";
+  if (!password.trim()) return "La contraseña no puede estar vacía.";
+  return null;
+}
+
+
+
 form.addEventListener("submit", function (event) {
   event.preventDefault();
 
   const username = document.querySelector("#username").value;
   const password = document.querySelector("#password").value;
+
+  message.textContent = "";
+
+  const error = validate(username,password);
+  if (error) {
+    message.textContent = error;
+    return;
+  }
 
   loginUser(username, password);
 });
@@ -34,7 +50,7 @@ async function loginUser(username, password) {
     console.log(error);
 
     if (error.response) {
-      message.textContent = error.response.data.message;
+      message.textContent = error.response.data.error;
     } else {
       message.textContent = "Error al conectar con el servidor";
     }

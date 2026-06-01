@@ -14,7 +14,8 @@ CORS(app, resources={
     r"/users/*": {"origins": "*"},
     r"/products/*": {"origins": "*"},
     r"/shopping_carts/*": {"origins": "*"},
-    r"/checkout/*": {"origins": "*"}
+    r"/checkout/*": {"origins": "*"},
+    r"/invoices/*": {"origins": "*"}
 
 })
 app.register_blueprint(users_bp,url_prefix="/users")

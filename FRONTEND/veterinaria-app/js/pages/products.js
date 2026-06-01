@@ -14,6 +14,7 @@ async function loadProducts() {
     const products = await getProducts();
 
     renderProducts(products);
+   
     setupCardClicks(products);
   } catch (error) {
     console.log(error);
