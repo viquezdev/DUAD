@@ -1,21 +1,19 @@
-
 import { getSession } from "../services/sessionService.js";
 
-const session=getSession();
-const token=session.access_token;
+const session = getSession();
+if (session) {
+  const token = session.access_token;
+}
 
 export async function getSales() {
   try {
     const url = "http://localhost:5000/invoices/invoices";
 
-    const response = await axios.get(
-      url,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -23,5 +21,3 @@ export async function getSales() {
     throw error;
   }
 }
-
-
