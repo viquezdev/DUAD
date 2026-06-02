@@ -9,12 +9,9 @@ if (session) {
 export async function getProducts() {
   try {
     const url = "http://localhost:5000/products/products";
-
     const response = await axios.get(url);
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -25,7 +22,6 @@ export async function getProductById(id) {
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -50,8 +46,6 @@ export async function registerProduct(sku, name, price, description, quantity) {
 
     return response.data;
   } catch (error) {
-    console.log(error);
-
     throw error;
   }
 }
@@ -66,7 +60,6 @@ export async function deleteProductById(id) {
     });
     return response.data;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -98,8 +91,6 @@ export async function updateProduct(
 
     return response.data;
   } catch (error) {
-    console.log(error);
-
     throw error;
   }
 }

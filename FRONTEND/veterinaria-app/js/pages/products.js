@@ -8,6 +8,7 @@ renderNavbar();
 loadProducts();
 updateCartCount();
 
+const errorMessage = document.querySelector("#productsError");
 
 async function loadProducts() {
   try {
@@ -17,6 +18,12 @@ async function loadProducts() {
    
     setupCardClicks(products);
   } catch (error) {
-    console.log(error);
+    if (error.response) {
+      errorMessage.textContent = error.response.data.error || "No fue posible cargar los productos";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+
+    }
+     errorMessage.classList.add("show");
   }
 }

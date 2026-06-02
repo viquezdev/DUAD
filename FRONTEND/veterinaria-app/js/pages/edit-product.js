@@ -1,9 +1,17 @@
 import { getProductById } from "../api/productApi.js";
 import { setupNavbar, renderNavbar } from "../ui/navbar.js";
 import { updateProduct } from "../api/productApi.js";
+import { getSession } from "../services/sessionService.js";
 
 setupNavbar();
 renderNavbar();
+
+const session = getSession();
+console.log(session);
+if (!session || !session.user || !session.user.is_admin) {
+  window.location.replace("index.html");
+  throw new Error("Unauthorized");
+}
 
 const form = document.querySelector(".addProductForm");
 const message = document.querySelector(".error-message");

@@ -9,11 +9,25 @@ loadProduct();
 updateCartCount();
 
 async function loadProduct() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const errorMessage = document.querySelector("#errorMessage");
 
-  const product = await getProductById(id);
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
 
-  renderProduct(product);
-  setupProductClick(product);
+    const product = await getProductById(id);
+
+    renderProduct(product);
+    setupProductClick(product);
+
+  } catch (error) {
+
+    errorMessage.classList.add("show");
+
+    if (error.response) {
+      errorMessage.textContent = error.response.data.error || "No se pudo cargar el producto";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+    }
+  }
 }
