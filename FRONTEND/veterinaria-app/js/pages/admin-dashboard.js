@@ -10,7 +10,7 @@ import {
 import { getSales } from "../api/salesApi.js";
 
 const session = getSession();
-console.log(session);
+
 if (!session || !session.user || !session.user.is_admin) {
   window.location.replace("index.html");
   throw new Error("Unauthorized");
@@ -51,6 +51,7 @@ form.addEventListener("submit", async function (event) {
 });
 
 async function showProducts() {
+  const errorMessage = document.querySelector("#adminError");
   try {
     const products = await getProducts();
 
@@ -96,7 +97,13 @@ async function showProducts() {
       )
       .join("");
   } catch (error) {
-    console.log(error);
+    if (error.response) {
+      errorMessage.textContent =
+        error.response.data.error || "No fue posible cargar los productos";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+    }
+    errorMessage.classList.add("show");
   }
 }
 
@@ -117,8 +124,6 @@ tableBody.addEventListener("click", async function (event) {
 
       await showProducts();
     } catch (error) {
-      console.log(error);
-
       alert("Error eliminando producto");
     }
   }
@@ -135,6 +140,7 @@ tableBody.addEventListener("click", async function (event) {
 });
 
 async function showSales() {
+  const errorMessage = document.querySelector("#adminError");
   try {
     const sales = await getSales();
     const tableBody = document.querySelector("#salesTableBody");
@@ -162,6 +168,12 @@ async function showSales() {
       )
       .join("");
   } catch (error) {
-    console.log(error);
+    if (error.response) {
+      errorMessage.textContent =
+        error.response.data.error || "No fue posible cargar las ventas";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+    }
+    errorMessage.classList.add("show");
   }
 }

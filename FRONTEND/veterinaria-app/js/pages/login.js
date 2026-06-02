@@ -1,16 +1,13 @@
 import { saveSession } from "../services/sessionService.js";
 
-
 const form = document.querySelector(".login-form");
 const message = document.querySelector(".error-message");
 
-function validate(username,password){
+function validate(username, password) {
   if (!username.trim()) return "El usuario no puede estar vacío.";
   if (!password.trim()) return "La contraseña no puede estar vacía.";
   return null;
 }
-
-
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -20,7 +17,7 @@ form.addEventListener("submit", function (event) {
 
   message.textContent = "";
 
-  const error = validate(username,password);
+  const error = validate(username, password);
   if (error) {
     message.textContent = error;
     return;
@@ -44,8 +41,6 @@ async function loginUser(username, password) {
     saveSession(data);
     alert("Login exitoso");
     window.location.href = "index.html";
-    console.log(data);
-
   } catch (error) {
     console.log(error);
 
@@ -56,4 +51,3 @@ async function loginUser(username, password) {
     }
   }
 }
-

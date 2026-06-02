@@ -4,6 +4,8 @@ import { updateCartCount } from "../ui/navbar.js";
 
 import { createCart } from "../api/cartApi.js";
 
+const errorMessage = document.querySelector("#saleError");
+
 setupNavbar();
 renderNavbar();
 updateCartCount();
@@ -112,8 +114,11 @@ async function confirmCheckout() {
 
     window.location.href = "order-confirmation.html";
   } catch (error) {
-    console.log(error);
-
-    alert("Error al procesar compra");
+    if (error.response) {
+      message.textContent =
+        error.response.data.error || "Error al procesar la compra";
+    } else {
+      message.textContent = "Error al conectar con servidor";
+    }
   }
 }

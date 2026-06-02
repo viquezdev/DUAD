@@ -7,7 +7,7 @@ setupNavbar();
 renderNavbar();
 
 const session = getSession();
-console.log(session);
+
 if (!session || !session.user || !session.user.is_admin) {
   window.location.replace("index.html");
   throw new Error("Unauthorized");
@@ -28,14 +28,10 @@ const quantityEdit = document.querySelector("#quantityEdit");
 
 const params = new URLSearchParams(window.location.search);
 
-
+const errorMessage = document.querySelector("#productError");
 
 async function loadProduct() {
-
   try {
-
-    
-
     const productId = params.get("id");
 
     const product = await getProductById(productId);
@@ -49,55 +45,47 @@ async function loadProduct() {
     descriptionEdit.value = product.description;
 
     quantityEdit.value = product.quantity;
-
   } catch (error) {
-
-    console.log(error);
-
-    alert("Error cargando producto");
+    if (error.response) {
+      errorMessage.textContent =
+        error.response.data.error || "No fue posible cargar el producto";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+    }
+    errorMessage.classList.add("show");
   }
 }
 
 loadProduct();
 
+form.addEventListener("submit", async function (event) {
+  event.preventDefault();
 
-form.addEventListener("submit",async function (event) {
+  const productId = params.get("id");
 
-    event.preventDefault();
+  const sku = document.querySelector("#skuEdit").value;
 
-    const productId = params.get("id");
+  const name = document.querySelector("#nameEdit").value;
 
-    const sku = document.querySelector("#skuEdit").value;
+  const price = document.querySelector("#priceEdit").value;
 
-    const name = document.querySelector("#nameEdit").value;
+  const description = document.querySelector("#descriptionEdit").value;
 
-    const price = document.querySelector("#priceEdit").value;
+  const quantity = document.querySelector("#quantityEdit").value;
 
-    const description = document.querySelector("#descriptionEdit").value;
+  try {
+    await updateProduct(productId, sku, name, price, description, quantity);
 
-    const quantity = document.querySelector("#quantityEdit").value;
+    alert("Producto actualizado");
 
-    try {
-      console.log(productId);
-      await updateProduct(
-        productId,
-        sku,
-        name,
-        price,
-        description,
-        quantity
-      );
-
-      alert("Producto actualizado");
-
-      window.location.href =
-        "admin-dashboard.html";
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert("Error actualizando producto");
+    window.location.href = "admin-dashboard.html";
+  } catch (error) {
+    if (error.response) {
+      errorMessage.textContent =
+        error.response.data.error || "No fue posible actualizar el producto";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
     }
+    errorMessage.classList.add("show");
   }
-);
+});
