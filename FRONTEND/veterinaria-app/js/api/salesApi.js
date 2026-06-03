@@ -1,23 +1,21 @@
 import { getSession } from "../services/sessionService.js";
 
-const session = getSession();
-if (session) {
-  const token = session.access_token;
-}
+
 
 export async function getSales() {
-  try {
-    const url = "http://localhost:5000/invoices/invoices";
-
-    const response = await axios.get(url, {
+  const session = getSession();
+  if (!session) {
+    throw new Error("No existe una sesión activa");
+  }
+  const token = session.access_token;
+  const response = await axios.get(
+    "http://localhost:5000/invoices/invoices",
+    {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+    }
+  );
+
+  return response.data;
 }

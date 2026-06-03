@@ -115,10 +115,10 @@ async function confirmCheckout() {
     window.location.href = "order-confirmation.html";
   } catch (error) {
     if (error.response) {
-      message.textContent =
+      errorMessage.textContent =
         error.response.data.error || "Error al procesar la compra";
     } else {
-      message.textContent = "Error al conectar con servidor";
+      errorMessage.textContent = "Error al conectar con servidor";
     }
   }
 }

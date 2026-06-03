@@ -10,8 +10,18 @@ updateCartCount();
 
 
 function loadCart() {
-  const cart = getCart();
-  renderCart(cart);
+  const errorMessage = document.querySelector("#errorMessage");
+  try {
+    const cart = getCart();
+    renderCart(cart);
+  } catch (error) {
+    if (error.response) {
+      errorMessage.textContent = error.response.data.error || "No se pudo cargar el carrito";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+    }
+  }
+  
 }
 
 const btnCheckout = document.querySelector(".btn-checkout");

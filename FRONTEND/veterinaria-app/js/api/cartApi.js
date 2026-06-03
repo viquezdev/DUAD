@@ -2,14 +2,13 @@
 
 import { getSession } from "../services/sessionService.js";
 
-
+const session = getSession();
 
 export async function createCart(cartData) {
 
-  try {
-
-    const session = getSession();
-
+    if (!session) {
+      throw new Error("No existe una sesión activa");
+    }
     const token = session.access_token;
 
     const url =
@@ -25,16 +24,6 @@ export async function createCart(cartData) {
       }
     );
 
-    const data = response.data;
+    return response.data;
 
-    console.log(data);
-
-    return data;
-
-  } catch (error) {
-
-    console.log(error);
-
-    throw error;
-  }
 }

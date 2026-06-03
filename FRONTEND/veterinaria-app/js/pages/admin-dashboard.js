@@ -23,10 +23,11 @@ showSales();
 
 const form = document.querySelector(".addProductForm");
 const message = document.querySelector(".error-message");
+const errorMessage = document.querySelector("#adminError");
 
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
-  message.textContent = "";
+  errorMessage.textContent = "";
   const sku = document.querySelector("#sku").value.trim();
   const name = document.querySelector("#name").value.trim();
   const price = document.querySelector("#price").value;
@@ -42,16 +43,16 @@ form.addEventListener("submit", async function (event) {
     alert("Producto registrado exitosamente");
   } catch (error) {
     if (error.response) {
-      message.textContent =
+      errorMessage.textContent =
         error.response.data.error || "Error al registrar producto";
     } else {
-      message.textContent = "Error al conectar con servidor";
+      errorMessage.textContent = "Error al conectar con servidor";
     }
   }
 });
 
 async function showProducts() {
-  const errorMessage = document.querySelector("#adminError");
+  
   try {
     const products = await getProducts();
 
@@ -124,7 +125,13 @@ tableBody.addEventListener("click", async function (event) {
 
       await showProducts();
     } catch (error) {
-      alert("Error eliminando producto");
+      if (error.response) {
+      errorMessage.textContent =
+        error.response.data.error || "No fue posible eliminar el producto";
+      } else {
+        errorMessage.textContent = "No fue posible conectar con el servidor";
+      }
+      errorMessage.classList.add("show");
     }
   }
 
