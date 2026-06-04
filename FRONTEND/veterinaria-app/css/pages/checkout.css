@@ -38,7 +38,7 @@
 
   border-radius: 0.5rem;
 
-  border: 1px solid #ccc;
+  border: 0.0625rem solid #ccc;
 }
 
 .checkout-summary {
@@ -101,7 +101,7 @@
 
   padding: 0.5rem;
 
-  border: 1px solid #ccc;
+  border: 0.0625rem solid #ccc;
 }
 
 .error-message {
@@ -113,7 +113,7 @@
   background-color: #ffe5e5;
   color: #b30000;
 
-  border: 1px solid #ffb3b3;
+  border: 0.0625rem solid #ffb3b3;
   border-radius: 0.8rem;
 
   text-align: center;

@@ -1,10 +1,16 @@
 import { setupNavbar, renderNavbar } from "../ui/navbar.js";
 import { getCart } from "../services/cartService.js";
 import { updateCartCount } from "../ui/navbar.js";
-
+import { getSession } from "../services/sessionService.js";
 import { createCart } from "../api/cartApi.js";
 
 const errorMessage = document.querySelector("#saleError");
+const session = getSession();
+
+if (!session || !session.user || !session.user.is_admin) {
+  window.location.replace("index.html");
+  throw new Error("Unauthorized");
+}
 
 setupNavbar();
 renderNavbar();

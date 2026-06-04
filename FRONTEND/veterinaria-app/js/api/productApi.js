@@ -1,6 +1,6 @@
 import { getSession } from "../services/sessionService.js";
 
-const session = getSession();
+
 
 
 export async function getProducts() {
@@ -18,6 +18,7 @@ export async function getProductById(id) {
 }
 
 export async function registerProduct(sku, name, price, description, quantity) {
+  const session = getSession();
   if (!session) {
     throw new Error("No existe una sesión activa");
   }
@@ -43,7 +44,8 @@ export async function registerProduct(sku, name, price, description, quantity) {
 }
 
 export async function deleteProductById(id) {
-    if (!session) {
+  const session = getSession();  
+  if (!session) {
       throw new Error("No existe una sesión activa");
     }
     const token = session.access_token;
@@ -57,7 +59,7 @@ export async function deleteProductById(id) {
 }
 
 export async function updateProduct(id,sku,name,price,description,quantity,) {
- 
+    const session = getSession();
     if (!session) {
       throw new Error("No existe una sesión activa");
     }

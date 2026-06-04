@@ -1,10 +1,16 @@
 import { setupNavbar, renderNavbar } from "../ui/navbar.js";
 import { updateCartCount } from "../ui/navbar.js";
+import { getSession } from "../services/sessionService.js";
 
+const session = getSession();
+
+if (!session || !session.user || !session.user.is_admin) {
+  window.location.replace("index.html");
+  throw new Error("Unauthorized");
+}
 
 setupNavbar();
 renderNavbar();
-
 
 renderSummary()
 

@@ -2,10 +2,10 @@
 
 import { getSession } from "../services/sessionService.js";
 
-const session = getSession();
+
 
 export async function createCart(cartData) {
-
+    const session = getSession();
     if (!session) {
       throw new Error("No existe una sesión activa");
     }

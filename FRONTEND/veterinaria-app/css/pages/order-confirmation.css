@@ -70,7 +70,7 @@
 
   padding: 1rem 0;
 
-  border-bottom: 1px solid #ddd;
+  border-bottom: 0.0625rem solid #ddd;
 }
 
 .summary-product h3 {
