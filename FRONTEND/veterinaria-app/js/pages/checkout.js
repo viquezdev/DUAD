@@ -1,0 +1,130 @@
+import { setupNavbar, renderNavbar } from "../ui/navbar.js";
+import { getCart } from "../services/cartService.js";
+import { updateCartCount } from "../ui/navbar.js";
+import { getSession } from "../services/sessionService.js";
+import { createCart } from "../api/cartApi.js";
+
+const errorMessage = document.querySelector("#saleError");
+const session = getSession();
+
+if (!session || !session.user || !session.user.is_admin) {
+  window.location.replace("index.html");
+  throw new Error("Unauthorized");
+}
+
+setupNavbar();
+renderNavbar();
+updateCartCount();
+
+loadCheckout();
+
+function loadCheckout() {
+  const cart = getCart();
+
+  renderSummary(cart);
+}
+
+function renderSummary(cart) {
+  const container = document.querySelector("#summaryContainer");
+
+  container.innerHTML = cart
+    .map(
+      (item) => `
+  
+    <div class="summary-item">
+
+      <div class="itemCart">
+
+        <p>${item.name}</p>
+
+        <small>
+          ${item.quantity} x ₡${item.price}
+        </small>
+
+      </div>
+    <div>
+      <strong>
+        ₡${(item.price * item.quantity).toFixed(2)}
+      </strong>
+  </div>
+    </div>
+
+  `,
+    )
+    .join("");
+
+  const subtotal = cart.reduce((acc, item) => {
+    return acc + item.price * item.quantity;
+  }, 0);
+
+  document.querySelector("#subtotal").textContent = "₡" + subtotal.toFixed(2);
+
+  document.querySelector("#checkoutTotal").textContent =
+    "₡" + subtotal.toFixed(2);
+}
+
+const confirmBtn = document.querySelector("#btnConfirm");
+
+confirmBtn.addEventListener("click", confirmCheckout);
+
+async function confirmCheckout() {
+  try {
+    const cart = getCart();
+
+    if (cart.length === 0) {
+      alert("El carrito está vacío");
+      return;
+    }
+
+    const address = document.querySelector("#address").value;
+
+    const paymentMethod = document.querySelector("#paymentMethod").value;
+
+    if (!address || !paymentMethod) {
+      alert("Completa todos los campos");
+      return;
+    }
+
+    const total = cart.reduce((acc, item) => {
+      return acc + item.price * item.quantity;
+    }, 0);
+
+    const products = cart.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    }));
+
+    const checkoutData = {
+      billing_address: address,
+
+      payment_method: paymentMethod,
+
+      total_amount: total,
+
+      products: products,
+    };
+
+    const response = await createCart(checkoutData);
+
+    localStorage.setItem(
+      "lastOrder",
+      JSON.stringify({
+        products: cart,
+        total: total,
+        invoice: response.invoice,
+      }),
+    );
+
+    localStorage.removeItem("cart");
+    alert("Su compra se realizó exitosamente");
+
+    window.location.href = "order-confirmation.html";
+  } catch (error) {
+    if (error.response) {
+      errorMessage.textContent =
+        error.response.data.error || "Error al procesar la compra";
+    } else {
+      errorMessage.textContent = "Error al conectar con servidor";
+    }
+  }
+}

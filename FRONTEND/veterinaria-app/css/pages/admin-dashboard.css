@@ -1,0 +1,80 @@
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem;
+}
+
+.list-products,
+.list-sales,
+.add-product {
+  background: white;
+
+  width: 100%;
+
+  padding: 2rem;
+
+  border-radius: 1rem;
+
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.addProductForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5 rem;
+}
+
+.addProductForm label {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+.addProductForm input {
+  width: 100%;
+  font-size: 1.5rem;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  border: 0.0625rem solid #ccc;
+}
+
+.addProductForm button {
+  margin-top: 1rem;
+}
+
+.products-table,
+.sales-table th {
+  padding: 1rem;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.error-message {
+  display: none;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1rem 1.5rem;
+
+  background-color: #ffe5e5;
+  color: #b30000;
+
+  border: 0.0625rem solid #ffb3b3;
+  border-radius: 0.8rem;
+
+  text-align: center;
+  font-weight: bold;
+
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.error-message.show {
+  display: block;
+}

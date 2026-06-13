@@ -16,7 +16,6 @@ invoices_bp=Blueprint("invoices",__name__)
 
 
 @invoices_bp.route("/invoices", methods=["GET"])
-
 @roles_required(True)
 @verify_cache(cache_manager,key_func=lambda: generate_cache_invoices_all_key(
     get_jwt_identity()["sub"],

@@ -33,27 +33,39 @@ class ProductRepository:
     def update(self,id,sku=None,name=None,price=None,description=None,quantity=None):
         try:
             with self.session_factory() as session:
-                product=session.query(Product).filter_by(id=id).one_or_none()
-                product_sku_verify=session.query(Product).filter_by(sku=sku).one_or_none()
+
+                product = session.query(Product).filter_by(id=id).one_or_none()
+
                 if not product:
                     print(f"Product with id {id} not found.")
                     return None
-                if product_sku_verify:
-                    print(f"Product with sku {sku} not found.")
+
+                product_sku_verify = session.query(Product).filter_by(
+                    sku=sku
+                ).one_or_none()
+
+                if product_sku_verify and product_sku_verify.id != product.id:
+                    print(f"Product with sku {sku} already exists.")
                     return None
-                fields={
-                    "sku":sku,
-                    "name":name,
-                    "price":price,
-                    "description":description,
-                    "quantity":quantity
+
+                fields = {
+                    "sku": sku,
+                    "name": name,
+                    "price": price,
+                    "description": description,
+                    "quantity": quantity
                 }
-                for attr,value in fields.items():
+
+                for attr, value in fields.items():
                     if value is not None:
-                        setattr(product,attr,value)
+                        setattr(product, attr, value)
+
                 session.commit()
+
                 session.refresh(product)
+
                 return product
+
         except SQLAlchemyError as e:
             print(f"Error updating product: {e}")
             return None

@@ -5,15 +5,25 @@ from routes.product_routes import products_bp
 from routes.shopping_cart_routes import shopping_carts_bp
 from routes.invoice_routes import invoices_bp
 from routes.returns_routes import returns_bp
-
+from routes.checkout_routes import checkout_bp
+from flask_cors import CORS
 
 
 app=Flask(__name__)
+CORS(app, resources={
+    r"/users/*": {"origins": "*"},
+    r"/products/*": {"origins": "*"},
+    r"/shopping_carts/*": {"origins": "*"},
+    r"/checkout/*": {"origins": "*"},
+    r"/invoices/*": {"origins": "*"}
+
+})
 app.register_blueprint(users_bp,url_prefix="/users")
 app.register_blueprint(products_bp,url_prefix="/products")
 app.register_blueprint(shopping_carts_bp,url_prefix="/shopping_carts")
 app.register_blueprint(invoices_bp,url_prefix="/invoices")
 app.register_blueprint(returns_bp,url_prefix="/returns")
+app.register_blueprint(checkout_bp,url_prefix="/checkout")
 
 @app.route("/seed")
 def seed():

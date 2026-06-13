@@ -1,0 +1,33 @@
+import { getProductById } from "../api/productApi.js";
+import { renderProduct,setupProductClick } from "../ui/renderProducts.js";
+import { setupNavbar,renderNavbar } from "../ui/navbar.js";
+import { updateCartCount } from "../ui/navbar.js";
+
+setupNavbar();
+renderNavbar();
+loadProduct();
+updateCartCount();
+
+async function loadProduct() {
+  const errorMessage = document.querySelector("#errorMessage");
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const product = await getProductById(id);
+
+    renderProduct(product);
+    setupProductClick(product);
+
+  } catch (error) {
+
+    errorMessage.classList.add("show");
+
+    if (error.response) {
+      errorMessage.textContent = error.response.data.error || "No se pudo cargar el producto";
+    } else {
+      errorMessage.textContent = "No fue posible conectar con el servidor";
+    }
+  }
+}

@@ -1,0 +1,129 @@
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 1.5rem;
+  gap: 1rem;
+}
+
+.nav-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-right {
+  display: flex;
+  margin-right: 1.5rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cart-icon {
+  position: relative;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.cart-count {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.8rem;
+  background: red;
+  color: white;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 50%;
+}
+
+#userInfo {
+  margin: 0;
+  color: black;
+}
+
+#btnLogout {
+  background-color: crimson;
+}
+
+#btnLogout:hover {
+  background-color: rgb(126, 5, 29);
+}
+
+.brand-image {
+  width: 4rem;
+}
+
+.nav-button {
+  border: none;
+  background: none;
+  color: rgb(146, 145, 145);
+  cursor: pointer;
+}
+.nav-button:hover,
+.nav-button:active,
+.nav-button:focus {
+  font-weight: bold;
+  color: black;
+}
+
+.btn {
+  background-color: rgb(22, 74, 96);
+  color: white;
+  width: 7rem;
+  height: 2rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.btn-delete {
+  background-color: red;
+  color: white;
+  width: 7rem;
+  height: 2rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.btn-products {
+  background-color: rgb(22, 74, 96);
+  color: white;
+  width: 15rem;
+  height: 2.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding: auto;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: rgb(64, 130, 160);
+}
+
+.btn-delete:hover {
+  background-color: rgb(233, 126, 126);
+}
+
+.banner-global {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 3rem;
+
+  background-image:
+    linear-gradient(rgba(70, 162, 148, 0.6), rgba(70, 162, 148, 0.6)),
+    url("../assets/images/image.PNG");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

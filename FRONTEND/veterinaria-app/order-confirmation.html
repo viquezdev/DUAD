@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/order-confirmation.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="./js/pages/order-confirmation.js" defer></script>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar-container">
+        <div class="nav-left">
+          <a class="nav-brand"
+            ><img src="assets/icons/logo.png" alt="logo" class="brand-image"
+          /></a>
+          <a href="index.html" class="nav-button">PetStore</a>
+        </div>
+        <div class="nav-center">
+          <a href="index.html" class="nav-button">Inicio</a>
+          <a href="products.html" class="nav-button">Productos</a>
+          <a class="nav-button">Acerca de</a>
+          <a
+            href="admin-dashboard.html"
+            id="adminLink"
+            class="nav-button hidden"
+            >Administración</a
+          >
+        </div>
+        <div class="nav-right">
+          <button id="btnLogin" class="btn">Iniciar sesión</button>
+          <p id="userInfo" class="hidden"></p>
+          <button id="btnLogout" class="btn hidden">Cerrar sesión</button>
+          <div class="cart-icon" id="cartIcon" class="hidden" hidden>
+            🛒
+            <span id="cartCount" class="cart-count hidden">0</span>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main class="order-confirmation">
+      <section class="purchase-success">
+        <h2>Compra realizada con exito</h2>
+        <p>
+          Tu pedido ha sido procesado correctamente. Recibirás un correo con la
+          confirmación y los detalles de tu compra.
+        </p>
+      </section>
+
+      <section class="order-summary">
+        <h2>Resumen de la compra</h2>
+
+        <div id="summaryContainer"></div>
+
+        <div class="summary-prices">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="subtotal"></span>
+          </div>
+
+          <div class="summary-total">
+            <span>Total</span>
+            <span id="checkoutTotal"></span>
+          </div>
+        </div>
+
+        <button id="btn-products" class="btn">Volver al catálogo</button>
+        <button class="btn-index">Volver inicio</button>
+      </section>
+    </main>
+  </body>
+</html>
