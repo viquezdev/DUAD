@@ -1,5 +1,11 @@
-import React from 'react';
-
 export const Footer = () => {
-  return <div>footer</div>;
+  return (
+    <footer>
+      <div className="footer-container">
+        <p>© PawStore 2026 — Todos los derechos reservados.</p>
+        <a href="/">Instagram</a>
+        <a href="/">Facebook</a>
+      </div>
+    </footer>
+  );
 };

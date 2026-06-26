@@ -1,7 +1,6 @@
-import React from 'react';
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 
-export const Header = () => {
+export const Header = ({ setPage }) => {
   return (
     <header>
       <nav className="navbar-container">
@@ -13,9 +12,15 @@ export const Header = () => {
         </div>
 
         <div className="nav-right">
-          <a href="/">Inicio</a>
-          <a href="/productos">Productos</a>
-          <a href="/contacto">Contacto</a>
+          <button className="nav-link" onClick={() => setPage('home')}>
+            Inicio
+          </button>
+
+          <button className="nav-link" onClick={() => setPage('products')}>
+            Productos
+          </button>
+
+          <button className="nav-link">Contacto</button>
         </div>
       </nav>
     </header>

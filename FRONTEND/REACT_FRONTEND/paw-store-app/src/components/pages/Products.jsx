@@ -1,5 +1,7 @@
-import React from 'react';
-
 export const Products = () => {
-  return <div>products</div>;
+  return (
+    <section class="products-page">
+      <div id="productsContainer" class="products-grid"></div>
+    </section>
+  );
 };
