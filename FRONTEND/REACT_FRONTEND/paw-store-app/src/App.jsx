@@ -16,7 +16,9 @@ function App() {
       {page === 'products' && (
         <Products setPage={setPage} setSelectedProduct={setSelectedProduct} />
       )}
-      {page === 'details' && <Product product={selectedProduct} />}
+      {page === 'details' && (
+        <Product product={selectedProduct} setPage={setPage} />
+      )}
       <Footer />
     </>
   );
