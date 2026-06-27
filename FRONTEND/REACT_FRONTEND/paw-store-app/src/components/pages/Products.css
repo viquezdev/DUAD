@@ -3,4 +3,16 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  text-align: center;
+  color: black;
+  font-size: 2rem;
+}
+
+.products-page {
+  background-color: white;
 }

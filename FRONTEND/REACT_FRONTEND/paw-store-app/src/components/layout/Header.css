@@ -1,0 +1,65 @@
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  height: 3rem;
+  align-items: center;
+  border-bottom: 0.12rem solid #ececec;
+  box-shadow: 0 0.4rem 1.5rem 0.3rem rgba(0, 0, 0, 0.15);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  margin-left: 7rem;
+}
+
+.nav-right {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-right: 7rem;
+}
+
+.nav-right a {
+  text-decoration: none;
+  border: none;
+  background: none;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.brand-image {
+  width: 3rem;
+  height: 3rem;
+}
+
+.brand-name {
+  color: #aa3bff;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.nav-link:hover,
+.nav-link:active,
+.nav-link:focus {
+  font-weight: bold;
+  color: green;
+}

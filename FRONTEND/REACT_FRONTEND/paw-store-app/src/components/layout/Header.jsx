@@ -1,4 +1,5 @@
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
+import './Header.css';
 
 export const Header = ({ setPage }) => {
   return (

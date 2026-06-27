@@ -1,6 +1,6 @@
 import './ProductCard.css';
 
-export const ProductCard = ({ product }) => {
+export const ProductCard = ({ product, setPage, setSelectedProduct }) => {
   return (
     <article className="product-card">
       <div className="product-image-container">
@@ -18,7 +18,14 @@ export const ProductCard = ({ product }) => {
 
         <p>{product.categoria}</p>
 
-        <button>Ver detalles</button>
+        <button
+          onClick={() => {
+            setSelectedProduct(product);
+            setPage('details');
+          }}
+        >
+          Ver detalles
+        </button>
       </div>
     </article>
   );
