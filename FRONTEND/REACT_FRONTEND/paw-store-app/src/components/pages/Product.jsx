@@ -11,7 +11,7 @@ export const Product = ({ product, setPage }) => {
         />
       </div>
       <div className="product-detail">
-        <h2>{product.nombre}</h2>
+        <h1>{product.nombre}</h1>
 
         <p className="price-detail">₡ {product.precio}</p>
         <p>{product.categoria}</p>

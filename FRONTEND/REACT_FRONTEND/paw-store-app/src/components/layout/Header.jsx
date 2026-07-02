@@ -1,27 +1,38 @@
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 import './Header.css';
 
-export const Header = ({ setPage }) => {
+export const Header = ({ page, setPage }) => {
   return (
     <header>
       <nav className="navbar-container">
         <div className="nav-left">
-          <a href="/" className="nav-brand">
+          <button className="nav-brand" onClick={() => setPage('home')}>
             <img src={pawStoreLogo} alt="PawStore" className="brand-image" />
             <span className="brand-name">PawStore</span>
-          </a>
+          </button>
         </div>
 
         <div className="nav-right">
-          <button className="nav-link" onClick={() => setPage('home')}>
+          <button
+            className={page === 'home' ? 'nav-link active' : 'nav-link'}
+            onClick={() => setPage('home')}
+          >
             Inicio
           </button>
 
-          <button className="nav-link" onClick={() => setPage('products')}>
+          <button
+            className={page === 'products' ? 'nav-link active' : 'nav-link'}
+            onClick={() => setPage('products')}
+          >
             Productos
           </button>
 
-          <button className="nav-link">Contacto</button>
+          <button
+            className={page === 'contact' ? 'nav-link active' : 'nav-link'}
+            onClick={() => setPage('contact')}
+          >
+            Contacto
+          </button>
         </div>
       </nav>
     </header>

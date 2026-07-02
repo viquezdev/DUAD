@@ -2,7 +2,7 @@ import './Home.css';
 
 export const Home = ({ setPage }) => {
   return (
-    <body>
+    <main>
       <div className="home-page">
         <h1>Bienvenido a PawStore</h1>
         <p>
@@ -21,6 +21,6 @@ export const Home = ({ setPage }) => {
           podrán mostrar productos destacados.
         </p>
       </div>
-    </body>
+    </main>
   );
 };

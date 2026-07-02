@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Header } from './components/layout/header';
-import './index.css';
+import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { Home } from './components/pages/Home';
 import { Product } from './components/pages/Product';
@@ -11,7 +10,7 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   return (
     <>
-      <Header setPage={setPage} />
+      <Header page={page} setPage={setPage} />
       {page === 'home' && <Home setPage={setPage} />}
       {page === 'products' && (
         <Products setPage={setPage} setSelectedProduct={setSelectedProduct} />
