@@ -21,7 +21,11 @@ export const Header = ({ page, setPage }) => {
           </button>
 
           <button
-            className={page === 'products' ? 'nav-link active' : 'nav-link'}
+            className={
+              page === 'products' || page === 'details'
+                ? 'nav-link active'
+                : 'nav-link'
+            }
             onClick={() => setPage('products')}
           >
             Productos

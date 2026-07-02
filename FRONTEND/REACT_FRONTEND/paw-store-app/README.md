@@ -1,16 +1,74 @@
-# React + Vite
+# PawStore
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PawStore es una aplicación web desarrollada con React y Vite que simula una tienda de productos para mascotas.
 
-Currently, two official plugins are available:
+La aplicación permite:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Visualizar la página de inicio.
+- Consultar el catálogo de productos.
+- Ver el detalle de cada producto.
+- Navegar entre las diferentes vistas sin recargar la página.
 
-## React Compiler
+## Tecnologías utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- JavaScript
+- CSS
+- JSON
 
-## Expanding the ESLint configuration
+## Instalación
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clonar el repositorio:
+
+```bash
+git clone URL_DEL_REPOSITORIO
+```
+
+2. Ingresar a la carpeta del proyecto:
+
+```bash
+cd PawStore
+```
+
+3. Instalar las dependencias:
+
+```bash
+npm install
+```
+
+## Ejecutar el proyecto
+
+Iniciar el servidor de desarrollo:
+
+```bash
+npm run dev
+```
+
+Luego abrir en el navegador la dirección que aparece en la terminal, por ejemplo:
+
+```
+http://localhost:5173
+```
+
+## Estructura del proyecto
+
+```
+src/
+│
+├── components/
+│   ├── layout/
+│   └── ProductCard/
+│
+├── pages/
+│
+├── data/
+│
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+## Autor
+
+Luis Daniel Víquez Vargas.

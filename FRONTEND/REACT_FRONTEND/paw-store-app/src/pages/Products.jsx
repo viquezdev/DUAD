@@ -1,5 +1,5 @@
-import products from '../../data/products.json';
-import { ProductCard } from '../ProductCard/ProductCard';
+import products from '../data/products.json';
+import { ProductCard } from '../components/ProductCard/ProductCard';
 import './Products.css';
 
 export const Products = ({ setPage, setSelectedProduct }) => {
