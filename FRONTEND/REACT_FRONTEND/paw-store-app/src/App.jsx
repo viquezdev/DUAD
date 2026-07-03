@@ -4,6 +4,7 @@ import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
 import { Product } from './pages/Product';
 import { Products } from './pages/Products';
+import { Contact } from './pages/Contact';
 
 function App() {
   const [page, setPage] = useState('home');
@@ -18,6 +19,7 @@ function App() {
       {page === 'details' && (
         <Product product={selectedProduct} setPage={setPage} />
       )}
+      {page === 'contact' && <Contact />}
       <Footer />
     </>
   );
