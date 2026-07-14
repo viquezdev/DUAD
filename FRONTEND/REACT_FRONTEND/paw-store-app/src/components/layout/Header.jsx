@@ -37,6 +37,15 @@ export const Header = ({ page, setPage }) => {
           >
             Contacto
           </button>
+
+          <button
+            className={
+              page === 'adminProducts' ? 'nav-link active' : 'nav-link'
+            }
+            onClick={() => setPage('adminProducts')}
+          >
+            Administración
+          </button>
         </div>
       </nav>
     </header>

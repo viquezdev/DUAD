@@ -1,0 +1,42 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 1rem;
+  margin: 2rem;
+  border: 0.12rem solid #f0efef;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 1.5rem 0.3rem rgba(0, 0, 0, 0.15);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+form label {
+  font-weight: bold;
+}
+
+form input,
+textarea {
+  background-color: #ffffff;
+  height: 1.5rem;
+  border-radius: 0.2rem;
+  color: black;
+  border-color: rgb(190, 190, 190);
+}
+
+form p {
+  color: red;
+  font-size: 0.7rem;
+  font-style: italic;
+}
+
+.btnSubmit {
+  background-color: #aa3bff;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+}
