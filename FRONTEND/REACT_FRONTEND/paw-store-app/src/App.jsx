@@ -10,20 +10,16 @@ import { EditProduct } from './pages/EditProduct';
 
 function App() {
   const [page, setPage] = useState('home');
-  const [selectedProduct, setSelectedProduct] = useState(null);
+
   return (
     <>
       <Header page={page} setPage={setPage} />
       {page === 'home' && <Home setPage={setPage} />}
-      {page === 'products' && (
-        <Products setPage={setPage} setSelectedProduct={setSelectedProduct} />
-      )}
-      {page === 'details' && (
-        <Product product={selectedProduct} setPage={setPage} />
-      )}
+      {page === 'products' && <Products setPage={setPage} />}
+      {page === 'details' && <Product setPage={setPage} />}
       {page === 'contact' && <Contact />}
       {page === 'adminProducts' && <ProductManagement setPage={setPage} />}
-      {page === 'editProduct' && <EditProduct />}
+      {page === 'editProduct' && <EditProduct setPage={setPage} />}
 
       <Footer />
     </>

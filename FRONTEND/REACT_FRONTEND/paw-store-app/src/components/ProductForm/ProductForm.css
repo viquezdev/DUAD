@@ -79,3 +79,13 @@ small {
 .btnCancel:hover {
   opacity: 0.85;
 }
+
+.successMessage {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: bold;
+}

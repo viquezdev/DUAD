@@ -2,6 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './ProductForm.css';
 import { useProductStore } from '../../store/productStore';
+import { useState } from 'react';
 
 const esquemaValidacion = Yup.object({
   nombre: Yup.string().required('El nombre del producto es obligatorio'),
@@ -13,23 +14,24 @@ const esquemaValidacion = Yup.object({
     .positive('El precio debe ser mayor que cero')
     .required('El precio es obligatorio'),
   categoria: Yup.string().required('La categoría del producto es obligatoria'),
-  imagen: Yup.string()
-    .url('Debe ingresar una URL válida')
-    .required('La imagen del producto es obligatoria'),
+  imagen: Yup.string().required('La imagen del producto es obligatoria'),
   stock: Yup.number()
     .typeError('Debe ingresar un número válido')
     .min(0, 'El stock no puede ser negativo')
     .required('El stock es obligatorio'),
 });
 
-export const ProductForm = ({ mode = 'create', product = null, onCancel }) => {
+export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
   const addProduct = useProductStore((state) => state.addProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
+  const [message, setMessage] = useState('');
   return (
     <div className="formContainer">
       <h1>
         {mode === 'create' ? 'Agregar nuevo producto' : 'Editar producto'}
       </h1>
+
+      {message && <div className="successMessage">{message}</div>}
 
       <Formik
         initialValues={{
@@ -46,19 +48,15 @@ export const ProductForm = ({ mode = 'create', product = null, onCancel }) => {
             addProduct(values);
             resetForm();
 
-            alert('Producto agregado correctamente');
+            setMessage('Producto agregado correctamente');
           } else {
             updateProduct({
               ...product,
               ...values,
             });
 
-            alert('Producto actualizado correctamente');
+            setMessage('Producto actualizado correctamente');
           }
-
-          setTimeout(() => {
-            onCancel();
-          }, 500);
         }}
       >
         <Form>
@@ -161,7 +159,6 @@ export const ProductForm = ({ mode = 'create', product = null, onCancel }) => {
           <Field
             id="imagen"
             name="imagen"
-            type="url"
             placeholder="https://..."
             aria-required="true"
             aria-describedby="imagen-error"
@@ -202,7 +199,11 @@ export const ProductForm = ({ mode = 'create', product = null, onCancel }) => {
               {mode === 'create' ? 'Agregar producto' : 'Guardar cambios'}
             </button>
 
-            <button type="button" className="btnCancel" onClick={onCancel}>
+            <button
+              type="button"
+              className="btnCancel"
+              onClick={() => setPage('products')}
+            >
               Cancelar
             </button>
           </div>

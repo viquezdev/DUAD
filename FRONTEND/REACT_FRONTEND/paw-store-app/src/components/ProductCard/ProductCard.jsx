@@ -1,6 +1,10 @@
 import './ProductCard.css';
+import { useProductStore } from '../../store/productStore';
 
-export const ProductCard = ({ product, setPage, setSelectedProduct }) => {
+export const ProductCard = ({ product, setPage }) => {
+  const setSelectedProduct = useProductStore(
+    (state) => state.setSelectedProduct
+  );
   return (
     <article className="product-card">
       <div className="product-image-container">

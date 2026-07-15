@@ -1,6 +1,8 @@
 import './Product.css';
+import { useProductStore } from '../store/productStore';
 
-export const Product = ({ product, setPage }) => {
+export const Product = ({ setPage }) => {
+  const product = useProductStore((state) => state.selectedProduct);
   return (
     <div className="product-page">
       <div className="detail-image-container">

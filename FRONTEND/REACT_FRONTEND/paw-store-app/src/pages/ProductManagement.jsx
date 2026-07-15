@@ -6,7 +6,7 @@ export const ProductManagement = ({ setPage }) => {
   return (
     <main className="product-management">
       <ProductTable setPage={setPage} />
-      <ProductForm mode="create" />
+      <ProductForm mode="create" setPage={setPage} />
     </main>
   );
 };
