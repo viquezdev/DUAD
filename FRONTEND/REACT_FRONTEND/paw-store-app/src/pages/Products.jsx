@@ -1,8 +1,9 @@
-import products from '../data/products.json';
+import { useProductStore } from '../store/productStore';
 import { ProductCard } from '../components/ProductCard/ProductCard';
 import './Products.css';
 
 export const Products = ({ setPage, setSelectedProduct }) => {
+  const products = useProductStore((state) => state.products);
   if (products.length === 0) {
     return (
       <div className="empty-products">

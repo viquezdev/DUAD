@@ -6,6 +6,7 @@ import { Product } from './pages/Product';
 import { Products } from './pages/Products';
 import { Contact } from './pages/Contact';
 import { ProductManagement } from './pages/ProductManagement';
+import { EditProduct } from './pages/EditProduct';
 
 function App() {
   const [page, setPage] = useState('home');
@@ -22,6 +23,8 @@ function App() {
       )}
       {page === 'contact' && <Contact />}
       {page === 'adminProducts' && <ProductManagement setPage={setPage} />}
+      {page === 'editProduct' && <EditProduct />}
+
       <Footer />
     </>
   );

@@ -1,7 +1,12 @@
-import products from '../../data/products.json';
 import './ProductTable.css';
+import { useProductStore } from '../../store/productStore';
 
-export const ProductTable = () => {
+export const ProductTable = ({ setPage }) => {
+  const products = useProductStore((state) => state.products);
+  const deleteProduct = useProductStore((state) => state.deleteProduct);
+  const setSelectedProduct = useProductStore(
+    (state) => state.setSelectedProduct
+  );
   return (
     <div className="tableContainer">
       <h1>Administración de productos</h1>
@@ -30,9 +35,22 @@ export const ProductTable = () => {
               <td>{product.stock}</td>
 
               <td>
-                <button className="btnEdit">Editar</button>
+                <button
+                  className="btnEdit"
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setPage('editProduct');
+                  }}
+                >
+                  Editar
+                </button>
 
-                <button className="btnDelete">Eliminar</button>
+                <button
+                  className="btnDelete"
+                  onClick={() => deleteProduct(product.id)}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}

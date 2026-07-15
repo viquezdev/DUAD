@@ -5,8 +5,8 @@ import { ProductForm } from '../components/ProductForm/ProductForm';
 export const ProductManagement = ({ setPage }) => {
   return (
     <main className="product-management">
-      <ProductTable />
-      <ProductForm />
+      <ProductTable setPage={setPage} />
+      <ProductForm mode="create" />
     </main>
   );
 };

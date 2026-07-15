@@ -25,10 +25,12 @@ table {
   background-color: #aa3bff;
   padding: 0.4rem;
   border-radius: 0.4rem;
+  cursor: pointer;
 }
 
 .btnDelete {
   background-color: red;
   padding: 0.4rem;
   border-radius: 0.4rem;
+  cursor: pointer;
 }

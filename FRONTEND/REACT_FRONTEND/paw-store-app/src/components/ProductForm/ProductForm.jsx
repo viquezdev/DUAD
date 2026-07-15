@@ -1,73 +1,211 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import './ProductForm.css';
 import * as Yup from 'yup';
+import './ProductForm.css';
+import { useProductStore } from '../../store/productStore';
 
 const esquemaValidacion = Yup.object({
   nombre: Yup.string().required('El nombre del producto es obligatorio'),
   descripcion: Yup.string().required(
     'La descripción del producto es obligatoria'
   ),
-  precio: Yup.number().required('El precio es obligatorio'),
+  precio: Yup.number()
+    .typeError('Debe ingresar un número válido')
+    .positive('El precio debe ser mayor que cero')
+    .required('El precio es obligatorio'),
   categoria: Yup.string().required('La categoría del producto es obligatoria'),
-  imagen: Yup.string().required('La imagen del producto es obligatoria'),
-  stock: Yup.number().required('El stock del producto es obligatorio'),
+  imagen: Yup.string()
+    .url('Debe ingresar una URL válida')
+    .required('La imagen del producto es obligatoria'),
+  stock: Yup.number()
+    .typeError('Debe ingresar un número válido')
+    .min(0, 'El stock no puede ser negativo')
+    .required('El stock es obligatorio'),
 });
-export const ProductForm = () => {
+
+export const ProductForm = ({ mode = 'create', product = null, onCancel }) => {
+  const addProduct = useProductStore((state) => state.addProduct);
+  const updateProduct = useProductStore((state) => state.updateProduct);
   return (
     <div className="formContainer">
-      <h1>Agregar nuevo producto</h1>
+      <h1>
+        {mode === 'create' ? 'Agregar nuevo producto' : 'Editar producto'}
+      </h1>
+
       <Formik
         initialValues={{
-          nombre: '',
-          descripcion: '',
-          precio: 0,
-          categoria: '',
-          imagen: '',
-          stock: 0,
+          nombre: product?.nombre || '',
+          descripcion: product?.descripcion || '',
+          precio: product?.precio || 0,
+          categoria: product?.categoria || '',
+          imagen: product?.imagen || '',
+          stock: product?.stock || 0,
         }}
         validationSchema={esquemaValidacion}
-        onSubmit={(valores) => {
-          alert(JSON.stringify(valores, null, 6));
+        onSubmit={(values, { resetForm }) => {
+          if (mode === 'create') {
+            addProduct(values);
+            resetForm();
+
+            alert('Producto agregado correctamente');
+          } else {
+            updateProduct({
+              ...product,
+              ...values,
+            });
+
+            alert('Producto actualizado correctamente');
+          }
+
+          setTimeout(() => {
+            onCancel();
+          }, 500);
         }}
       >
         <Form>
-          <label htmlFor="nombre">Nombre</label>
-          <Field id="nombre" name="nombre" placeholder="Nombre del producto" />
-          <ErrorMessage name="nombre" component="p" />
+          <label htmlFor="nombre">
+            Nombre <span aria-hidden="true">*</span>
+          </label>
 
-          <label htmlFor="descripcion">Descripción</label>
+          <Field
+            id="nombre"
+            name="nombre"
+            type="text"
+            placeholder="Nombre del producto"
+            aria-required="true"
+            aria-describedby="nombre-help nombre-error"
+          />
+
+          <small id="nombre-help">Escriba el nombre del producto.</small>
+
+          <ErrorMessage
+            name="nombre"
+            render={(msg) => (
+              <p id="nombre-error" className="error" role="alert">
+                {msg}
+              </p>
+            )}
+          />
+
+          <label htmlFor="descripcion">
+            Descripción <span aria-hidden="true">*</span>
+          </label>
+
           <Field
             id="descripcion"
             name="descripcion"
             as="textarea"
             rows="5"
             placeholder="Descripción detallada del producto"
+            aria-required="true"
+            aria-describedby="descripcion-error"
           />
-          <ErrorMessage name="descripcion" component="p" />
 
-          <label htmlFor="precio">Precio</label>
-          <Field id="precio" name="precio" type="number" />
-          <ErrorMessage name="precio" component="p" />
+          <ErrorMessage
+            name="descripcion"
+            render={(msg) => (
+              <p id="descripcion-error" className="error" role="alert">
+                {msg}
+              </p>
+            )}
+          />
 
-          <label htmlFor="categoria">Categoría</label>
+          <label htmlFor="precio">
+            Precio <span aria-hidden="true">*</span>
+          </label>
+
+          <Field
+            id="precio"
+            name="precio"
+            type="number"
+            min="0"
+            aria-required="true"
+            aria-describedby="precio-help precio-error"
+          />
+
+          <small id="precio-help">Ingrese el precio en colones.</small>
+
+          <ErrorMessage
+            name="precio"
+            render={(msg) => (
+              <p id="precio-error" className="error" role="alert">
+                {msg}
+              </p>
+            )}
+          />
+
+          <label htmlFor="categoria">
+            Categoría <span aria-hidden="true">*</span>
+          </label>
+
           <Field
             id="categoria"
             name="categoria"
-            placeholder="Categoría del producto(ej. Alimento, Juguetes)"
+            placeholder="Ej. Alimento, Juguetes..."
+            aria-required="true"
+            aria-describedby="categoria-error"
           />
-          <ErrorMessage name="categoria" component="p" />
 
-          <label htmlFor="imagen">Imagen</label>
-          <Field id="imagen" name="imagen" placeholder="Imagen del producto" />
-          <ErrorMessage name="imagen" component="p" />
+          <ErrorMessage
+            name="categoria"
+            render={(msg) => (
+              <p id="categoria-error" className="error" role="alert">
+                {msg}
+              </p>
+            )}
+          />
 
-          <label htmlFor="stock">Stock</label>
-          <Field id="stock" name="stock" type="number" />
-          <ErrorMessage name="stock" component="p" />
+          <label htmlFor="imagen">
+            Imagen <span aria-hidden="true">*</span>
+          </label>
 
-          <button className="btnSubmit" type="submit">
-            Agregar producto
-          </button>
+          <Field
+            id="imagen"
+            name="imagen"
+            type="url"
+            placeholder="https://..."
+            aria-required="true"
+            aria-describedby="imagen-error"
+          />
+
+          <ErrorMessage
+            name="imagen"
+            render={(msg) => (
+              <p id="imagen-error" className="error" role="alert">
+                {msg}
+              </p>
+            )}
+          />
+
+          <label htmlFor="stock">
+            Stock <span aria-hidden="true">*</span>
+          </label>
+
+          <Field
+            id="stock"
+            name="stock"
+            type="number"
+            min="0"
+            aria-required="true"
+            aria-describedby="stock-error"
+          />
+          <ErrorMessage
+            name="stock"
+            render={(msg) => (
+              <p id="stock-error" className="error" role="alert">
+                {msg}
+              </p>
+            )}
+          />
+
+          <div className="formButtons">
+            <button type="submit" className="btnSubmit">
+              {mode === 'create' ? 'Agregar producto' : 'Guardar cambios'}
+            </button>
+
+            <button type="button" className="btnCancel" onClick={onCancel}>
+              Cancelar
+            </button>
+          </div>
         </Form>
       </Formik>
     </div>
