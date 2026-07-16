@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import './ProductForm.css';
 import { useProductStore } from '../../store/productStore';
@@ -24,14 +24,14 @@ const esquemaValidacion = Yup.object({
 export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
   const addProduct = useProductStore((state) => state.addProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
-  const [message, setMessage] = useState('');
+  const products = useProductStore((state) => state.products);
+  const setSuccessMessage = useProductStore((state) => state.setSuccessMessage);
+  const [errorMessage, setErrorMessage] = useState('');
   return (
     <div className="formContainer">
       <h1>
         {mode === 'create' ? 'Agregar nuevo producto' : 'Editar producto'}
       </h1>
-
-      {message && <div className="successMessage">{message}</div>}
 
       <Formik
         initialValues={{
@@ -48,166 +48,138 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
             addProduct(values);
             resetForm();
 
-            setMessage('Producto agregado correctamente');
+            setSuccessMessage('Producto agregado correctamente');
           } else {
+            const updated = products.some((p) => p.id === product?.id);
+
+            if (!updated) {
+              setErrorMessage('No se encontró el producto para actualizar.');
+              return;
+            }
             updateProduct({
               ...product,
               ...values,
             });
 
-            setMessage('Producto actualizado correctamente');
+            setSuccessMessage('Producto actualizado correctamente');
+
+            setPage('adminProducts');
           }
         }}
       >
-        <Form>
-          <label htmlFor="nombre">
-            Nombre <span aria-hidden="true">*</span>
-          </label>
+        {({ isValid, submitCount }) => (
+          <Form>
+            <label htmlFor="nombre">
+              Nombre <span aria-hidden="true">*</span>
+            </label>
 
-          <Field
-            id="nombre"
-            name="nombre"
-            type="text"
-            placeholder="Nombre del producto"
-            aria-required="true"
-            aria-describedby="nombre-help nombre-error"
-          />
+            <Field
+              id="nombre"
+              name="nombre"
+              type="text"
+              placeholder="Nombre del producto"
+              aria-required="true"
+              aria-describedby="nombre-help nombre-error"
+            />
 
-          <small id="nombre-help">Escriba el nombre del producto.</small>
+            <small id="nombre-help">Escriba el nombre del producto.</small>
 
-          <ErrorMessage
-            name="nombre"
-            render={(msg) => (
-              <p id="nombre-error" className="error" role="alert">
-                {msg}
+            <label htmlFor="descripcion">
+              Descripción <span aria-hidden="true">*</span>
+            </label>
+
+            <Field
+              id="descripcion"
+              name="descripcion"
+              as="textarea"
+              rows="5"
+              placeholder="Descripción detallada del producto"
+              aria-required="true"
+              aria-describedby="descripcion-error"
+            />
+
+            <label htmlFor="precio">
+              Precio <span aria-hidden="true">*</span>
+            </label>
+
+            <Field
+              id="precio"
+              name="precio"
+              type="number"
+              min="0"
+              aria-required="true"
+              aria-describedby="precio-help precio-error"
+            />
+
+            <small id="precio-help">Ingrese el precio en colones.</small>
+
+            <label htmlFor="categoria">
+              Categoría <span aria-hidden="true">*</span>
+            </label>
+
+            <Field
+              id="categoria"
+              name="categoria"
+              placeholder="Ej. Alimento, Juguetes..."
+              aria-required="true"
+              aria-describedby="categoria-error"
+            />
+
+            <label htmlFor="imagen">
+              Imagen <span aria-hidden="true">*</span>
+            </label>
+
+            <Field
+              id="imagen"
+              name="imagen"
+              placeholder="https://..."
+              aria-required="true"
+              aria-describedby="imagen-error"
+            />
+
+            <label htmlFor="stock">
+              Stock <span aria-hidden="true">*</span>
+            </label>
+
+            <Field
+              id="stock"
+              name="stock"
+              type="number"
+              min="0"
+              aria-required="true"
+              aria-describedby="stock-error"
+            />
+
+            <div className="formButtons">
+              <button type="submit" className="btnSubmit">
+                {mode === 'create' ? 'Agregar producto' : 'Guardar cambios'}
+              </button>
+
+              <button
+                type="button"
+                className="btnCancel"
+                onClick={() =>
+                  setPage(mode === 'edit' ? 'adminProducts' : 'products')
+                }
+              >
+                Cancelar
+              </button>
+            </div>
+            {errorMessage && (
+              <p className="formError" role="alert">
+                {errorMessage}
               </p>
             )}
-          />
 
-          <label htmlFor="descripcion">
-            Descripción <span aria-hidden="true">*</span>
-          </label>
-
-          <Field
-            id="descripcion"
-            name="descripcion"
-            as="textarea"
-            rows="5"
-            placeholder="Descripción detallada del producto"
-            aria-required="true"
-            aria-describedby="descripcion-error"
-          />
-
-          <ErrorMessage
-            name="descripcion"
-            render={(msg) => (
-              <p id="descripcion-error" className="error" role="alert">
-                {msg}
+            {!isValid && submitCount > 0 && (
+              <p className="formError" role="alert">
+                {mode === 'create'
+                  ? 'Por favor completa todos los campos antes de agregar el producto.'
+                  : 'Por favor completa todos los campos antes de guardar los cambios.'}
               </p>
             )}
-          />
-
-          <label htmlFor="precio">
-            Precio <span aria-hidden="true">*</span>
-          </label>
-
-          <Field
-            id="precio"
-            name="precio"
-            type="number"
-            min="0"
-            aria-required="true"
-            aria-describedby="precio-help precio-error"
-          />
-
-          <small id="precio-help">Ingrese el precio en colones.</small>
-
-          <ErrorMessage
-            name="precio"
-            render={(msg) => (
-              <p id="precio-error" className="error" role="alert">
-                {msg}
-              </p>
-            )}
-          />
-
-          <label htmlFor="categoria">
-            Categoría <span aria-hidden="true">*</span>
-          </label>
-
-          <Field
-            id="categoria"
-            name="categoria"
-            placeholder="Ej. Alimento, Juguetes..."
-            aria-required="true"
-            aria-describedby="categoria-error"
-          />
-
-          <ErrorMessage
-            name="categoria"
-            render={(msg) => (
-              <p id="categoria-error" className="error" role="alert">
-                {msg}
-              </p>
-            )}
-          />
-
-          <label htmlFor="imagen">
-            Imagen <span aria-hidden="true">*</span>
-          </label>
-
-          <Field
-            id="imagen"
-            name="imagen"
-            placeholder="https://..."
-            aria-required="true"
-            aria-describedby="imagen-error"
-          />
-
-          <ErrorMessage
-            name="imagen"
-            render={(msg) => (
-              <p id="imagen-error" className="error" role="alert">
-                {msg}
-              </p>
-            )}
-          />
-
-          <label htmlFor="stock">
-            Stock <span aria-hidden="true">*</span>
-          </label>
-
-          <Field
-            id="stock"
-            name="stock"
-            type="number"
-            min="0"
-            aria-required="true"
-            aria-describedby="stock-error"
-          />
-          <ErrorMessage
-            name="stock"
-            render={(msg) => (
-              <p id="stock-error" className="error" role="alert">
-                {msg}
-              </p>
-            )}
-          />
-
-          <div className="formButtons">
-            <button type="submit" className="btnSubmit">
-              {mode === 'create' ? 'Agregar producto' : 'Guardar cambios'}
-            </button>
-
-            <button
-              type="button"
-              className="btnCancel"
-              onClick={() => setPage('products')}
-            >
-              Cancelar
-            </button>
-          </div>
-        </Form>
+          </Form>
+        )}
       </Formik>
     </div>
   );

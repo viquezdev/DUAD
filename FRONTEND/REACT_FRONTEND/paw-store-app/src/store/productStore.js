@@ -4,6 +4,7 @@ import productsData from '../data/products.json';
 export const useProductStore = create((set) => ({
   products: productsData,
   selectedProduct: null,
+  successMessage: '',
 
   addProduct: (newProduct) =>
     set((state) => {
@@ -45,5 +46,15 @@ export const useProductStore = create((set) => ({
   clearSelectedProduct: () =>
     set({
       selectedProduct: null,
+    }),
+
+  setSuccessMessage: (message) =>
+    set({
+      successMessage: message,
+    }),
+
+  clearSuccessMessage: () =>
+    set({
+      successMessage: '',
     }),
 }));
