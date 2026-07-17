@@ -3,7 +3,7 @@ import productsData from '../data/products.json';
 
 export const useProductStore = create((set) => ({
   products: productsData,
-  selectedProduct: null,
+  selectedProductId: null,
   successMessage: '',
 
   addProduct: (newProduct) =>
@@ -38,14 +38,14 @@ export const useProductStore = create((set) => ({
       ),
     })),
 
-  setSelectedProduct: (product) =>
+  setSelectedProduct: (id) =>
     set({
-      selectedProduct: product,
+      selectedProductId: id,
     }),
 
   clearSelectedProduct: () =>
     set({
-      selectedProduct: null,
+      selectedProductId: null,
     }),
 
   setSuccessMessage: (message) =>

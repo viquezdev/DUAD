@@ -1,3 +1,12 @@
+.product-management {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
 .successMessage {
   background-color: #d4edda;
   color: #155724;

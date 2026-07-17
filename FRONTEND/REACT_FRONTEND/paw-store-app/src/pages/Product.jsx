@@ -2,7 +2,11 @@ import './Product.css';
 import { useProductStore } from '../store/productStore';
 
 export const Product = ({ setPage }) => {
-  const product = useProductStore((state) => state.selectedProduct);
+  const products = useProductStore((state) => state.products);
+
+  const selectedProductId = useProductStore((state) => state.selectedProductId);
+
+  const product = products.find((p) => p.id === selectedProductId);
 
   if (!product) {
     return (

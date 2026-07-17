@@ -14,14 +14,18 @@ export const ProductTable = ({ setPage }) => {
         En esta sección puedes gestionar el catálogo de productos de PawStore
       </p>
       <table>
+        <caption>
+          Lista de productos registrados en el catálogo de PawStore.
+        </caption>
+
         <thead>
           <tr>
-            <th>ID</th>
-            <th>NOMBRE</th>
-            <th>PRECIO</th>
-            <th>CATEGORÍA</th>
-            <th>STOCK</th>
-            <th>ACCIONES</th>
+            <th scope="col">ID</th>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">PRECIO</th>
+            <th scope="col">CATEGORÍA</th>
+            <th scope="col">STOCK</th>
+            <th scope="col">ACCIONES</th>
           </tr>
         </thead>
 
@@ -37,8 +41,9 @@ export const ProductTable = ({ setPage }) => {
               <td>
                 <button
                   className="btnEdit"
+                  aria-label={`Editar ${product.nombre}`}
                   onClick={() => {
-                    setSelectedProduct(product);
+                    setSelectedProduct(product.id);
                     setPage('editProduct');
                   }}
                 >
@@ -47,6 +52,7 @@ export const ProductTable = ({ setPage }) => {
 
                 <button
                   className="btnDelete"
+                  aria-label={`Eliminar ${product.nombre}`}
                   onClick={() => deleteProduct(product.id)}
                 >
                   Eliminar

@@ -24,7 +24,7 @@ export const ProductCard = ({ product, setPage }) => {
 
         <button
           onClick={() => {
-            setSelectedProduct(product);
+            setSelectedProduct(product.id);
             setPage('details');
           }}
         >
