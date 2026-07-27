@@ -48,6 +48,12 @@ export const Header = ({ page, setPage }) => {
           >
             Administración
           </button>
+          <button
+            className={page === 'login' ? 'nav-link active' : 'nav-link'}
+            onClick={() => setPage('login')}
+          >
+            Iniciar sesión
+          </button>
         </div>
       </nav>
     </header>
