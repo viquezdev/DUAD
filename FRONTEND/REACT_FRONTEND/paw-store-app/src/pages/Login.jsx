@@ -2,7 +2,8 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { login } from '../services/authService';
 import './Login.css';
-//import { useState } from 'react';
+import { useState } from 'react';
+import { useAuthStore } from '../store/authStore';
 
 const esquemaValidacion = Yup.object({
   email: Yup.string().email().required('El correo electrónico es obligatorio'),
@@ -10,7 +11,10 @@ const esquemaValidacion = Yup.object({
 });
 
 export const Login = ({ setPage }) => {
+  const loginStore = useAuthStore((state) => state.login);
+  const user = useAuthStore((state) => state.user);
   const [errorMessage, setErrorMessage] = useState('');
+
   return (
     <main className="login-page">
       <div className="loginContainer">
@@ -24,8 +28,13 @@ export const Login = ({ setPage }) => {
           validationSchema={esquemaValidacion}
           onSubmit={async (values) => {
             try {
-              await login(values.email, values.password);
-              setPage('adminProducts');
+              const data = await login(values.email, values.password);
+              loginStore(data.user, data.access_token, data.refresh_token);
+              if (user?.is_admin) {
+                setPage('adminProducts');
+              } else {
+                setPage('products');
+              }
             } catch (error) {
               if (error.response?.status === 401) {
                 setErrorMessage('Correo o contraseña incorrectos.');

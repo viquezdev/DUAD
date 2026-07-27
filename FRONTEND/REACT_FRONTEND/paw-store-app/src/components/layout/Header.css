@@ -63,3 +63,7 @@
   color: #aa3bff;
   font-weight: bold;
 }
+
+.nav-right .btnLogout {
+  color: red;
+}

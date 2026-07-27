@@ -1,11 +1,23 @@
 import { useProductStore } from '../store/productStore';
 import { ProductForm } from '../components/ProductForm/ProductForm';
+import { useAuthStore } from '../store/authStore';
+import { useEffect } from 'react';
 import './EditProduct.css';
 
 export const EditProduct = ({ setPage }) => {
+  const user = useAuthStore((state) => state.user);
   const products = useProductStore((state) => state.products);
   const selectedProductId = useProductStore((state) => state.selectedProductId);
   const product = products.find((p) => p.id === selectedProductId);
+  useEffect(() => {
+    if (!user || !user.is_admin) {
+      setPage('home');
+    }
+  }, [user, setPage]);
+
+  if (!user || !user.is_admin) {
+    return null;
+  }
   if (!product) {
     return (
       <div>

@@ -1,7 +1,10 @@
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 import './Header.css';
+import { useAuthStore } from '../../store/authStore';
 
 export const Header = ({ page, setPage }) => {
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   return (
     <header>
       <nav className="navbar-container">
@@ -19,7 +22,6 @@ export const Header = ({ page, setPage }) => {
           >
             Inicio
           </button>
-
           <button
             className={
               page === 'products' || page === 'details'
@@ -30,14 +32,12 @@ export const Header = ({ page, setPage }) => {
           >
             Productos
           </button>
-
           <button
             className={page === 'contact' ? 'nav-link active' : 'nav-link'}
             onClick={() => setPage('contact')}
           >
             Contacto
           </button>
-
           <button
             className={
               page === 'adminProducts' || page === 'editProduct'
@@ -48,12 +48,28 @@ export const Header = ({ page, setPage }) => {
           >
             Administración
           </button>
-          <button
-            className={page === 'login' ? 'nav-link active' : 'nav-link'}
-            onClick={() => setPage('login')}
-          >
-            Iniciar sesión
-          </button>
+          {user ? (
+            <>
+              <button className="nav-link">Usuario: {user.username}</button>
+
+              <button
+                className="btnLogout"
+                onClick={() => {
+                  logout();
+                  setPage('home');
+                }}
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <button
+              className={page === 'login' ? 'nav-link active' : 'nav-link'}
+              onClick={() => setPage('login')}
+            >
+              Iniciar sesión
+            </button>
+          )}
         </div>
       </nav>
     </header>
