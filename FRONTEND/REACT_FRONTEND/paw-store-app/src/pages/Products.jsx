@@ -1,9 +1,15 @@
 import { useProductStore } from '../store/productStore';
 import { ProductCard } from '../components/ProductCard/ProductCard';
+import { useEffect } from 'react';
 import './Products.css';
 
 export const Products = ({ setPage }) => {
+  const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   if (products.length === 0) {
     return (
