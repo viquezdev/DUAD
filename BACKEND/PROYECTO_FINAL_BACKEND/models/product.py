@@ -12,6 +12,8 @@ class Product(Base):
     price=Column(Numeric(10,2),nullable=False)
     description=Column(Text)
     quantity=Column(Integer,nullable=False,default=0)
+    category=Column(String(100),nullable=False)
+    image=Column(Text)
 
     shopping_cart_products=relationship("ShoppingCartProduct",back_populates="product")
     returns=relationship("Return",back_populates="product")
@@ -23,5 +25,7 @@ class Product(Base):
             "name":self.name,
             "price":float(self.price),
             "description":self.description,
-            "quantity":self.quantity
+            "quantity":self.quantity,
+            "category":self.category,
+            "image":self.image
         }

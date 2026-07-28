@@ -44,7 +44,7 @@ def get_product_by_id(id):
 def create_product():
     try:
         product_data=request.get_json()
-        required_fields = ["sku", "name","price","description","quantity"]
+        required_fields = ["sku", "name","price","description","quantity","category","image"]
         missing_fields = [field for field in required_fields if field not in product_data]
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
@@ -69,7 +69,9 @@ def update_product(id):
             name=data_product.get("name"),
             price=data_product.get("price"),
             description=data_product.get("description"),
-            quantity=data_product.get("quantity")
+            quantity=data_product.get("quantity"),
+            category=data_product.get("category"),
+            image=data_product.get("image")
         )
         if not updated_product:
             return jsonify({"error": "Product not found"}), 404
