@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { getProducts } from '../services/productService';
+import { getProducts, addProduct } from '../services/productService';
+import { useAuthStore } from '../store/authStore';
 
 export const useProductStore = create((set) => ({
   products: [],
@@ -27,6 +28,33 @@ export const useProductStore = create((set) => ({
       set({
         loading: false,
         error: 'No se pudieron cargar los productos.',
+      });
+    }
+  },
+
+  createProduct: async (product) => {
+    set({
+      loading: true,
+      error: null,
+    });
+
+    try {
+      const token = useAuthStore.getState().accessToken;
+      await addProduct(product, token);
+
+      const products = await getProducts();
+
+      set({
+        products,
+        loading: false,
+        successMessage: 'Producto agregado correctamente',
+      });
+    } catch (error) {
+      console.error(error);
+
+      set({
+        loading: false,
+        error: 'No se pudo agregar el producto.',
       });
     }
   },

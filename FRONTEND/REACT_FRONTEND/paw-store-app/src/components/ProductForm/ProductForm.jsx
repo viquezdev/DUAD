@@ -5,6 +5,7 @@ import { useProductStore } from '../../store/productStore';
 import { useState } from 'react';
 
 const esquemaValidacion = Yup.object({
+  sku: Yup.string().required('El SKU es obligatorio'),
   nombre: Yup.string().required('El nombre del producto es obligatorio'),
   descripcion: Yup.string().required(
     'La descripción del producto es obligatoria'
@@ -15,14 +16,14 @@ const esquemaValidacion = Yup.object({
     .required('El precio es obligatorio'),
   categoria: Yup.string().required('La categoría del producto es obligatoria'),
   imagen: Yup.string().required('La imagen del producto es obligatoria'),
-  stock: Yup.number()
+  quantity: Yup.number()
     .typeError('Debe ingresar un número válido')
-    .min(0, 'El stock no puede ser negativo')
-    .required('El stock es obligatorio'),
+    .min(0, 'La cantidad no puede ser negativa')
+    .required('La cantidad es obligatoria'),
 });
 
 export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
-  const addProduct = useProductStore((state) => state.addProduct);
+  const createProduct = useProductStore((state) => state.createProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
   const products = useProductStore((state) => state.products);
   const setSuccessMessage = useProductStore((state) => state.setSuccessMessage);
@@ -35,20 +36,34 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
 
       <Formik
         initialValues={{
+          sku: product?.sku || '',
           nombre: product?.nombre || '',
           descripcion: product?.descripcion || '',
           precio: product?.precio || 0,
           categoria: product?.categoria || '',
           imagen: product?.imagen || '',
-          stock: product?.stock || 0,
+          quantity: product?.quantity || 0,
         }}
         validationSchema={esquemaValidacion}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={async (values, { resetForm }) => {
           if (mode === 'create') {
-            addProduct(values);
-            resetForm();
+            const apiProduct = {
+              sku: values.sku,
+              name: values.nombre,
+              description: values.descripcion,
+              price: values.precio,
+              quantity: values.quantity,
+              category: values.categoria,
+              image: values.imagen,
+            };
 
-            setSuccessMessage('Producto agregado correctamente');
+            try {
+              await createProduct(apiProduct);
+              resetForm();
+              setErrorMessage('');
+            } catch (error) {
+              setErrorMessage('No se pudo crear el producto.');
+            }
           } else {
             const updated = products.some((p) => p.id === product?.id);
 
@@ -69,6 +84,18 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
       >
         {({ isValid, submitCount }) => (
           <Form>
+            <label htmlFor="sku">
+              SKU <span aria-hidden="true">*</span>
+            </label>
+
+            <Field
+              id="sku"
+              name="sku"
+              type="text"
+              placeholder="Ej. PROD-001"
+              aria-required="true"
+            />
+
             <label htmlFor="nombre">
               Nombre <span aria-hidden="true">*</span>
             </label>
@@ -137,17 +164,17 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
               aria-describedby="imagen-error"
             />
 
-            <label htmlFor="stock">
-              Stock <span aria-hidden="true">*</span>
+            <label htmlFor="quantity">
+              Cantidad <span aria-hidden="true">*</span>
             </label>
 
             <Field
-              id="stock"
-              name="stock"
+              id="quantity"
+              name="quantity"
               type="number"
               min="0"
               aria-required="true"
-              aria-describedby="stock-error"
+              aria-describedby="quantity-error"
             />
 
             <div className="formButtons">

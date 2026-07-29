@@ -7,8 +7,13 @@ export const getProducts = async () => {
   return response.data;
 };
 
-export const createProduct = async (product) => {
-  const response = await axios.post(API_URL, product);
+export const addProduct = async (product, token) => {
+  const response = await axios.post(API_URL, product, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return response.data;
 };
 
