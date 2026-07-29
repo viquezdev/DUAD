@@ -2,14 +2,25 @@ import { useProductStore } from '../store/productStore';
 import { ProductCard } from '../components/ProductCard/ProductCard';
 import { useEffect } from 'react';
 import './Products.css';
+import { Loading } from '../components/Loading/Loading';
 
 export const Products = ({ setPage }) => {
   const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
+  const error = useProductStore((state) => state.error);
+  const loading = useProductStore((state) => state.loading);
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [loadProducts]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   if (products.length === 0) {
     return (

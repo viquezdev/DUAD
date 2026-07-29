@@ -33,15 +33,15 @@ export const ProductTable = ({ setPage }) => {
           {products.map((product) => (
             <tr key={product.id}>
               <td>{product.id}</td>
-              <td>{product.nombre}</td>
-              <td>₡ {product.precio}</td>
-              <td className="productCategory">{product.categoria}</td>
-              <td>{product.stock}</td>
+              <td>{product.name}</td>
+              <td>₡ {product.price}</td>
+              <td className="productCategory">{product.category}</td>
+              <td>{product.quantity}</td>
 
               <td>
                 <button
                   className="btnEdit"
-                  aria-label={`Editar ${product.nombre}`}
+                  aria-label={`Editar ${product.name}`}
                   onClick={() => {
                     setSelectedProduct(product.id);
                     setPage('editProduct');
@@ -52,7 +52,7 @@ export const ProductTable = ({ setPage }) => {
 
                 <button
                   className="btnDelete"
-                  aria-label={`Eliminar ${product.nombre}`}
+                  aria-label={`Eliminar ${product.name}`}
                   onClick={() => deleteProduct(product.id)}
                 >
                   Eliminar
