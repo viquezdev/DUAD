@@ -7,21 +7,44 @@ export const getProducts = async () => {
   return response.data;
 };
 
-export const addProduct = async (product, token) => {
-  const response = await axios.post(API_URL, product, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const createProductService = async (product, token) => {
+  try {
+    const response = await axios.post(API_URL, product, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear producto:', error);
+    throw error;
+  }
 };
 
-export const updateProduct = async (id, product) => {
-  const response = await axios.put(`${API_URL}/${id}`, product);
-  return response.data;
+export const updateProductService = async (id, product, token) => {
+  try {
+    const response = await axios.put(`${API_URL}/${id}`, product, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error);
+    throw error;
+  }
 };
 
-export const deleteProduct = async (id) => {
-  await axios.delete(`${API_URL}/${id}`);
+export const deleteProductService = async (id, token) => {
+  try {
+    await axios.delete(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error('Error al eliminar el producto:', error);
+    throw error;
+  }
 };

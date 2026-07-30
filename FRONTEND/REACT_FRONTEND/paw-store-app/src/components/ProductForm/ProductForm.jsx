@@ -25,8 +25,7 @@ const esquemaValidacion = Yup.object({
 export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
   const createProduct = useProductStore((state) => state.createProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
-  const products = useProductStore((state) => state.products);
-  const setSuccessMessage = useProductStore((state) => state.setSuccessMessage);
+
   const [errorMessage, setErrorMessage] = useState('');
   return (
     <div className="formContainer">
@@ -37,17 +36,17 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
       <Formik
         initialValues={{
           sku: product?.sku || '',
-          nombre: product?.nombre || '',
-          descripcion: product?.descripcion || '',
-          precio: product?.precio || 0,
-          categoria: product?.categoria || '',
-          imagen: product?.imagen || '',
+          nombre: product?.name || '',
+          descripcion: product?.description || '',
+          precio: product?.price || 0,
+          categoria: product?.category || '',
+          imagen: product?.image || '',
           quantity: product?.quantity || 0,
         }}
         validationSchema={esquemaValidacion}
         onSubmit={async (values, { resetForm }) => {
           if (mode === 'create') {
-            const apiProduct = {
+            const apiNewProduct = {
               sku: values.sku,
               name: values.nombre,
               description: values.descripcion,
@@ -56,29 +55,34 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
               category: values.categoria,
               image: values.imagen,
             };
-
             try {
-              await createProduct(apiProduct);
+              await createProduct(apiNewProduct);
               resetForm();
               setErrorMessage('');
             } catch (error) {
-              setErrorMessage('No se pudo crear el producto.');
+              setErrorMessage(
+                error.response?.data?.error || 'No se pudo agregar el producto.'
+              );
             }
           } else {
-            const updated = products.some((p) => p.id === product?.id);
-
-            if (!updated) {
-              setErrorMessage('No se encontró el producto para actualizar.');
-              return;
+            const apiUpdateProduct = {
+              id: product.id,
+              name: values.nombre,
+              description: values.descripcion,
+              price: values.precio,
+              quantity: values.quantity,
+              category: values.categoria,
+              image: values.imagen,
+            };
+            try {
+              await updateProduct(apiUpdateProduct);
+              setPage('adminProducts');
+            } catch (error) {
+              setErrorMessage(
+                error.response?.data?.error ||
+                  'No se pudo actualizar el producto.'
+              );
             }
-            updateProduct({
-              ...product,
-              ...values,
-            });
-
-            setSuccessMessage('Producto actualizado correctamente');
-
-            setPage('adminProducts');
           }
         }}
       >
