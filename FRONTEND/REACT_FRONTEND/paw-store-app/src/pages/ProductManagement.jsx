@@ -11,12 +11,14 @@ export const ProductManagement = ({ setPage }) => {
   const clearSuccessMessage = useProductStore(
     (state) => state.clearSuccessMessage
   );
+  const setAuthMessage = useAuthStore((state) => state.setAuthMessage);
 
   useEffect(() => {
     if (!user || !user.is_admin) {
+      setAuthMessage('No tienes permiso para acceder a esta sección.');
       setPage('home');
     }
-  }, [user, setPage]);
+  }, [user, setPage, setAuthMessage]);
 
   useEffect(() => {
     if (!successMessage) return;

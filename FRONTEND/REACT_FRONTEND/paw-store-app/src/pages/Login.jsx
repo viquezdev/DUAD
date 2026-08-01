@@ -12,7 +12,6 @@ const esquemaValidacion = Yup.object({
 
 export const Login = ({ setPage }) => {
   const loginStore = useAuthStore((state) => state.login);
-  const user = useAuthStore((state) => state.user);
   const [errorMessage, setErrorMessage] = useState('');
 
   return (
@@ -30,14 +29,12 @@ export const Login = ({ setPage }) => {
             try {
               const data = await login(values.email, values.password);
               loginStore(data.user, data.access_token, data.refresh_token);
-              if (user?.is_admin) {
-                setPage('adminProducts');
-              } else {
-                setPage('products');
-              }
+              setPage(data.user.is_admin ? 'adminProducts' : 'products');
             } catch (error) {
               if (error.response?.status === 401) {
-                setErrorMessage('Correo o contraseña incorrectos.');
+                setErrorMessage(
+                  'Las credenciales proporcionadas no son válidas. Por favor verifica tu correo y contraseña.'
+                );
               } else {
                 setErrorMessage(
                   'Ocurrió un error al conectar con el servidor.'

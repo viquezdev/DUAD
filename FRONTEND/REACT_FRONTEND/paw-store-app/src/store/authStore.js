@@ -4,6 +4,7 @@ export const useAuthStore = create((set) => ({
   user: null,
   accessToken: null,
   refreshToken: null,
+  authMessage: '',
 
   login: (user, accessToken, refreshToken) =>
     set({
@@ -17,5 +18,15 @@ export const useAuthStore = create((set) => ({
       user: null,
       accessToken: null,
       refreshToken: null,
+    }),
+
+  setAuthMessage: (message) =>
+    set({
+      authMessage: message,
+    }),
+
+  clearAuthMessage: () =>
+    set({
+      authMessage: '',
     }),
 }));

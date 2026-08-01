@@ -13,7 +13,8 @@
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  margin-left: 7rem;
+  margin-left: 3rem;
+  margin-right: 2rem;
 }
 
 .nav-right {
@@ -66,4 +67,18 @@
 
 .nav-right .btnLogout {
   color: red;
+  white-space: nowrap;
+}
+
+.nav-user {
+  font-weight: bold;
+  line-height: 1rem;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

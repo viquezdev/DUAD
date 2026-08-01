@@ -98,6 +98,7 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
               type="text"
               placeholder="Ej. PROD-001"
               aria-required="true"
+              readOnly={mode === 'edit'}
             />
 
             <label htmlFor="nombre">

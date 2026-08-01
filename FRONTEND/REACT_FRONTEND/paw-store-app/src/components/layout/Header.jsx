@@ -50,17 +50,21 @@ export const Header = ({ page, setPage }) => {
           </button>
           {user ? (
             <>
-              <button className="nav-link">Usuario: {user.username}</button>
+              <div className="user-section">
+                <span className="nav-user">
+                  Sesión iniciada como: {user.username}
+                </span>
 
-              <button
-                className="btnLogout"
-                onClick={() => {
-                  logout();
-                  setPage('home');
-                }}
-              >
-                Cerrar sesión
-              </button>
+                <button
+                  className="btnLogout"
+                  onClick={() => {
+                    logout();
+                    setPage('home');
+                  }}
+                >
+                  Cerrar sesión
+                </button>
+              </div>
             </>
           ) : (
             <button
