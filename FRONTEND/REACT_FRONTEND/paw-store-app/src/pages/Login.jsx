@@ -4,15 +4,17 @@ import { login } from '../services/authService';
 import './Login.css';
 import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
+import { useNavigate } from 'react-router-dom';
 
 const esquemaValidacion = Yup.object({
   email: Yup.string().email().required('El correo electrónico es obligatorio'),
   password: Yup.string().required('La contraseña es obligatoria'),
 });
 
-export const Login = ({ setPage }) => {
+export const Login = () => {
   const loginStore = useAuthStore((state) => state.login);
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   return (
     <main className="login-page">
@@ -29,7 +31,7 @@ export const Login = ({ setPage }) => {
             try {
               const data = await login(values.email, values.password);
               loginStore(data.user, data.access_token, data.refresh_token);
-              setPage(data.user.is_admin ? 'adminProducts' : 'products');
+              navigate(data.user.is_admin ? '/admin/products' : '/products');
             } catch (error) {
               if (error.response?.status === 401) {
                 setErrorMessage(
@@ -83,7 +85,7 @@ export const Login = ({ setPage }) => {
                 <button
                   type="button"
                   className="btnCancel"
-                  onClick={() => setPage('home')}
+                  onClick={() => navigate('/')}
                 >
                   Volver a inicio
                 </button>

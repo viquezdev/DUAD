@@ -1,30 +1,21 @@
-import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
-import { Home } from './pages/Home';
-import { Product } from './pages/Product';
-import { Products } from './pages/Products';
-import { Contact } from './pages/Contact';
-import { ProductManagement } from './pages/ProductManagement';
-import { EditProduct } from './pages/EditProduct';
-import { Login } from './pages/Login';
+import { routes } from './routes/routes';
 
 function App() {
-  const [page, setPage] = useState('home');
-
   return (
-    <>
-      <Header page={page} setPage={setPage} />
-      {page === 'home' && <Home setPage={setPage} />}
-      {page === 'products' && <Products setPage={setPage} />}
-      {page === 'details' && <Product setPage={setPage} />}
-      {page === 'contact' && <Contact />}
-      {page === 'adminProducts' && <ProductManagement setPage={setPage} />}
-      {page === 'editProduct' && <EditProduct setPage={setPage} />}
-      {page === 'login' && <Login setPage={setPage} />}
+    <BrowserRouter>
+      <Header />
+
+      <Routes>
+        {routes.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
+      </Routes>
 
       <Footer />
-    </>
+    </BrowserRouter>
   );
 }
 

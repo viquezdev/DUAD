@@ -1,12 +1,14 @@
 import './Product.css';
 import { useProductStore } from '../store/productStore';
+import { useNavigate } from 'react-router-dom';
 
-export const Product = ({ setPage }) => {
+export const Product = () => {
   const products = useProductStore((state) => state.products);
 
   const selectedProductId = useProductStore((state) => state.selectedProductId);
 
   const product = products.find((p) => p.id === selectedProductId);
+  const navigate = useNavigate();
 
   if (!product) {
     return (
@@ -15,7 +17,7 @@ export const Product = ({ setPage }) => {
 
         <p>No hay ningún producto seleccionado.</p>
 
-        <button className="btn-detail" onClick={() => setPage('products')}>
+        <button className="btn-detail" onClick={() => navigate('/products')}>
           Volver al catálogo
         </button>
       </div>
@@ -37,7 +39,7 @@ export const Product = ({ setPage }) => {
         <button
           className="btn-detail"
           onClick={() => {
-            setPage('products');
+            navigate('/products');
           }}
         >
           Volver al catálogo

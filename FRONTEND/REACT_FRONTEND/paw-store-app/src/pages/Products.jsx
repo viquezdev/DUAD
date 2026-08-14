@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import './Products.css';
 import { Loading } from '../components/Loading/Loading';
 
-export const Products = ({ setPage }) => {
+export const Products = () => {
   const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
   const error = useProductStore((state) => state.error);
@@ -36,7 +36,7 @@ export const Products = ({ setPage }) => {
       <h1>Catálogo de productos</h1>
       <div className="products-grid">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} setPage={setPage} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>

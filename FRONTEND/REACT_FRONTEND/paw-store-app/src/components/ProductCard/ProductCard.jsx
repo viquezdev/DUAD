@@ -1,10 +1,19 @@
 import './ProductCard.css';
 import { useProductStore } from '../../store/productStore';
+import { useNavigate } from 'react-router-dom';
 
-export const ProductCard = ({ product, setPage }) => {
+export const ProductCard = ({ product }) => {
   const setSelectedProduct = useProductStore(
     (state) => state.setSelectedProduct
   );
+
+  const navigate = useNavigate();
+
+  const handleDetails = () => {
+    setSelectedProduct(product.id);
+    navigate(`/products/${product.id}`);
+  };
+
   return (
     <article className="product-card">
       <div className="product-image-container">
@@ -18,14 +27,7 @@ export const ProductCard = ({ product, setPage }) => {
 
         <p>{product.category}</p>
 
-        <button
-          onClick={() => {
-            setSelectedProduct(product.id);
-            setPage('details');
-          }}
-        >
-          Ver detalles
-        </button>
+        <button onClick={handleDetails}>Ver detalles</button>
       </div>
     </article>
   );

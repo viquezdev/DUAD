@@ -41,6 +41,7 @@
   cursor: pointer;
   padding: 0;
   font: inherit;
+  text-decoration: none;
 }
 
 .brand-image {
@@ -58,11 +59,13 @@
   background: none;
   border: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .nav-link.active {
   color: #aa3bff;
   font-weight: bold;
+  text-decoration: none;
 }
 
 .nav-right .btnLogout {

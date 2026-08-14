@@ -1,78 +1,80 @@
+import { Link, NavLink } from 'react-router-dom';
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 import './Header.css';
 import { useAuthStore } from '../../store/authStore';
 
-export const Header = ({ page, setPage }) => {
+export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   return (
     <header>
       <nav className="navbar-container">
         <div className="nav-left">
-          <button className="nav-brand" onClick={() => setPage('home')}>
+          <Link to="/" className="nav-brand">
             <img src={pawStoreLogo} alt="PawStore" className="brand-image" />
             <span className="brand-name">PawStore</span>
-          </button>
+          </Link>
         </div>
 
         <div className="nav-right">
-          <button
-            className={page === 'home' ? 'nav-link active' : 'nav-link'}
-            onClick={() => setPage('home')}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
           >
             Inicio
-          </button>
-          <button
-            className={
-              page === 'products' || page === 'details'
-                ? 'nav-link active'
-                : 'nav-link'
+          </NavLink>
+          <NavLink
+            to="/products"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
             }
-            onClick={() => setPage('products')}
           >
             Productos
-          </button>
-          <button
-            className={page === 'contact' ? 'nav-link active' : 'nav-link'}
-            onClick={() => setPage('contact')}
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
           >
             Contacto
-          </button>
-          <button
-            className={
-              page === 'adminProducts' || page === 'editProduct'
-                ? 'nav-link active'
-                : 'nav-link'
+          </NavLink>
+          <NavLink
+            to="/admin/products"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
             }
-            onClick={() => setPage('adminProducts')}
           >
             Administración
-          </button>
+          </NavLink>
           {user ? (
             <>
               <div className="user-section">
                 <span className="nav-user">
                   Sesión iniciada como: {user.username}
                 </span>
-
-                <button
+                <NavLink
+                  to="/"
                   className="btnLogout"
                   onClick={() => {
                     logout();
-                    setPage('home');
                   }}
                 >
                   Cerrar sesión
-                </button>
+                </NavLink>
               </div>
             </>
           ) : (
-            <button
-              className={page === 'login' ? 'nav-link active' : 'nav-link'}
-              onClick={() => setPage('login')}
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
             >
               Iniciar sesión
-            </button>
+            </NavLink>
           )}
         </div>
       </nav>

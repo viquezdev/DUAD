@@ -1,12 +1,15 @@
 import './ProductTable.css';
 import { useProductStore } from '../../store/productStore';
+import { useNavigate } from 'react-router-dom';
 
-export const ProductTable = ({ setPage }) => {
+export const ProductTable = () => {
   const products = useProductStore((state) => state.products);
   const deleteProduct = useProductStore((state) => state.deleteProduct);
   const setSelectedProduct = useProductStore(
     (state) => state.setSelectedProduct
   );
+  const navigate = useNavigate();
+
   return (
     <div className="tableContainer">
       <h1>Administración de productos</h1>
@@ -44,7 +47,7 @@ export const ProductTable = ({ setPage }) => {
                   aria-label={`Editar ${product.name}`}
                   onClick={() => {
                     setSelectedProduct(product.id);
-                    setPage('editProduct');
+                    navigate(`/admin/products/edit/${product.id}`);
                   }}
                 >
                   Editar

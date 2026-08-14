@@ -2,6 +2,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import './ProductForm.css';
 import { useProductStore } from '../../store/productStore';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const esquemaValidacion = Yup.object({
@@ -22,10 +23,10 @@ const esquemaValidacion = Yup.object({
     .required('La cantidad es obligatoria'),
 });
 
-export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
+export const ProductForm = ({ mode = 'create', product = null }) => {
   const createProduct = useProductStore((state) => state.createProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
-
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   return (
     <div className="formContainer">
@@ -76,7 +77,7 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
             };
             try {
               await updateProduct(apiUpdateProduct);
-              setPage('adminProducts');
+              navigate('/admin/products');
             } catch (error) {
               setErrorMessage(
                 error.response?.data?.error ||
@@ -191,7 +192,7 @@ export const ProductForm = ({ mode = 'create', product = null, setPage }) => {
                 type="button"
                 className="btnCancel"
                 onClick={() =>
-                  setPage(mode === 'edit' ? 'adminProducts' : 'products')
+                  navigate(mode === 'edit' ? '/admin/products' : '/products')
                 }
               >
                 Cancelar

@@ -1,10 +1,12 @@
 import { useAuthStore } from '../store/authStore';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-export const Home = ({ setPage }) => {
+export const Home = () => {
   const authMessage = useAuthStore((state) => state.authMessage);
   const clearMessage = useAuthStore((state) => state.clearAuthMessage);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!authMessage) return;
@@ -28,7 +30,7 @@ export const Home = ({ setPage }) => {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button className="btn-products" onClick={() => setPage('products')}>
+        <button className="btn-products" onClick={() => navigate('/products')}>
           Ver productos
         </button>
         <p>
