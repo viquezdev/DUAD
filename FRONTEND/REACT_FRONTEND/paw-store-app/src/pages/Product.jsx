@@ -37,6 +37,15 @@ export const Product = () => {
         <p className="description">{product.description}</p>
 
         <button
+          className="btn-add-cart"
+          onClick={() => {
+            navigate('/cart');
+          }}
+        >
+          Agregar al carrito
+        </button>
+
+        <button
           className="btn-detail"
           onClick={() => {
             navigate('/products');

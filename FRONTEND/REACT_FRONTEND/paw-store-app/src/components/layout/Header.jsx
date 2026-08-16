@@ -42,6 +42,14 @@ export const Header = () => {
             Contacto
           </NavLink>
           <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Carrito
+          </NavLink>
+          <NavLink
             to="/admin/products"
             className={({ isActive }) =>
               isActive ? 'nav-link active' : 'nav-link'

@@ -36,12 +36,19 @@
 }
 
 .btn-detail {
-  margin-top: auto;
-  width: 10rem;
-  border-radius: 0.3rem;
-  background-color: #aa3bff;
-  height: 2rem;
+  background: none;
+  color: #aa3bff;
+  font-weight: bold;
+  border: none;
+  margin-bottom: 2rem;
   margin-top: 1rem;
+  font-size: 1.3rem;
+}
+
+.btn-detail:hover {
+  font-weight: bold;
+  cursor: pointer;
+  font-style: italic;
 }
 
 .product-detail h1 {
@@ -52,4 +59,13 @@
 
 .price-detail {
   font-weight: bold;
+}
+
+.btn-add-cart {
+  margin-top: auto;
+  width: 10rem;
+  border-radius: 0.3rem;
+  background-color: #aa3bff;
+  height: 2rem;
+  margin-top: 1rem;
 }

@@ -5,6 +5,7 @@ import { Contact } from '../pages/Contact';
 import { Login } from '../pages/Login';
 import { ProductManagement } from '../pages/ProductManagement';
 import { EditProduct } from '../pages/EditProduct';
+import { Cart } from '../pages/Cart';
 
 export const routes = [
   {
@@ -34,5 +35,9 @@ export const routes = [
   {
     path: '/admin/products/edit/:id',
     element: <EditProduct />,
+  },
+  {
+    path: '/cart',
+    element: <Cart />,
   },
 ];
