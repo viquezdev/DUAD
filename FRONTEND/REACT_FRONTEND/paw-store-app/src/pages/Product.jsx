@@ -1,5 +1,7 @@
 import './Product.css';
 import { useProductStore } from '../store/productStore';
+import { useCartStore } from '../store/cartStore';
+import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 
 export const Product = () => {
@@ -39,6 +41,21 @@ export const Product = () => {
         <button
           className="btn-add-cart"
           onClick={() => {
+            useCartStore.getState().loadCart(useAuthStore.getState().user.id);
+            if (useCartStore.getState().cart) {
+              useCartStore
+                .getState()
+                .addToCart(useCartStore.getState().cart.id, product.id, 1);
+            } else {
+              useCartStore
+                .getState()
+                .createCart(
+                  useAuthStore.getState().user.id,
+                  'active',
+                  new Date().toISOString()
+                );
+            }
+
             navigate('/cart');
           }}
         >

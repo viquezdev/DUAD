@@ -69,3 +69,8 @@
   height: 2rem;
   margin-top: 1rem;
 }
+
+.btn-add-cart:hover {
+  background-color: #8a2be2;
+  cursor: pointer;
+}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${import.meta.env.VITE_API_URL}/shopping_carts`;
+const API_URL = `${import.meta.env.VITE_API_URL}/shopping_carts/shopping_carts`;
 
 export const getCartService = async (userId, token) => {
   try {
@@ -84,6 +84,19 @@ export const createCartService = async (userId, status, created_at, token) => {
     return response.data;
   } catch (error) {
     console.error('Error al crear el carrito:', error);
+    throw error;
+  }
+};
+
+export const deleteCartService = async (cartId, token) => {
+  try {
+    await axios.delete(`${API_URL}/${cartId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error('Error al eliminar el carrito:', error);
     throw error;
   }
 };

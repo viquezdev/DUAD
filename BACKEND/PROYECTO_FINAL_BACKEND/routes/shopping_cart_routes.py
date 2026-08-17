@@ -37,17 +37,40 @@ def get_all_carts():
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
     
 
-@shopping_carts_bp.route("/shopping_carts/<id>", methods=["GET"])
+# @shopping_carts_bp.route("/shopping_carts/<id>", methods=["GET"])
+# @roles_required()
+# @verify_cache(cache_manager,key_func=lambda id: generate_cache_cart_key(
+#     get_jwt_identity()["sub"],
+#     "admin" if get_jwt_identity()["is_admin"] else "user",
+#     id
+# ),time_to_live=600)
+# def get_cart_by_id(id):
+#     try:
+#         user_data = get_jwt_identity()
+#         data_cart = shopping_cart_repo.get_by_id(id)
+
+#         if not data_cart:
+#             return jsonify({"error": "Cart not found"}), 404
+
+
+#         if user_data["is_admin"] != True and str(user_data["sub"]) != str(data_cart.user_id):
+#             return jsonify({"error": "Access denied"}), 403
+
+#         return jsonify({"Shopping Cart": data_cart.to_dict()}), 200
+#     except Exception as e:
+#         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+
+@shopping_carts_bp.route("/shopping_carts/<user_id>", methods=["GET"])
 @roles_required()
-@verify_cache(cache_manager,key_func=lambda id: generate_cache_cart_key(
+@verify_cache(cache_manager,key_func=lambda user_id: generate_cache_cart_key(
     get_jwt_identity()["sub"],
     "admin" if get_jwt_identity()["is_admin"] else "user",
-    id
+    user_id
 ),time_to_live=600)
-def get_cart_by_id(id):
+def get_cart_by_user_id(user_id):
     try:
         user_data = get_jwt_identity()
-        data_cart = shopping_cart_repo.get_by_id(id)
+        data_cart = shopping_cart_repo.get_by_user_id(user_id)
 
         if not data_cart:
             return jsonify({"error": "Cart not found"}), 404
@@ -56,10 +79,10 @@ def get_cart_by_id(id):
         if user_data["is_admin"] != True and str(user_data["sub"]) != str(data_cart.user_id):
             return jsonify({"error": "Access denied"}), 403
 
-        return jsonify({"Shopping Cart": data_cart.to_dict()}), 200
+        return jsonify(data_cart.to_dict()), 200
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
+       
 
 @shopping_carts_bp.route("/shopping_carts", methods=["POST"])
 @roles_required()
@@ -326,9 +349,15 @@ def remove_product_from_cart(cart_id,product_id):
 
         deleted_item = shopping_cart_product_repo.delete(found_item.id)
 
+        if not deleted_item:
+            return jsonify({
+                "error": "Could not delete product from cart"
+            }), 500
+
         return jsonify({
             "message": f"Product with ID {product_id} was removed from cart {cart_id}"
         }), 200
         
     except Exception as e:
-        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+         print(f"Error deleting shopping cart product: {e}")
+         return None
