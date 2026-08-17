@@ -14,6 +14,10 @@ export const Cart = () => {
   const products = useProductStore((state) => state.products);
   const cart = useCartStore((state) => state.cart);
 
+  const deleteProductFromCart = useCartStore(
+    (state) => state.deleteProductFromCart
+  );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,9 +93,7 @@ export const Cart = () => {
                       <button
                         className="btn-remove"
                         onClick={() => {
-                          useCartStore
-                            .getState()
-                            .deleteProductFromCart(cart.id, item.product_id);
+                          deleteProductFromCart(cart.id, item.product_id);
                         }}
                       >
                         Eliminar

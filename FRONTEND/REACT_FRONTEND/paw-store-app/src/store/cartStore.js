@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import {
   getCartService,
   addToCartService,
@@ -8,6 +9,7 @@ import {
   getCartItemsService,
   deleteCartService,
 } from '../services/cartService';
+
 import { useAuthStore } from './authStore';
 
 export const useCartStore = create((set) => ({
@@ -21,10 +23,99 @@ export const useCartStore = create((set) => ({
       loading: true,
       error: null,
     });
+
     try {
       const token = useAuthStore.getState().accessToken;
+
       const cart = await getCartService(userId, token);
+
       const cartItems = await getCartItemsService(cart.id, token);
+
+      set({
+        cart,
+        cartItems,
+        loading: false,
+      });
+
+      return cart;
+    } catch (error) {
+      set({
+        error: error.message,
+        loading: false,
+      });
+
+      throw error;
+    }
+  },
+
+  createCart: async (userId, status, created_at) => {
+    set({
+      loading: true,
+      error: null,
+    });
+
+    try {
+      const token = useAuthStore.getState().accessToken;
+
+      const response = await createCartService(
+        userId,
+        status,
+        created_at,
+        token
+      );
+
+      const cart = response.shopping_cart || response;
+
+      set({
+        cart,
+        loading: false,
+      });
+
+      return cart;
+    } catch (error) {
+      set({
+        error: error.message,
+        loading: false,
+      });
+
+      throw error;
+    }
+  },
+
+  addProductToCart: async (userId, productId, quantity) => {
+    set({
+      loading: true,
+      error: null,
+    });
+
+    try {
+      const token = useAuthStore.getState().accessToken;
+
+      let cart = null;
+
+      try {
+        cart = await getCartService(userId, token);
+      } catch (error) {
+        if (error.response?.status !== 404) {
+          throw error;
+        }
+      }
+
+      if (!cart) {
+        const response = await createCartService(
+          userId,
+          'active',
+          new Date().toISOString(),
+          token
+        );
+
+        cart = response.shopping_cart || response;
+      }
+
+      await addToCartService(cart.id, productId, quantity, token);
+
+      const cartItems = await getCartItemsService(cart.id, token);
+
       set({
         cart,
         cartItems,
@@ -35,25 +126,8 @@ export const useCartStore = create((set) => ({
         error: error.message,
         loading: false,
       });
-    }
-  },
-  createCart: async (userId, status, created_at) => {
-    set({
-      loading: true,
-      error: null,
-    });
-    try {
-      const token = useAuthStore.getState().accessToken;
-      const cart = await createCartService(userId, status, created_at, token);
-      set({
-        cart,
-        loading: false,
-      });
-    } catch (error) {
-      set({
-        error: error.message,
-        loading: false,
-      });
+
+      throw error;
     }
   },
 
@@ -62,15 +136,28 @@ export const useCartStore = create((set) => ({
       loading: true,
       error: null,
     });
+
     try {
       const token = useAuthStore.getState().accessToken;
+
       await removeFromCartService(cartId, productId, token);
+
       const cartItems = await getCartItemsService(cartId, token);
+
       if (cartItems.length === 0) {
         await deleteCartService(cartId, token);
-        set({ cart: null, cartItems: [] });
+
+        set({
+          cart: null,
+          cartItems: [],
+          loading: false,
+        });
+
+        return;
       }
+
       set({
+        cartItems,
         loading: false,
       });
     } catch (error) {
@@ -78,6 +165,8 @@ export const useCartStore = create((set) => ({
         error: error.message,
         loading: false,
       });
+
+      throw error;
     }
   },
 
@@ -86,9 +175,12 @@ export const useCartStore = create((set) => ({
       loading: true,
       error: null,
     });
+
     try {
       const token = useAuthStore.getState().accessToken;
+
       await deleteCartService(cartId, token);
+
       set({
         cart: null,
         cartItems: [],
@@ -99,27 +191,8 @@ export const useCartStore = create((set) => ({
         error: error.message,
         loading: false,
       });
-    }
-  },
 
-  addToCart: async (cartId, productId, quantity) => {
-    set({
-      loading: true,
-      error: null,
-    });
-    try {
-      const token = useAuthStore.getState().accessToken;
-      await addToCartService(cartId, productId, quantity, token);
-      const cartItems = await getCartItemsService(cartId, token);
-      set({
-        cartItems,
-        loading: false,
-      });
-    } catch (error) {
-      set({
-        error: error.message,
-        loading: false,
-      });
+      throw error;
     }
   },
 }));

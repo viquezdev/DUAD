@@ -6,11 +6,15 @@ import { useNavigate } from 'react-router-dom';
 
 export const Product = () => {
   const products = useProductStore((state) => state.products);
-
   const selectedProductId = useProductStore((state) => state.selectedProductId);
 
-  const product = products.find((p) => p.id === selectedProductId);
+  const addProductToCart = useCartStore((state) => state.addProductToCart);
+
+  const user = useAuthStore((state) => state.user);
+
   const navigate = useNavigate();
+
+  const product = products.find((p) => p.id === selectedProductId);
 
   if (!product) {
     return (
@@ -25,49 +29,36 @@ export const Product = () => {
       </div>
     );
   }
+
+  const handleAddToCart = async () => {
+    try {
+      await addProductToCart(user.id, product.id, 1);
+      navigate('/cart');
+    } catch (error) {
+      console.error('Error al agregar producto al carrito:', error);
+    }
+  };
+
   return (
     <div className="product-page">
       <div className="detail-image-container">
         <img src={product.image} alt={product.name} className="detail-image" />
       </div>
+
       <div className="product-detail">
         <h1>{product.name}</h1>
 
         <p className="price-detail">₡ {product.price}</p>
+
         <p>{product.category}</p>
 
         <p className="description">{product.description}</p>
 
-        <button
-          className="btn-add-cart"
-          onClick={() => {
-            useCartStore.getState().loadCart(useAuthStore.getState().user.id);
-            if (useCartStore.getState().cart) {
-              useCartStore
-                .getState()
-                .addToCart(useCartStore.getState().cart.id, product.id, 1);
-            } else {
-              useCartStore
-                .getState()
-                .createCart(
-                  useAuthStore.getState().user.id,
-                  'active',
-                  new Date().toISOString()
-                );
-            }
-
-            navigate('/cart');
-          }}
-        >
+        <button className="btn-add-cart" onClick={handleAddToCart}>
           Agregar al carrito
         </button>
 
-        <button
-          className="btn-detail"
-          onClick={() => {
-            navigate('/products');
-          }}
-        >
+        <button className="btn-detail" onClick={() => navigate('/products')}>
           Volver al catálogo
         </button>
       </div>
