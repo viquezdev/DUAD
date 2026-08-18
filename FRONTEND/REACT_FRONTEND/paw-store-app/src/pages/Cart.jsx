@@ -33,7 +33,7 @@ export const Cart = () => {
     <div className="cart-page">
       <h1>Carrito de compras</h1>
 
-      {cartItems.length === 0 ? (
+      {!cart ? (
         <div className="empty-cart">
           <img
             src="/images/carrito.png"

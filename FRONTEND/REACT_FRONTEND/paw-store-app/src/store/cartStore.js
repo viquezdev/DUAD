@@ -29,6 +29,16 @@ export const useCartStore = create((set) => ({
 
       const cart = await getCartService(userId, token);
 
+      if (!cart) {
+        set({
+          cart: null,
+          cartItems: [],
+          loading: false,
+        });
+
+        return;
+      }
+
       const cartItems = await getCartItemsService(cart.id, token);
 
       set({
@@ -36,15 +46,11 @@ export const useCartStore = create((set) => ({
         cartItems,
         loading: false,
       });
-
-      return cart;
     } catch (error) {
       set({
-        error: error.message,
+        error: error.response?.data?.error || 'No se pudo cargar el carrito.',
         loading: false,
       });
-
-      throw error;
     }
   },
 
@@ -82,7 +88,7 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  addProductToCart: async (userId, productId, quantity) => {
+  addProductToCart: async (user_id, productId, quantity) => {
     set({
       loading: true,
       error: null,
@@ -93,17 +99,11 @@ export const useCartStore = create((set) => ({
 
       let cart = null;
 
-      try {
-        cart = await getCartService(userId, token);
-      } catch (error) {
-        if (error.response?.status !== 404) {
-          throw error;
-        }
-      }
+      cart = await getCartService(user_id, token);
 
       if (!cart) {
         const response = await createCartService(
-          userId,
+          user_id,
           'active',
           new Date().toISOString(),
           token
@@ -123,7 +123,9 @@ export const useCartStore = create((set) => ({
       });
     } catch (error) {
       set({
-        error: error.message,
+        error:
+          error.response?.data?.error ||
+          'No se pudo agregar el producto al carrito.',
         loading: false,
       });
 

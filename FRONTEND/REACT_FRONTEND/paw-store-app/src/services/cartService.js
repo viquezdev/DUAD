@@ -9,17 +9,21 @@ export const getCartService = async (userId, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
+
     return response.data;
   } catch (error) {
-    console.error('Error al obtener el carrito:', error);
+    if (error.response?.status === 404) {
+      return null;
+    }
+
     throw error;
   }
 };
 
-export const addToCartService = async (cartId, productId, quantity, token) => {
+export const addToCartService = async (cart_id, productId, quantity, token) => {
   try {
     const response = await axios.post(
-      `${API_URL}/${cartId}/products`,
+      `${API_URL}/${cart_id}/products`,
       { productId, quantity },
       {
         headers: {
@@ -70,11 +74,11 @@ export const updateCartItemService = async (
   }
 };
 
-export const createCartService = async (userId, status, created_at, token) => {
+export const createCartService = async (user_id, status, created_at, token) => {
   try {
     const response = await axios.post(
       API_URL,
-      { userId, status, created_at },
+      { user_id, status, created_at },
       {
         headers: {
           Authorization: `Bearer ${token}`,
