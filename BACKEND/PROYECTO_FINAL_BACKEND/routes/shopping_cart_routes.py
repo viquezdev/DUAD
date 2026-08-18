@@ -91,7 +91,7 @@ def create_cart():
         user_data = get_jwt_identity()
         cart_data = request.get_json()
 
-        required_fields = ["user_id", "status", "created_at"]
+        required_fields = ["user_id", "status"]
         missing_fields = [field for field in required_fields if field not in cart_data]
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
@@ -114,6 +114,10 @@ def create_cart():
             "user"   
         )
         cache_manager.delete_data(cache_key_owner)
+
+        if not new_shopping_cart:
+            return jsonify({"error": "Error creating shopping cart"}), 400
+
 
         return jsonify({
             "message": "Shopping cart created successfully",
@@ -203,19 +207,42 @@ def delete_cart(id):
 def get_all_cart_products(cart_id):
     try:
         user_data = get_jwt_identity()
+
         shopping_cart = shopping_cart_repo.get_by_id(cart_id)
+
         if not shopping_cart:
-            return jsonify({"error": "Shopping cart not found"}), 404
-        if not user_data["is_admin"] and str(user_data["sub"]) != str(shopping_cart.user_id):
-            return jsonify({"error": "Access denied"}), 403
-        data_products_cart = shopping_cart_product_repo.get_by_shopping_cart_id(cart_id)
+            return jsonify({
+                "error": "Shopping cart not found"
+            }), 404
+
+        if (
+            not user_data["is_admin"]
+            and str(user_data["sub"]) != str(shopping_cart.user_id)
+        ):
+            return jsonify({
+                "error": "Access denied"
+            }), 403
+
+        data_products_cart = (
+            shopping_cart_product_repo
+            .get_by_shopping_cart_id(cart_id)
+        )
+
         if not data_products_cart:
-            return jsonify({"data": [], "message": "No products found"}), 404
-        serialized = [p.to_dict() for p in data_products_cart]
+            return jsonify([]), 200
+
+        serialized = [
+            p.to_dict()
+            for p in data_products_cart
+        ]
+
         return jsonify(serialized), 200
+
     except Exception as e:
-        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
+        return jsonify({
+            "error": "Unexpected error",
+            "details": str(e)
+        }), 500
 
 @shopping_carts_bp.route("/shopping_carts/<cart_id>/products", methods=["POST"])
 @roles_required()

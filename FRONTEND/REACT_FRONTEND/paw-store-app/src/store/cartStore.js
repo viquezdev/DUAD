@@ -54,7 +54,7 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  createCart: async (userId, status, created_at) => {
+  createCart: async (userId, status) => {
     set({
       loading: true,
       error: null,
@@ -63,12 +63,7 @@ export const useCartStore = create((set) => ({
     try {
       const token = useAuthStore.getState().accessToken;
 
-      const response = await createCartService(
-        userId,
-        status,
-        created_at,
-        token
-      );
+      const response = await createCartService(userId, status, token);
 
       const cart = response.shopping_cart || response;
 
@@ -102,13 +97,7 @@ export const useCartStore = create((set) => ({
       cart = await getCartService(user_id, token);
 
       if (!cart) {
-        const response = await createCartService(
-          user_id,
-          'active',
-          new Date().toISOString(),
-          token
-        );
-
+        const response = await createCartService(user_id, 'active', token);
         cart = response.shopping_cart || response;
       }
 

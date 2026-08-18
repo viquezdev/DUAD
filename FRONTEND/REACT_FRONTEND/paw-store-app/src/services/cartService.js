@@ -20,11 +20,16 @@ export const getCartService = async (userId, token) => {
   }
 };
 
-export const addToCartService = async (cart_id, productId, quantity, token) => {
+export const addToCartService = async (
+  cart_id,
+  product_id,
+  quantity,
+  token
+) => {
   try {
     const response = await axios.post(
       `${API_URL}/${cart_id}/products`,
-      { productId, quantity },
+      { product_id, quantity },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -74,11 +79,11 @@ export const updateCartItemService = async (
   }
 };
 
-export const createCartService = async (user_id, status, created_at, token) => {
+export const createCartService = async (user_id, status, token) => {
   try {
     const response = await axios.post(
       API_URL,
-      { user_id, status, created_at },
+      { user_id, status },
       {
         headers: {
           Authorization: `Bearer ${token}`,

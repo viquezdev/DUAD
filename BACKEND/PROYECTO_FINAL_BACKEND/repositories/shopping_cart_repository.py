@@ -9,7 +9,7 @@ class ShoppingCartRepository:
         self.session_factory=session_factory
 
 
-    def create(self,user_id,status,created_at):
+    def create(self,user_id,status):
         try:
             with self.session_factory() as session:
                 user=session.query(User).filter_by(id=user_id).one_or_none()
@@ -18,11 +18,12 @@ class ShoppingCartRepository:
                     return None                   
                 shopping_cart=ShoppingCart(
                     user_id=user_id,
-                    status=status,
-                    created_at=created_at
+                    status=status
                     )
                 session.add(shopping_cart)
                 session.commit()
+                session.refresh(shopping_cart)
+
                 return shopping_cart
         except SQLAlchemyError as e:
             print(f"Error creating shopping cart: {e}")

@@ -36,7 +36,8 @@ class ShoppingCartProductRepository:
                 )
 
                 session.add(new_item)
-                session.flush()
+                session.commit()
+                session.refresh(new_item)
 
                 return new_item
 
