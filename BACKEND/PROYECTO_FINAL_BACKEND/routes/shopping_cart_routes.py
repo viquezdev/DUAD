@@ -173,34 +173,68 @@ def update_cart(id):
 def delete_cart(id):
     try:
         user_data = get_jwt_identity()
+
         data_cart = shopping_cart_repo.get_by_id(id)
+
         if not data_cart:
-            return jsonify({"error": "Shopping cart not found"}), 404
-        if user_data["is_admin"] != True and str(user_data["sub"]) != str(data_cart.user_id):
-            return jsonify({"error": "Access denied"}), 403
+            return jsonify({
+                "error": "Shopping cart not found"
+            }), 404
+
+        if (
+            not user_data["is_admin"]
+            and str(user_data["sub"]) != str(data_cart.user_id)
+        ):
+            return jsonify({
+                "error": "Access denied"
+            }), 403
+
         deleted = shopping_cart_repo.delete(id)
+
         if not deleted:
-            return jsonify({"error": "Delete failed"}), 400
-        requester_role = "admin" if user_data["is_admin"] else "user"
-        cache_key_requester = generate_cache_carts_all_key(
-            user_data["sub"], requester_role
-        )
-        cache_manager.delete_data(cache_key_requester)
+            return jsonify({
+                "error": "Delete failed"
+            }), 400
+
         owner_user_id = data_cart.user_id
+
+        requester_role = (
+            "admin"
+            if user_data["is_admin"]
+            else "user"
+        )
+
+        cache_key_requester = generate_cache_carts_all_key(
+            user_data["sub"],
+            requester_role
+        )
+
+        cache_manager.delete_data(cache_key_requester)
+
         cache_key_owner = generate_cache_carts_all_key(
-            owner_user_id, "user"
+            owner_user_id,
+            "user"
         )
+
         cache_manager.delete_data(cache_key_owner)
-        cache_key_cart = generate_cache_cart_key(
-            owner_user_id,"user", id
+
+        cache_key_cart_owner = generate_cache_cart_key(
+            owner_user_id,
+            "user",
+            id
         )
-        cache_manager.delete_data(cache_key_cart)
+
+        cache_manager.delete_data(cache_key_cart_owner)
+
         return jsonify({
             "message": f"Shopping cart with ID {id} was deleted successfully"
-        }), 200 
-    except Exception as e:
-        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+        }), 200
 
+    except Exception as e:
+        return jsonify({
+            "error": "Unexpected error",
+            "details": str(e)
+        }), 500
 
 @shopping_carts_bp.route("/shopping_carts/<cart_id>/products", methods=["GET"])
 @roles_required()

@@ -69,6 +69,7 @@ export const useCartStore = create((set) => ({
 
       set({
         cart,
+        cartItems: [],
         loading: false,
       });
 
