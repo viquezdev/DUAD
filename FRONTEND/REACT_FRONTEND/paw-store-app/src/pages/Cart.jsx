@@ -1,22 +1,23 @@
 import './Cart.css';
 import { useCartStore } from '../store/cartStore';
-import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
-import { useEffect } from 'react';
 import { useProductStore } from '../store/productStore';
+import { useAuthStore } from '../store/authStore';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const Cart = () => {
   const user = useAuthStore((state) => state.user);
 
-  const loadCart = useCartStore((state) => state.loadCart);
+  const cart = useCartStore((state) => state.cart);
   const cartItems = useCartStore((state) => state.cartItems);
 
-  const products = useProductStore((state) => state.products);
-  const cart = useCartStore((state) => state.cart);
-
+  const loadCart = useCartStore((state) => state.loadCart);
+  const updateCartItem = useCartStore((state) => state.updateCartItem);
   const deleteProductFromCart = useCartStore(
     (state) => state.deleteProductFromCart
   );
+
+  const products = useProductStore((state) => state.products);
 
   const navigate = useNavigate();
 
@@ -29,33 +30,51 @@ export const Cart = () => {
     loadCart(user.id);
   }, [user, navigate, loadCart]);
 
-  const handleQuantityChange = (productId, newQuantity) => {
-    if (newQuantity < 1) {
+  const handleAddQuantity = async (productId) => {
+    if (!cart) return;
+
+    const item = cartItems.find((item) => item.product_id === productId);
+
+    const product = products.find((product) => product.id === productId);
+
+    if (!item || !product) return;
+
+    if (item.quantity >= product.quantity) {
       return;
     }
+
+    const newQuantity = item.quantity + 1;
+
+    await updateCartItem(cart.id, productId, newQuantity);
   };
 
-  const handleAddQuantity = (productId) => {
+  const handleSubtractQuantity = async (productId) => {
+    if (!cart) return;
+
     const item = cartItems.find((item) => item.product_id === productId);
-    if (item) {
-      const newQuantity = item.quantity + 1;
-      handleQuantityChange(productId, newQuantity);
+
+    if (!item) return;
+
+    if (item.quantity <= 1) {
+      return;
     }
+
+    const newQuantity = item.quantity - 1;
+
+    await updateCartItem(cart.id, productId, newQuantity);
   };
 
-  const handleSubtractQuantity = (productId) => {
-    const item = cartItems.find((item) => item.product_id === productId);
-    if (item) {
-      const newQuantity = item.quantity - 1;
-      handleQuantityChange(productId, newQuantity);
-    }
+  const handleDeleteProduct = async (productId) => {
+    if (!cart) return;
+
+    await deleteProductFromCart(cart.id, productId);
   };
 
-  return (
-    <div className="cart-page">
-      <h1>Carrito de compras</h1>
+  if (!cart) {
+    return (
+      <div className="cart-page">
+        <h1>Carrito de compras</h1>
 
-      {!cart ? (
         <div className="empty-cart">
           <img
             src="/images/carrito.png"
@@ -71,84 +90,103 @@ export const Cart = () => {
             Ir a productos
           </button>
         </div>
-      ) : (
-        <>
-          <div className="cart-container">
-            <ul>
-              {cartItems.map((item) => {
-                const product = products.find(
-                  (product) => product.id === item.product_id
-                );
+      </div>
+    );
+  }
 
-                if (!product) {
-                  return null;
-                }
+  return (
+    <div className="cart-page">
+      <h1>Carrito de compras</h1>
 
-                return (
-                  <li key={item.product_id}>
-                    <div className="cart-item-details">
-                      <img className="cart-item-image" src={product.image} />
-                      <h3>{product.name}</h3>
+      <div className="cart-container">
+        <ul>
+          {cartItems.map((item) => {
+            const product = products.find(
+              (product) => product.id === item.product_id
+            );
 
-                      <button
-                        className="btn-quantity"
-                        onClick={() => {
-                          handleSubtractQuantity(item.product_id);
-                        }}
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        readOnly
-                      />
-                      <button
-                        className="btn-quantity"
-                        onClick={() => {
-                          handleAddQuantity(item.product_id);
-                        }}
-                      >
-                        +
-                      </button>
-                      <div>
-                        <p>Precio: ₡ {product.price}</p>
-                        <p className="subtotal">Subtotal: ₡ {item.subtotal}</p>
-                      </div>
+            if (!product) {
+              return null;
+            }
 
-                      <button
-                        className="btn-remove"
-                        onClick={() => {
-                          deleteProductFromCart(cart.id, item.product_id);
-                        }}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-            <div className="cart-checkout">
-              <h2>
-                Total: ₡{' '}
-                {cartItems
-                  .reduce((total, item) => total + Number(item.subtotal), 0)
-                  .toFixed(2)}
-              </h2>
-              <button
-                className="btn-checkout"
-                onClick={() => {
-                  // Lógica para proceder al pago
-                }}
-              >
-                Continuar al checkout
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+            const isMaxStock = item.quantity >= product.quantity;
+
+            return (
+              <li key={item.product_id}>
+                <div className="cart-item-details">
+                  <img
+                    className="cart-item-image"
+                    src={product.image}
+                    alt={product.name}
+                  />
+
+                  <h3>{product.name}</h3>
+
+                  <button
+                    className="btn-quantity"
+                    onClick={() => handleSubtractQuantity(item.product_id)}
+                    disabled={item.quantity <= 1}
+                    aria-label={`Disminuir cantidad de ${product.name}`}
+                  >
+                    -
+                  </button>
+
+                  <input
+                    type="number"
+                    min="1"
+                    max={product.quantity}
+                    value={item.quantity}
+                    readOnly
+                    aria-label={`Cantidad de ${product.name}`}
+                  />
+
+                  <button
+                    className="btn-quantity"
+                    onClick={() => handleAddQuantity(item.product_id)}
+                    disabled={isMaxStock}
+                    aria-label={`Aumentar cantidad de ${product.name}`}
+                  >
+                    +
+                  </button>
+
+                  <div>
+                    <p>Precio: ₡ {product.price}</p>
+
+                    <p className="subtotal">Subtotal: ₡ {item.subtotal}</p>
+
+                    {isMaxStock && (
+                      <small>No hay más unidades disponibles.</small>
+                    )}
+                  </div>
+
+                  <button
+                    className="btn-remove"
+                    onClick={() => handleDeleteProduct(item.product_id)}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="cart-checkout">
+          <h2>
+            Total: ₡{' '}
+            {cartItems
+              .reduce((total, item) => total + Number(item.subtotal), 0)
+              .toFixed(2)}
+          </h2>
+
+          <button
+            className="btn-checkout"
+            onClick={() => navigate('/checkout')}
+          >
+            Continuar al checkout
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

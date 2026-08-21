@@ -313,7 +313,6 @@ def update_product_quantity_in_modify_cart(cart_id,product_id):
 
         cart_id = int(cart_id)
         product_id = int(product_id)
-
     
         shopping_cart = shopping_cart_repo.get_by_id(cart_id)
         if not shopping_cart:

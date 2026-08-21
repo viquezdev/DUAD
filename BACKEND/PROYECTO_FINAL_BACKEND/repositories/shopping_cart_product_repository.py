@@ -171,8 +171,7 @@ class ShoppingCartProductRepository:
 
                 item.quantity = quantity
                 item.subtotal = product.price * quantity
-
-                session.flush()
+                session.commit()
                 return item
 
         except SQLAlchemyError as e:

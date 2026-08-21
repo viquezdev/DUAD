@@ -187,4 +187,33 @@ export const useCartStore = create((set) => ({
       throw error;
     }
   },
+
+  updateCartItem: async (cartId, productId, quantity) => {
+    set({
+      loading: true,
+      error: null,
+    });
+
+    try {
+      const token = useAuthStore.getState().accessToken;
+
+      await updateCartItemService(cartId, productId, quantity, token);
+
+      const cartItems = await getCartItemsService(cartId, token);
+      console.log('Nuevos cartItems:', cartItems);
+      set({
+        cartItems,
+        loading: false,
+      });
+    } catch (error) {
+      set({
+        error:
+          error.response?.data?.error ||
+          'No se pudo actualizar la cantidad del producto.',
+        loading: false,
+      });
+
+      throw error;
+    }
+  },
 }));
