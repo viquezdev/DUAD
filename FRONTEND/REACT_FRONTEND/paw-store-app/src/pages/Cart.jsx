@@ -29,6 +29,28 @@ export const Cart = () => {
     loadCart(user.id);
   }, [user, navigate, loadCart]);
 
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      return;
+    }
+  };
+
+  const handleAddQuantity = (productId) => {
+    const item = cartItems.find((item) => item.product_id === productId);
+    if (item) {
+      const newQuantity = item.quantity + 1;
+      handleQuantityChange(productId, newQuantity);
+    }
+  };
+
+  const handleSubtractQuantity = (productId) => {
+    const item = cartItems.find((item) => item.product_id === productId);
+    if (item) {
+      const newQuantity = item.quantity - 1;
+      handleQuantityChange(productId, newQuantity);
+    }
+  };
+
   return (
     <div className="cart-page">
       <h1>Carrito de compras</h1>
@@ -68,23 +90,28 @@ export const Cart = () => {
                       <img className="cart-item-image" src={product.image} />
                       <h3>{product.name}</h3>
 
-                      {/* <button
+                      <button
                         className="btn-quantity"
                         onClick={() => {
-                          // Lógica para aumentar la cantidad
+                          handleSubtractQuantity(item.product_id);
                         }}
                       >
                         -
                       </button>
-                      <input type="number" min="1" value={item.quantity} />
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        readOnly
+                      />
                       <button
                         className="btn-quantity"
                         onClick={() => {
-                          // Lógica para disminuir la cantidad
+                          handleAddQuantity(item.product_id);
                         }}
                       >
                         +
-                      </button> */}
+                      </button>
                       <div>
                         <p>Precio: ₡ {product.price}</p>
                         <p className="subtotal">Subtotal: ₡ {item.subtotal}</p>
@@ -106,7 +133,9 @@ export const Cart = () => {
             <div className="cart-checkout">
               <h2>
                 Total: ₡{' '}
-                {cartItems.reduce((total, item) => total + item.subtotal, 0)}
+                {cartItems
+                  .reduce((total, item) => total + Number(item.subtotal), 0)
+                  .toFixed(2)}
               </h2>
               <button
                 className="btn-checkout"
