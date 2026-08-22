@@ -54,9 +54,17 @@ export const Product = () => {
 
         <p className="description">{product.description}</p>
 
-        <button className="btn-add-cart" onClick={handleAddToCart}>
+        <button
+          className="btn-add-cart"
+          onClick={handleAddToCart}
+          disabled={product.quantity <= 0}
+        >
           Agregar al carrito
         </button>
+
+        {product.quantity <= 0 && (
+          <small className="stock-message">No hay stock disponible</small>
+        )}
 
         <button className="btn-detail" onClick={() => navigate('/products')}>
           Volver al catálogo

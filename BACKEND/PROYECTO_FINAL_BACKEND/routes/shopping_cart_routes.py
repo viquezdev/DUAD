@@ -305,57 +305,92 @@ def add_product_to_cart(cart_id):
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
     
 
-@shopping_carts_bp.route("/shopping_carts/<cart_id>/products/<product_id>", methods=["PATCH"])
+@shopping_carts_bp.route(
+    "/shopping_carts/<cart_id>/products/<product_id>",
+    methods=["PATCH"]
+)
 @roles_required()
-def update_product_quantity_in_modify_cart(cart_id,product_id):
+def update_product_quantity_in_modify_cart(cart_id, product_id):
     try:
         user_data = get_jwt_identity()
 
         cart_id = int(cart_id)
         product_id = int(product_id)
-    
+
         shopping_cart = shopping_cart_repo.get_by_id(cart_id)
+
         if not shopping_cart:
-            return jsonify({"error": "Shopping cart not found"}), 404
+            return jsonify({
+                "error": "Shopping cart not found"
+            }), 404
 
-    
-        if not user_data["is_admin"] and str(user_data["sub"]) != str(shopping_cart.user_id):
-            return jsonify({"error": "Access denied"}), 403
+        if (
+            not user_data["is_admin"]
+            and str(user_data["sub"]) != str(shopping_cart.user_id)
+        ):
+            return jsonify({
+                "error": "Access denied"
+            }), 403
 
+        cart_product = shopping_cart_product_repo.get_product_in_cart(
+            cart_id,
+            product_id
+        )
 
-        cart_product = shopping_cart_product_repo.get_product_in_cart(cart_id, product_id)
         if not cart_product:
-            return jsonify({"error": "Product not found in this cart"}), 404
-
+            return jsonify({
+                "error": "Product not found in this cart"
+            }), 404
 
         data = request.get_json()
         new_quantity = data.get("quantity")
 
-        if new_quantity is None or type(new_quantity) is not int or new_quantity <= 0:
-            return jsonify({"error": "Quantity must be a positive integer"}), 400
+        if (
+            new_quantity is None
+            or type(new_quantity) is not int
+            or new_quantity <= 0
+        ):
+            return jsonify({
+                "error": "Quantity must be a positive integer"
+            }), 400
 
-    
         product = product_repo.get_by_id(product_id)
+
         if not product:
-            return jsonify({"error": "Product not found"}), 404
+            return jsonify({
+                "error": "Product not found"
+            }), 404
 
-    
-        stock_disponible = product.quantity + cart_product.quantity
-        if new_quantity > stock_disponible:
-            return jsonify({"error": "Not enough stock"}), 400
-
+        if new_quantity > product.quantity:
+            return jsonify({
+                "error": "Not enough stock"
+            }), 400
 
         updated_item = shopping_cart_product_repo.update_quantity(
             cart_product_id=cart_product.id,
             quantity=new_quantity
         )
 
+        if not updated_item:
+            return jsonify({
+                "error": "Could not update product quantity"
+            }), 400
+
         return jsonify({
             "message": f"Product {product_id} updated in cart {cart_id}",
-            "shopping_cart_product": updated_item.to_dict()
+            "shopping_cart_product": updated_item
         }), 200
+
+    except ValueError:
+        return jsonify({
+            "error": "Invalid cart or product ID"
+        }), 400
+
     except Exception as e:
-        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+        return jsonify({
+            "error": "Unexpected error",
+            "details": str(e)
+        }), 500
     
 
 @shopping_carts_bp.route("/shopping_carts/<cart_id>/products/<product_id>", methods=["DELETE"])

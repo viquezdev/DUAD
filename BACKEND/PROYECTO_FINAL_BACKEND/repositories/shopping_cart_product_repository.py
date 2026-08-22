@@ -159,20 +159,34 @@ class ShoppingCartProductRepository:
     def update_quantity(self, cart_product_id, quantity):
         try:
             with self.session_factory() as session:
-                item = session.query(ShoppingCartProduct).filter_by(id=cart_product_id).one_or_none()
+
+                item = (
+                    session.query(ShoppingCartProduct)
+                    .filter_by(id=cart_product_id)
+                    .one_or_none()
+                )
+
                 if not item:
-                    print(f"Shopping cart product with id {cart_product_id} not found.")
                     return None
 
-                product = session.query(Product).filter_by(id=item.product_id).one_or_none()
+                product = (
+                    session.query(Product)
+                    .filter_by(id=item.product_id)
+                    .one_or_none()
+                )
+
                 if not product:
-                    print(f"Product with id {item.product_id} not found.")
+                    return None
+
+                if quantity <= 0:
                     return None
 
                 item.quantity = quantity
                 item.subtotal = product.price * quantity
+
                 session.commit()
-                return item
+
+                return item.to_dict()
 
         except SQLAlchemyError as e:
             print(f"Error updating quantity: {e}")

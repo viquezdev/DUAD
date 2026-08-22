@@ -99,16 +99,27 @@ export const useCartStore = create((set) => ({
 
       if (!cart) {
         const response = await createCartService(user_id, 'active', token);
+
         cart = response.shopping_cart || response;
       }
 
-      await addToCartService(cart.id, productId, quantity, token);
-
       const cartItems = await getCartItemsService(cart.id, token);
+
+      const item = cartItems.find((item) => item.product_id === productId);
+
+      if (item) {
+        const newQuantity = item.quantity + quantity;
+
+        await updateCartItemService(cart.id, productId, newQuantity, token);
+      } else {
+        await addToCartService(cart.id, productId, quantity, token);
+      }
+
+      const updatedCartItems = await getCartItemsService(cart.id, token);
 
       set({
         cart,
-        cartItems,
+        cartItems: updatedCartItems,
         loading: false,
       });
     } catch (error) {
