@@ -15,6 +15,10 @@ class Invoice(Base):
     payment_method=Column(String(50),nullable=False)
     payment_status=Column(String(50),nullable=False)
     total_amount=Column(Numeric(10,2),nullable=False)
+    full_name=Column(String(150),nullable=False)
+    phone_number=Column(String(30),nullable=False)
+    email=Column(String(150),nullable=False)
+
 
     user=relationship("User",back_populates="invoices")
     shopping_cart=relationship("ShoppingCart",back_populates="invoice")
@@ -32,5 +36,8 @@ class Invoice(Base):
             "billing_address":self.billing_address,
             "payment_method":self.payment_method,
             "payment_status":self.payment_status,
-            "total_amount":self.total_amount
+            "total_amount":self.total_amount,
+            "full_name":self.full_name,
+            "phone_number":self.phone_number,
+            "email":self.email
         }

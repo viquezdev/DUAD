@@ -49,7 +49,8 @@ class ShoppingCartRepository:
                 }
                 for attr,value in fields.items():
                     if value is not None:
-                        setattr(shopping_cart,attr,value)                   
+                        setattr(shopping_cart,attr,value)
+                session.commit()                   
                 session.flush()
                 return shopping_cart
         except SQLAlchemyError as e:
