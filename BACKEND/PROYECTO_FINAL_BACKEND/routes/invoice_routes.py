@@ -7,6 +7,8 @@ from services.decorators import roles_required,verify_cache,get_jwt_identity
 from cache_utils.manager import cache_manager
 from cache_utils.invoice_keys import generate_cache_invoice_key, generate_cache_invoices_all_key
 
+from cache_utils.product_keys import generate_cache_products_all_key
+
 
 invoice_repo=InvoiceRepository()
 shopping_cart_repo=ShoppingCartRepository()
@@ -175,6 +177,8 @@ def create_invoice():
             id=shopping_cart.id,
             status="invoiced"
         )
+
+        cache_manager.delete_data(generate_cache_products_all_key())
 
         return jsonify({
             "message": "Invoice created successfully",

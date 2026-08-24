@@ -30,7 +30,6 @@ class Invoice(Base):
             "id":self.id,
             "invoice_number":self.invoice_number,
             "user_id":self.user_id,
-            "username": self.user.username if self.user else None,
             "shopping_cart_id":self.shopping_cart_id,
             "created_at":self.created_at,
             "billing_address":self.billing_address,
