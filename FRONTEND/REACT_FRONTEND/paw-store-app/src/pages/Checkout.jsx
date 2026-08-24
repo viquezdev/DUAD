@@ -1,6 +1,8 @@
-import 'Checkout.css';
+import './Checkout.css';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { useCartStore } from '../store/cartStore';
+import { useProductStore } from '../store/productStore';
 
 const esquemaValidacion = Yup.object({
   nombre: Yup.string().required('El nombre completo es obligatorio'),
@@ -10,9 +12,13 @@ const esquemaValidacion = Yup.object({
 });
 
 export const Checkout = () => {
+  const cartItems = useCartStore((state) => state.cartItems);
+  const products = useProductStore((state) => state.products);
+
   return (
     <div className="checkout-page">
       <div className="purchase-information">
+        <h1>Información de compra</h1>
         <Formik
           initialValues={{
             nombre: '',
@@ -91,7 +97,34 @@ export const Checkout = () => {
           )}
         </Formik>
       </div>
-      <div className="order-summary"></div>
+      <div className="order-summary">
+        <h1>Resumen del pedido</h1>
+        <ul>
+          {cartItems.map((item) => {
+            const product = products.find(
+              (product) => product.id === item.product_id
+            );
+
+            if (!product) {
+              return null;
+            }
+
+            return (
+              <li key={item.product_id}>
+                <div className="items-summary">
+                  <p>{product.name}</p>
+                  <div className="item-price">
+                    <p>₡{product.price}</p>
+                    <p>
+                      {product.quantity} x ₡ {product.price}{' '}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };
