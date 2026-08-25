@@ -38,6 +38,7 @@ export const useCartStore = create((set) => ({
       cartItems: [],
     });
     useInvoiceStore.getState().clearInvoice();
+    useCartStore.getState().disableCheckout();
   },
 
   loadCart: async (userId) => {

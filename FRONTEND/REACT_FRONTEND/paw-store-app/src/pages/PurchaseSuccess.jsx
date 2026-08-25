@@ -120,7 +120,12 @@ export const PurchaseSuccess = () => {
           Volver al catálogo
         </button>
 
-        <button className="btn-home" onClick={() => navigate('/')}>
+        <button
+          className="btn-home"
+          onClick={() => {
+            (clearData(), navigate('/'));
+          }}
+        >
           Ir al inicio
         </button>
       </div>

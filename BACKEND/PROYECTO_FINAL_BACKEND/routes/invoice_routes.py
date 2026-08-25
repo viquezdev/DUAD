@@ -6,7 +6,7 @@ from repositories.product_repository import ProductRepository
 from services.decorators import roles_required,verify_cache,get_jwt_identity
 from cache_utils.manager import cache_manager
 from cache_utils.invoice_keys import generate_cache_invoice_key, generate_cache_invoices_all_key
-
+from cache_utils.cart_keys import generate_cache_active_cart_key
 from cache_utils.product_keys import generate_cache_products_all_key
 
 
@@ -179,6 +179,20 @@ def create_invoice():
         )
 
         cache_manager.delete_data(generate_cache_products_all_key())
+
+        owner_user_id = shopping_cart.user_id
+        requester_role = (
+                    "admin"
+                    if user_data["is_admin"]
+                    else "user"
+                )
+
+        cache_key_owner = generate_cache_active_cart_key(
+            owner_user_id,
+            requester_role
+        )
+
+        cache_manager.delete_data(cache_key_owner)
 
         return jsonify({
             "message": "Invoice created successfully",
