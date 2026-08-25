@@ -6,6 +6,7 @@ import { useProductStore } from '../store/productStore';
 import { useNavigate } from 'react-router-dom';
 import { useInvoiceStore } from '../store/invoiceStore';
 import { useAuthStore } from '../store/authStore';
+import { useState } from 'react';
 
 const esquemaValidacion = Yup.object({
   nombre: Yup.string().required('El nombre completo es obligatorio'),
@@ -22,6 +23,7 @@ export const Checkout = () => {
   const createInvoice = useInvoiceStore((state) => state.createInvoice);
   const user = useAuthStore((state) => state.user);
   const disableCheckout = useCartStore((state) => state.disableCheckout);
+  const [errorCompra, setErrorCompra] = useState(null);
   return (
     <div className="checkout-page">
       <div className="purchase-information">
@@ -35,6 +37,7 @@ export const Checkout = () => {
           }}
           validationSchema={esquemaValidacion}
           onSubmit={async (values) => {
+            setErrorCompra(null);
             try {
               const invoiceData = {
                 user_id: user.id,
@@ -53,6 +56,12 @@ export const Checkout = () => {
               }
             } catch (error) {
               console.error('Error al completar la compra:', error);
+
+              const mensaje =
+                error.response?.data?.error ||
+                'No se pudo completar la compra. Inténtalo nuevamente.';
+
+              setErrorCompra(mensaje);
             }
           }}
         >
@@ -155,6 +164,11 @@ export const Checkout = () => {
             .reduce((total, item) => total + Number(item.subtotal), 0)
             .toFixed(2)}{' '}
         </p>
+        {errorCompra && (
+          <p className="formError" role="alert">
+            {errorCompra}
+          </p>
+        )}
         <button type="submit" form="checkout-form" className="btn-confirm">
           Confirmar compra
         </button>
