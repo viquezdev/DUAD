@@ -11,12 +11,34 @@ import {
 } from '../services/cartService';
 
 import { useAuthStore } from './authStore';
+import { useInvoiceStore } from './invoiceStore';
 
 export const useCartStore = create((set) => ({
   cart: null,
   cartItems: [],
   loading: false,
   error: null,
+  checkoutEnabled: false,
+
+  enableCheckout: () => {
+    set({
+      checkoutEnabled: true,
+    });
+  },
+
+  disableCheckout: () => {
+    set({
+      checkoutEnabled: false,
+    });
+  },
+
+  clearCart: () => {
+    set({
+      cart: null,
+      cartItems: [],
+    });
+    useInvoiceStore.getState().clearInvoice();
+  },
 
   loadCart: async (userId) => {
     set({

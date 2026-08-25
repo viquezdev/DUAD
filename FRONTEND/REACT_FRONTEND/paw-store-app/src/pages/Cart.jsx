@@ -16,7 +16,7 @@ export const Cart = () => {
   const deleteProductFromCart = useCartStore(
     (state) => state.deleteProductFromCart
   );
-
+  const enableCheckout = useCartStore((state) => state.enableCheckout);
   const products = useProductStore((state) => state.products);
 
   const navigate = useNavigate();
@@ -181,7 +181,10 @@ export const Cart = () => {
 
           <button
             className="btn-checkout"
-            onClick={() => navigate('/checkout')}
+            onClick={() => {
+              enableCheckout();
+              navigate('/checkout');
+            }}
           >
             Continuar al checkout
           </button>

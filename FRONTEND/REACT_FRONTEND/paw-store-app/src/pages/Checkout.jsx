@@ -21,6 +21,7 @@ export const Checkout = () => {
   const cart = useCartStore((state) => state.cart);
   const createInvoice = useInvoiceStore((state) => state.createInvoice);
   const user = useAuthStore((state) => state.user);
+  const disableCheckout = useCartStore((state) => state.disableCheckout);
   return (
     <div className="checkout-page">
       <div className="purchase-information">
@@ -47,10 +48,9 @@ export const Checkout = () => {
               };
 
               const invoice = await createInvoice(invoiceData);
-
-              console.log('Factura creada:', invoice);
-
-              // me falta poner enlace para la  página de confirmación
+              if (invoice) {
+                navigate('/purchase-success');
+              }
             } catch (error) {
               console.error('Error al completar la compra:', error);
             }
@@ -139,10 +139,10 @@ export const Checkout = () => {
                 <div className="items-summary">
                   <h2>{product.name}</h2>
                   <p>
-                    {product.quantity} x ₡ {product.price}{' '}
+                    {item.quantity} x ₡ {product.price}{' '}
                   </p>
                   <div className="item-price">
-                    <p>Subtotal ₡{product.price}</p>
+                    <p>Subtotal ₡{item.subtotal}</p>
                   </div>
                 </div>
               </li>
@@ -158,7 +158,13 @@ export const Checkout = () => {
         <button type="submit" form="checkout-form" className="btn-confirm">
           Confirmar compra
         </button>
-        <button className="btn-cancel" onClick={() => navigate('/cart')}>
+        <button
+          className="btn-cancel"
+          onClick={() => {
+            disableCheckout();
+            navigate('/cart');
+          }}
+        >
           Cancelar
         </button>
       </div>

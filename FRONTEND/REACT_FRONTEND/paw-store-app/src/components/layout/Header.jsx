@@ -2,10 +2,12 @@ import { Link, NavLink } from 'react-router-dom';
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 import './Header.css';
 import { useAuthStore } from '../../store/authStore';
+import { useCartStore } from '../../store/cartStore';
 
 export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const checkoutEnabled = useCartStore((state) => state.checkoutEnabled);
   return (
     <header>
       <nav className="navbar-container">
@@ -49,6 +51,16 @@ export const Header = () => {
           >
             Carrito
           </NavLink>
+          {checkoutEnabled && (
+            <NavLink
+              to="/checkout"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              Checkout
+            </NavLink>
+          )}
           <NavLink
             to="/admin/products"
             className={({ isActive }) =>
