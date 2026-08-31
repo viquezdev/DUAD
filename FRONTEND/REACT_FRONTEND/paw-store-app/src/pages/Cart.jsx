@@ -163,7 +163,7 @@ export const Cart = () => {
                     className="btn-remove"
                     onClick={() => handleDeleteProduct(item.product_id)}
                   >
-                    Eliminar
+                    Quitar
                   </button>
                 </div>
               </li>
@@ -186,7 +186,7 @@ export const Cart = () => {
               navigate('/checkout');
             }}
           >
-            Continuar al checkout
+            Ir al checkout
           </button>
         </div>
       </div>

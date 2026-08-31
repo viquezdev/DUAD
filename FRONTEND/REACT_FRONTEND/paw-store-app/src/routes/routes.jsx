@@ -8,6 +8,7 @@ import { EditProduct } from '../pages/EditProduct';
 import { Cart } from '../pages/Cart';
 import { Checkout } from '../pages/Checkout';
 import { PurchaseSuccess } from '../pages/PurchaseSuccess';
+import { NotFound } from '../pages/NotFound';
 
 export const routes = [
   {
@@ -49,5 +50,9 @@ export const routes = [
   {
     path: '/purchase-success',
     element: <PurchaseSuccess />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ];

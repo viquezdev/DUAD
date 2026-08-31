@@ -11,7 +11,6 @@ export const useProductStore = create((set) => ({
   products: [],
   loading: false,
   error: null,
-  selectedProductId: null,
   successMessage: '',
 
   loadProducts: async () => {
@@ -120,16 +119,6 @@ export const useProductStore = create((set) => ({
       throw error;
     }
   },
-
-  setSelectedProduct: (id) =>
-    set({
-      selectedProductId: id,
-    }),
-
-  clearSelectedProduct: () =>
-    set({
-      selectedProductId: null,
-    }),
 
   setSuccessMessage: (message) =>
     set({

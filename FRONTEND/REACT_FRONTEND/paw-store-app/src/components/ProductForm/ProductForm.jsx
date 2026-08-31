@@ -28,6 +28,7 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
   const updateProduct = useProductStore((state) => state.updateProduct);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+
   return (
     <div className="formContainer">
       <h1>

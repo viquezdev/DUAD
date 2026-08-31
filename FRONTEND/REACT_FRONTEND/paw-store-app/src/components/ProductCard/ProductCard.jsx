@@ -1,16 +1,10 @@
 import './ProductCard.css';
-import { useProductStore } from '../../store/productStore';
 import { useNavigate } from 'react-router-dom';
 
 export const ProductCard = ({ product }) => {
-  const setSelectedProduct = useProductStore(
-    (state) => state.setSelectedProduct
-  );
-
   const navigate = useNavigate();
 
   const handleDetails = () => {
-    setSelectedProduct(product.id);
     navigate(`/products/${product.id}`);
   };
 

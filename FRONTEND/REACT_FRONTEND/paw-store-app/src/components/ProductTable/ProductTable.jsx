@@ -1,14 +1,19 @@
 import './ProductTable.css';
 import { useProductStore } from '../../store/productStore';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const ProductTable = () => {
+  const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
   const deleteProduct = useProductStore((state) => state.deleteProduct);
-  const setSelectedProduct = useProductStore(
-    (state) => state.setSelectedProduct
-  );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (products.length === 0) {
+      loadProducts();
+    }
+  }, [products.length, loadProducts]);
 
   return (
     <div className="tableContainer">
@@ -46,7 +51,6 @@ export const ProductTable = () => {
                   className="btnEdit"
                   aria-label={`Editar ${product.name}`}
                   onClick={() => {
-                    setSelectedProduct(product.id);
                     navigate(`/admin/products/edit/${product.id}`);
                   }}
                 >

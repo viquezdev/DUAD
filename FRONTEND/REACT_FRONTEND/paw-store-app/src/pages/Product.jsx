@@ -2,26 +2,42 @@ import './Product.css';
 import { useProductStore } from '../store/productStore';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const Product = () => {
+  const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
-  const selectedProductId = useProductStore((state) => state.selectedProductId);
 
   const addProductToCart = useCartStore((state) => state.addProductToCart);
-
+  const loading = useProductStore((state) => state.loading);
   const user = useAuthStore((state) => state.user);
 
   const navigate = useNavigate();
 
-  const product = products.find((p) => p.id === selectedProductId);
+  const { id } = useParams();
+
+  const product = products.find((p) => p.id === Number(id));
+  console.log('ID de la URL:', id);
+  console.log('Productos:', products);
+  console.log('Producto encontrado:', product);
+
+  useEffect(() => {
+    if (products.length === 0) {
+      loadProducts();
+    }
+  }, [products.length, loadProducts]);
+
+  if (loading) {
+    return <h1>Cargando producto...</h1>;
+  }
 
   if (!product) {
     return (
-      <div className="product-page">
-        <h1>Detalle del producto</h1>
+      <div className="product-not-found">
+        <h1>Producto no encontrado</h1>
 
-        <p>No hay ningún producto seleccionado.</p>
+        <p>Lo sentimos, no pudimos encontrar el producto que estás buscando.</p>
 
         <button className="btn-detail" onClick={() => navigate('/products')}>
           Volver al catálogo
@@ -32,8 +48,12 @@ export const Product = () => {
 
   const handleAddToCart = async () => {
     try {
-      await addProductToCart(user.id, product.id, 1);
-      navigate('/cart');
+      if (!user) {
+        navigate('/login');
+      } else {
+        await addProductToCart(user.id, product.id, 1);
+        navigate('/cart');
+      }
     } catch (error) {
       console.error('Error al agregar producto al carrito:', error);
     }

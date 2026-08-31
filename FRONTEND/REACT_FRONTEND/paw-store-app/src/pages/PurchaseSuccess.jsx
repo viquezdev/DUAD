@@ -39,11 +39,10 @@ export const PurchaseSuccess = () => {
           ✓
         </div>
 
-        <h1>Compra realizada con éxito</h1>
+        <h1>!Gracias por tu compra!</h1>
 
         <p>
-          Tu pedido ha sido procesado correctamente. Recibirás un correo con la
-          confirmación y los detalles de tu compra.
+          Hemos enviado un correo de confirmación con los detalles de tu pedido.
         </p>
 
         <p className="invoice-number">
