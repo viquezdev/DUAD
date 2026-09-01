@@ -1,5 +1,5 @@
 import './Cart.css';
-import { useCartStore } from '../store/cartStore';
+import { useCartStore, selectCartTotal } from '../store/cartStore';
 import { useProductStore } from '../store/productStore';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ export const Cart = () => {
   const products = useProductStore((state) => state.products);
 
   const navigate = useNavigate();
+  const total = useCartStore(selectCartTotal);
 
   useEffect(() => {
     if (!user) {
@@ -172,12 +173,7 @@ export const Cart = () => {
         </ul>
 
         <div className="cart-checkout">
-          <h2>
-            Total: ₡{' '}
-            {cartItems
-              .reduce((total, item) => total + Number(item.subtotal), 0)
-              .toFixed(2)}
-          </h2>
+          <h2>Total: ₡ {total}</h2>
 
           <button
             className="btn-checkout"

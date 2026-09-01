@@ -5,18 +5,18 @@ import { useProductStore } from '../../store/productStore';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const esquemaValidacion = Yup.object({
+const validationSchema = Yup.object({
   sku: Yup.string().required('El SKU es obligatorio'),
-  nombre: Yup.string().required('El nombre del producto es obligatorio'),
-  descripcion: Yup.string().required(
+  name: Yup.string().required('El nombre del producto es obligatorio'),
+  description: Yup.string().required(
     'La descripción del producto es obligatoria'
   ),
-  precio: Yup.number()
+  price: Yup.number()
     .typeError('Debe ingresar un número válido')
     .positive('El precio debe ser mayor que cero')
     .required('El precio es obligatorio'),
-  categoria: Yup.string().required('La categoría del producto es obligatoria'),
-  imagen: Yup.string().required('La imagen del producto es obligatoria'),
+  category: Yup.string().required('La categoría del producto es obligatoria'),
+  image: Yup.string().required('La imagen del producto es obligatoria'),
   quantity: Yup.number()
     .typeError('Debe ingresar un número válido')
     .min(0, 'La cantidad no puede ser negativa')
@@ -38,27 +38,28 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
       <Formik
         initialValues={{
           sku: product?.sku || '',
-          nombre: product?.name || '',
-          descripcion: product?.description || '',
-          precio: product?.price || 0,
-          categoria: product?.category || '',
-          imagen: product?.image || '',
+          name: product?.name || '',
+          description: product?.description || '',
+          price: product?.price || 0,
+          category: product?.category || '',
+          image: product?.image || '',
           quantity: product?.quantity || 0,
         }}
-        validationSchema={esquemaValidacion}
+        validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
           if (mode === 'create') {
-            const apiNewProduct = {
+            const newProduct = {
               sku: values.sku,
-              name: values.nombre,
-              description: values.descripcion,
-              price: values.precio,
+              name: values.name,
+              description: values.description,
+              price: values.price,
               quantity: values.quantity,
-              category: values.categoria,
-              image: values.imagen,
+              category: values.category,
+              image: values.image,
             };
+
             try {
-              await createProduct(apiNewProduct);
+              await createProduct(newProduct);
               resetForm();
               setErrorMessage('');
             } catch (error) {
@@ -67,17 +68,18 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
               );
             }
           } else {
-            const apiUpdateProduct = {
+            const updatedProduct = {
               id: product.id,
-              name: values.nombre,
-              description: values.descripcion,
-              price: values.precio,
+              name: values.name,
+              description: values.description,
+              price: values.price,
               quantity: values.quantity,
-              category: values.categoria,
-              image: values.imagen,
+              category: values.category,
+              image: values.image,
             };
+
             try {
-              await updateProduct(apiUpdateProduct);
+              await updateProduct(updatedProduct);
               navigate('/admin/products');
             } catch (error) {
               setErrorMessage(
@@ -103,72 +105,72 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
               readOnly={mode === 'edit'}
             />
 
-            <label htmlFor="nombre">
+            <label htmlFor="name">
               Nombre <span aria-hidden="true">*</span>
             </label>
 
             <Field
-              id="nombre"
-              name="nombre"
+              id="name"
+              name="name"
               type="text"
               placeholder="Nombre del producto"
               aria-required="true"
-              aria-describedby="nombre-help nombre-error"
+              aria-describedby="name-help name-error"
             />
 
-            <small id="nombre-help">Escriba el nombre del producto.</small>
+            <small id="name-help">Escriba el nombre del producto.</small>
 
-            <label htmlFor="descripcion">
+            <label htmlFor="description">
               Descripción <span aria-hidden="true">*</span>
             </label>
 
             <Field
-              id="descripcion"
-              name="descripcion"
+              id="description"
+              name="description"
               as="textarea"
               rows="5"
               placeholder="Descripción detallada del producto"
               aria-required="true"
-              aria-describedby="descripcion-error"
+              aria-describedby="description-error"
             />
 
-            <label htmlFor="precio">
+            <label htmlFor="price">
               Precio <span aria-hidden="true">*</span>
             </label>
 
             <Field
-              id="precio"
-              name="precio"
+              id="price"
+              name="price"
               type="number"
               min="0"
               aria-required="true"
-              aria-describedby="precio-help precio-error"
+              aria-describedby="price-help price-error"
             />
 
-            <small id="precio-help">Ingrese el precio en colones.</small>
+            <small id="price-help">Ingrese el precio en colones.</small>
 
-            <label htmlFor="categoria">
+            <label htmlFor="category">
               Categoría <span aria-hidden="true">*</span>
             </label>
 
             <Field
-              id="categoria"
-              name="categoria"
+              id="category"
+              name="category"
               placeholder="Ej. Alimento, Juguetes..."
               aria-required="true"
-              aria-describedby="categoria-error"
+              aria-describedby="category-error"
             />
 
-            <label htmlFor="imagen">
+            <label htmlFor="image">
               Imagen <span aria-hidden="true">*</span>
             </label>
 
             <Field
-              id="imagen"
-              name="imagen"
+              id="image"
+              name="image"
               placeholder="https://..."
               aria-required="true"
-              aria-describedby="imagen-error"
+              aria-describedby="image-error"
             />
 
             <label htmlFor="quantity">
@@ -199,6 +201,7 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
                 Cancelar
               </button>
             </div>
+
             {errorMessage && (
               <p className="formError" role="alert">
                 {errorMessage}

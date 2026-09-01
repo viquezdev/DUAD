@@ -9,6 +9,7 @@ import { Cart } from '../pages/Cart';
 import { Checkout } from '../pages/Checkout';
 import { PurchaseSuccess } from '../pages/PurchaseSuccess';
 import { NotFound } from '../pages/NotFound';
+import { AdminRoute } from './AdminRoute';
 
 export const routes = [
   {
@@ -32,12 +33,17 @@ export const routes = [
     element: <Login />,
   },
   {
-    path: '/admin/products',
-    element: <ProductManagement />,
-  },
-  {
-    path: '/admin/products/edit/:id',
-    element: <EditProduct />,
+    element: <AdminRoute />,
+    children: [
+      {
+        path: '/admin/products',
+        element: <ProductManagement />,
+      },
+      {
+        path: '/admin/products/edit/:id',
+        element: <EditProduct />,
+      },
+    ],
   },
   {
     path: '/cart',

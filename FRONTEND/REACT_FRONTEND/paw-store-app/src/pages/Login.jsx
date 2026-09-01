@@ -6,13 +6,15 @@ import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 
-const esquemaValidacion = Yup.object({
-  email: Yup.string().email().required('El correo electrónico es obligatorio'),
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email('El correo electrónico no es válido')
+    .required('El correo electrónico es obligatorio'),
   password: Yup.string().required('La contraseña es obligatoria'),
 });
 
 export const Login = () => {
-  const loginStore = useAuthStore((state) => state.login);
+  const loginUser = useAuthStore((state) => state.login);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
@@ -20,17 +22,25 @@ export const Login = () => {
     <main className="login-page">
       <div className="loginContainer">
         <h1>Iniciar sesión</h1>
-        {errorMessage && <p className="formError">{errorMessage}</p>}
+
+        {errorMessage && (
+          <p className="formError" role="alert">
+            {errorMessage}
+          </p>
+        )}
+
         <Formik
           initialValues={{
             email: '',
             password: '',
           }}
-          validationSchema={esquemaValidacion}
+          validationSchema={validationSchema}
           onSubmit={async (values) => {
             try {
               const data = await login(values.email, values.password);
-              loginStore(data.user, data.access_token, data.refresh_token);
+
+              loginUser(data.user, data.access_token, data.refresh_token);
+
               navigate(data.user.is_admin ? '/admin/products' : '/products');
             } catch (error) {
               if (error.response?.status === 401) {
@@ -72,11 +82,13 @@ export const Login = () => {
                 aria-required="true"
                 aria-describedby="password-error"
               />
+
               {!isValid && submitCount > 0 && (
                 <p className="formError" role="alert">
                   Por favor completa todos los campos para iniciar sesión.
                 </p>
               )}
+
               <div className="formButtons">
                 <button type="submit" className="btnSubmit">
                   Ingresar

@@ -1,18 +1,20 @@
 import './Checkout.css';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { useCartStore } from '../store/cartStore';
+import { useCartStore, selectCartTotal } from '../store/cartStore';
 import { useProductStore } from '../store/productStore';
 import { useNavigate } from 'react-router-dom';
 import { useInvoiceStore } from '../store/invoiceStore';
 import { useAuthStore } from '../store/authStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const esquemaValidacion = Yup.object({
-  nombre: Yup.string().required('El nombre completo es obligatorio'),
-  email: Yup.string().email().required('El correo electrónico es obligatorio'),
-  direccion: Yup.string().required('La dirección es obligatoria'),
-  telefono: Yup.string().required('La número de teléfono es obligatorio'),
+const validationSchema = Yup.object({
+  fullName: Yup.string().required('El nombre completo es obligatorio'),
+  email: Yup.string()
+    .email('El correo electrónico no es válido')
+    .required('El correo electrónico es obligatorio'),
+  address: Yup.string().required('La dirección es obligatoria'),
+  phone: Yup.string().required('El número de teléfono es obligatorio'),
 });
 
 export const Checkout = () => {
@@ -23,66 +25,95 @@ export const Checkout = () => {
   const createInvoice = useInvoiceStore((state) => state.createInvoice);
   const user = useAuthStore((state) => state.user);
   const disableCheckout = useCartStore((state) => state.disableCheckout);
-  const [errorCompra, setErrorCompra] = useState(null);
+  const [purchaseError, setPurchaseError] = useState(null);
+  const total = useCartStore(selectCartTotal);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    if (!cart || cartItems.length === 0) {
+      navigate('/cart');
+    }
+  }, [user, cart, cartItems.length, navigate]);
+
   return (
     <>
       <h1>Checkout</h1>
+
       <div className="checkout-page">
         <div className="purchase-information">
           <h2>Información de compra</h2>
+
           <Formik
             initialValues={{
-              nombre: '',
+              fullName: '',
               email: '',
-              direccion: '',
-              telefono: '',
+              address: '',
+              phone: '',
             }}
-            validationSchema={esquemaValidacion}
+            validationSchema={validationSchema}
             onSubmit={async (values) => {
-              setErrorCompra(null);
+              setPurchaseError(null);
+
+              if (!cart || cartItems.length === 0) {
+                setPurchaseError(
+                  'No puedes completar la compra porque tu carrito está vacío.'
+                );
+                return;
+              }
+
+              if (!user) {
+                navigate('/login');
+                return;
+              }
+
               try {
                 const invoiceData = {
                   user_id: user.id,
                   shopping_cart_id: cart.id,
-                  billing_address: values.direccion,
+                  billing_address: values.address,
                   payment_method: 'credit_card',
                   payment_status: 'pending',
-                  full_name: values.nombre,
-                  phone_number: values.telefono,
+                  full_name: values.fullName,
+                  phone_number: values.phone,
                   email: values.email,
                 };
 
                 const invoice = await createInvoice(invoiceData);
+
                 if (invoice) {
                   navigate('/purchase-success');
                 }
               } catch (error) {
                 console.error('Error al completar la compra:', error);
 
-                const mensaje =
+                const errorMessage =
                   error.response?.data?.error ||
                   'Ocurrió un problema al procesar tu compra. Por favor intenta de nuevo.';
 
-                setErrorCompra(mensaje);
+                setPurchaseError(errorMessage);
               }
             }}
           >
             {({ isValid, submitCount }) => (
               <Form id="checkout-form">
-                <label htmlFor="nombre">
+                <label htmlFor="fullName">
                   Nombre completo <span aria-hidden="true">*</span>
                 </label>
 
                 <Field
-                  id="nombre"
-                  name="nombre"
+                  id="fullName"
+                  name="fullName"
                   type="text"
                   placeholder="Nombre completo"
                   aria-required="true"
-                  aria-describedby="nombre-help nombre-error"
+                  aria-describedby="fullName-help fullName-error"
                 />
 
-                <small id="nombre-help">Escriba el nombre completo.</small>
+                <small id="fullName-help">Escriba el nombre completo.</small>
 
                 <label htmlFor="email">
                   Correo electrónico <span aria-hidden="true">*</span>
@@ -97,29 +128,30 @@ export const Checkout = () => {
                   aria-describedby="email-error"
                 />
 
-                <label htmlFor="direccion">
+                <label htmlFor="address">
                   Dirección de envío <span aria-hidden="true">*</span>
                 </label>
 
                 <Field
-                  id="direccion"
-                  name="direccion"
+                  id="address"
+                  name="address"
                   type="text"
                   placeholder="Dirección de envío"
                   aria-required="true"
-                  aria-describedby="direccion-error"
+                  aria-describedby="address-error"
                 />
 
-                <label htmlFor="telefono">
+                <label htmlFor="phone">
                   Teléfono <span aria-hidden="true">*</span>
                 </label>
 
                 <Field
-                  id="telefono"
-                  name="telefono"
-                  placeholder="teléfono"
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="Teléfono"
                   aria-required="true"
-                  aria-describedby="telefono-error"
+                  aria-describedby="phone-error"
                 />
 
                 <p>Esta información se utilizará para completar la compra.</p>
@@ -134,8 +166,10 @@ export const Checkout = () => {
             )}
           </Formik>
         </div>
+
         <div className="order-summary">
           <h2>Resumen del pedido</h2>
+
           <ul>
             {cartItems.map((item) => {
               const product = products.find(
@@ -150,9 +184,11 @@ export const Checkout = () => {
                 <li key={item.product_id}>
                   <div className="items-summary">
                     <h2>{product.name}</h2>
+
                     <p>
-                      {item.quantity} x ₡ {product.price}{' '}
+                      {item.quantity} x ₡ {product.price}
                     </p>
+
                     <div className="item-price">
                       <p>Subtotal ₡{item.subtotal}</p>
                     </div>
@@ -161,20 +197,19 @@ export const Checkout = () => {
               );
             })}
           </ul>
-          <p className="total">
-            Total: ₡{' '}
-            {cartItems
-              .reduce((total, item) => total + Number(item.subtotal), 0)
-              .toFixed(2)}{' '}
-          </p>
-          {errorCompra && (
+
+          <p className="total">Total: ₡ {total}</p>
+
+          {purchaseError && (
             <p className="formError" role="alert">
-              {errorCompra}
+              {purchaseError}
             </p>
           )}
+
           <button type="submit" form="checkout-form" className="btn-confirm">
             Confirmar compra
           </button>
+
           <button
             className="btn-cancel"
             onClick={() => {

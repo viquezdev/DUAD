@@ -2,12 +2,13 @@ import { Link, NavLink } from 'react-router-dom';
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 import './Header.css';
 import { useAuthStore } from '../../store/authStore';
-import { useCartStore } from '../../store/cartStore';
+import { useCartStore, selectCartCount } from '../../store/cartStore';
 
 export const Header = () => {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const checkoutEnabled = useCartStore((state) => state.checkoutEnabled);
+  const cartCount = useCartStore(selectCartCount);
   return (
     <header>
       <nav className="navbar-container">
@@ -50,6 +51,7 @@ export const Header = () => {
             }
           >
             Carrito
+            <span className="cart-count">{cartCount}</span>
           </NavLink>
           {checkoutEnabled && (
             <NavLink

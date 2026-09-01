@@ -20,8 +20,9 @@
 .nav-right {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-right: 7rem;
+  white-space: nowrap;
 }
 
 .nav-right button {
@@ -85,4 +86,24 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.cart-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0.375rem;
+  padding: 0 0.3125rem;
+
+  border-radius: 50%;
+
+  background-color: #6c4ab6;
+  color: #ffffff;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
 }

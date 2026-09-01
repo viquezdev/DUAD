@@ -13,6 +13,12 @@ import {
 import { useAuthStore } from './authStore';
 import { useInvoiceStore } from './invoiceStore';
 
+export const selectCartTotal = (state) =>
+  state.cartItems.reduce((total, item) => total + Number(item.subtotal), 0);
+
+export const selectCartCount = (state) =>
+  state.cartItems.reduce((total, item) => total + Number(item.quantity), 0);
+
 export const useCartStore = create((set) => ({
   cart: null,
   cartItems: [],
