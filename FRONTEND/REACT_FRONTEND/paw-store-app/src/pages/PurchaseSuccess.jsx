@@ -2,7 +2,7 @@ import './PurchaseSuccess.css';
 import { useNavigate } from 'react-router-dom';
 
 import { useInvoiceStore } from '../store/invoiceStore';
-import { useCartStore } from '../store/cartStore';
+import { useCart } from '../context/useCart.js';
 import { useProductStore } from '../store/productStore';
 
 export const PurchaseSuccess = () => {
@@ -10,11 +10,11 @@ export const PurchaseSuccess = () => {
 
   const invoice = useInvoiceStore((state) => state.invoice);
 
-  const cartItems = useCartStore((state) => state.cartItems);
+  const { cartItems } = useCart();
 
   const products = useProductStore((state) => state.products);
 
-  const clearData = useCartStore((state) => state.clearCart);
+  const { clearCart } = useCart();
 
   if (!invoice) {
     return (
@@ -113,7 +113,7 @@ export const PurchaseSuccess = () => {
         <button
           className="btn-catalog"
           onClick={() => {
-            (clearData(), navigate('/products'));
+            (clearCart(), navigate('/products'));
           }}
         >
           Volver al catálogo
@@ -122,7 +122,7 @@ export const PurchaseSuccess = () => {
         <button
           className="btn-home"
           onClick={() => {
-            (clearData(), navigate('/'));
+            (clearCart(), navigate('/'));
           }}
         >
           Ir al inicio

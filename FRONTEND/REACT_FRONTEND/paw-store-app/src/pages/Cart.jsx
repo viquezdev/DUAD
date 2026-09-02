@@ -1,26 +1,25 @@
 import './Cart.css';
-import { useCartStore, selectCartTotal } from '../store/cartStore';
+
 import { useProductStore } from '../store/productStore';
-import { useAuthStore } from '../store/authStore';
+import { useCart } from '../context/useCart.js';
+import { useAuth } from '../context/useAuth.js';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 export const Cart = () => {
-  const user = useAuthStore((state) => state.user);
-
-  const cart = useCartStore((state) => state.cart);
-  const cartItems = useCartStore((state) => state.cartItems);
-
-  const loadCart = useCartStore((state) => state.loadCart);
-  const updateCartItem = useCartStore((state) => state.updateCartItem);
-  const deleteProductFromCart = useCartStore(
-    (state) => state.deleteProductFromCart
-  );
-  const enableCheckout = useCartStore((state) => state.enableCheckout);
+  const { user } = useAuth();
+  const {
+    cart,
+    cartItems,
+    loadCart,
+    updateCartItem,
+    deleteProductFromCart,
+    enableCheckout,
+    cartTotal,
+  } = useCart();
   const products = useProductStore((state) => state.products);
 
   const navigate = useNavigate();
-  const total = useCartStore(selectCartTotal);
 
   useEffect(() => {
     if (!user) {
@@ -32,6 +31,7 @@ export const Cart = () => {
   }, [user, navigate, loadCart]);
 
   const handleAddQuantity = async (productId) => {
+    console.log('productId:', productId);
     if (!cart) return;
 
     const item = cartItems.find((item) => item.product_id === productId);
@@ -173,7 +173,7 @@ export const Cart = () => {
         </ul>
 
         <div className="cart-checkout">
-          <h2>Total: ₡ {total}</h2>
+          <h2>Total: ₡ {cartTotal}</h2>
 
           <button
             className="btn-checkout"

@@ -1,11 +1,11 @@
 import './Checkout.css';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { useCartStore, selectCartTotal } from '../store/cartStore';
+import { useCart } from '../context/useCart.js';
 import { useProductStore } from '../store/productStore';
 import { useNavigate } from 'react-router-dom';
 import { useInvoiceStore } from '../store/invoiceStore';
-import { useAuthStore } from '../store/authStore';
+import { useAuth } from '../context/useAuth.js';
 import { useState, useEffect } from 'react';
 
 const validationSchema = Yup.object({
@@ -18,15 +18,16 @@ const validationSchema = Yup.object({
 });
 
 export const Checkout = () => {
-  const cartItems = useCartStore((state) => state.cartItems);
+  const { cartItems } = useCart();
   const products = useProductStore((state) => state.products);
   const navigate = useNavigate();
-  const cart = useCartStore((state) => state.cart);
+  const { cart } = useCart();
   const createInvoice = useInvoiceStore((state) => state.createInvoice);
-  const user = useAuthStore((state) => state.user);
-  const disableCheckout = useCartStore((state) => state.disableCheckout);
+  const { user } = useAuth();
+  const { disableCheckout } = useCart();
   const [purchaseError, setPurchaseError] = useState(null);
-  const total = useCartStore(selectCartTotal);
+  const { cartTotal } = useCart();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     if (!user) {
@@ -82,7 +83,7 @@ export const Checkout = () => {
                   email: values.email,
                 };
 
-                const invoice = await createInvoice(invoiceData);
+                const invoice = await createInvoice(invoiceData, accessToken);
 
                 if (invoice) {
                   navigate('/purchase-success');
@@ -198,7 +199,7 @@ export const Checkout = () => {
             })}
           </ul>
 
-          <p className="total">Total: ₡ {total}</p>
+          <p className="total">Total: ₡ {cartTotal}</p>
 
           {purchaseError && (
             <p className="formError" role="alert">

@@ -1,22 +1,21 @@
-import { useAuthStore } from '../store/authStore';
+import { useAuth } from '../context/useAuth.js';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 export const Home = () => {
-  const authMessage = useAuthStore((state) => state.authMessage);
-  const clearMessage = useAuthStore((state) => state.clearAuthMessage);
+  const { authMessage, clearAuthMessage } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!authMessage) return;
 
     const timer = setTimeout(() => {
-      clearMessage();
+      clearAuthMessage();
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [authMessage, clearMessage]);
+  }, [authMessage, clearAuthMessage]);
   return (
     <main>
       {authMessage && <div className="errorMessage">{authMessage}</div>}

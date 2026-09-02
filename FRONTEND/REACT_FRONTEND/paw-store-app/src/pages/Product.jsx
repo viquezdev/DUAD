@@ -1,7 +1,7 @@
 import './Product.css';
 import { useProductStore } from '../store/productStore';
 import { useCartStore } from '../store/cartStore';
-import { useAuthStore } from '../store/authStore';
+import { useAuth } from '../context/useAuth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -11,7 +11,7 @@ export const Product = () => {
 
   const addProductToCart = useCartStore((state) => state.addProductToCart);
   const loading = useProductStore((state) => state.loading);
-  const user = useAuthStore((state) => state.user);
+  const { user, accessToken } = useAuth();
 
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ export const Product = () => {
       if (!user) {
         navigate('/login');
       } else {
-        await addProductToCart(user.id, product.id, 1);
+        await addProductToCart(user.id, product.id, 1, accessToken);
         navigate('/cart');
       }
     } catch (error) {

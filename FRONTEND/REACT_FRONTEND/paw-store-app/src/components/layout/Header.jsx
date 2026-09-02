@@ -1,14 +1,14 @@
 import { Link, NavLink } from 'react-router-dom';
 import pawStoreLogo from '../../assets/pawStoreLogo.png';
 import './Header.css';
-import { useAuthStore } from '../../store/authStore';
-import { useCartStore, selectCartCount } from '../../store/cartStore';
+import { useAuth } from '../../context/useAuth.js';
+import { useCart } from '../../context/useCart.js';
 
 export const Header = () => {
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-  const checkoutEnabled = useCartStore((state) => state.checkoutEnabled);
-  const cartCount = useCartStore(selectCartCount);
+  const { user, logoutUser } = useAuth();
+
+  const { checkoutEnabled, cartCount, clearCart } = useCart();
+
   return (
     <header>
       <nav className="navbar-container">
@@ -81,7 +81,8 @@ export const Header = () => {
                   to="/"
                   className="btnLogout"
                   onClick={() => {
-                    logout();
+                    clearCart();
+                    logoutUser();
                   }}
                 >
                   Cerrar sesión

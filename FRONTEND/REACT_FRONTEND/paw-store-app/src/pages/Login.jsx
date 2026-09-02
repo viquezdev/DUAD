@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { login } from '../services/authService';
 import './Login.css';
 import { useState } from 'react';
-import { useAuthStore } from '../store/authStore';
+import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object({
@@ -14,7 +14,7 @@ const validationSchema = Yup.object({
 });
 
 export const Login = () => {
-  const loginUser = useAuthStore((state) => state.login);
+  const { loginUser } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 

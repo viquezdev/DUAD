@@ -1,21 +1,18 @@
 import { create } from 'zustand';
 import { createInvoiceService } from '../services/invoiceService';
-import { useAuthStore } from './authStore';
 
 export const useInvoiceStore = create((set) => ({
   invoice: null,
   loading: false,
   error: null,
 
-  createInvoice: async (invoiceData) => {
+  createInvoice: async (invoiceData, token) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
-
       const response = await createInvoiceService(invoiceData, token);
 
       const invoice = response.invoice || response;

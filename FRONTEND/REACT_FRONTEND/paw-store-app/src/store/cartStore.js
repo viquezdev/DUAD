@@ -10,7 +10,6 @@ import {
   deleteCartService,
 } from '../services/cartService';
 
-import { useAuthStore } from './authStore';
 import { useInvoiceStore } from './invoiceStore';
 
 export const selectCartTotal = (state) =>
@@ -47,16 +46,14 @@ export const useCartStore = create((set) => ({
     useCartStore.getState().disableCheckout();
   },
 
-  loadCart: async (userId) => {
+  loadCart: async (userId, accessToken) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
-
-      const cart = await getCartService(userId, token);
+      const cart = await getCartService(userId, accessToken);
 
       if (!cart) {
         set({
@@ -68,7 +65,7 @@ export const useCartStore = create((set) => ({
         return;
       }
 
-      const cartItems = await getCartItemsService(cart.id, token);
+      const cartItems = await getCartItemsService(cart.id, accessToken);
 
       set({
         cart,
@@ -83,16 +80,14 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  createCart: async (userId, status) => {
+  createCart: async (userId, status, accessToken) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
-
-      const response = await createCartService(userId, status, token);
+      const response = await createCartService(userId, status, accessToken);
 
       const cart = response.shopping_cart || response;
 
@@ -113,38 +108,45 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  addProductToCart: async (user_id, productId, quantity) => {
+  addProductToCart: async (user_id, productId, quantity, accessToken) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
-
       let cart = null;
 
-      cart = await getCartService(user_id, token);
+      cart = await getCartService(user_id, accessToken);
 
       if (!cart) {
-        const response = await createCartService(user_id, 'active', token);
+        const response = await createCartService(
+          user_id,
+          'active',
+          accessToken
+        );
 
         cart = response.shopping_cart || response;
       }
 
-      const cartItems = await getCartItemsService(cart.id, token);
+      const cartItems = await getCartItemsService(cart.id, accessToken);
 
       const item = cartItems.find((item) => item.product_id === productId);
 
       if (item) {
         const newQuantity = item.quantity + quantity;
 
-        await updateCartItemService(cart.id, productId, newQuantity, token);
+        await updateCartItemService(
+          cart.id,
+          productId,
+          newQuantity,
+          accessToken
+        );
       } else {
-        await addToCartService(cart.id, productId, quantity, token);
+        await addToCartService(cart.id, productId, quantity, accessToken);
       }
 
-      const updatedCartItems = await getCartItemsService(cart.id, token);
+      const updatedCartItems = await getCartItemsService(cart.id, accessToken);
 
       set({
         cart,
@@ -163,21 +165,19 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  deleteProductFromCart: async (cartId, productId) => {
+  deleteProductFromCart: async (cartId, productId, accessToken) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
+      await removeFromCartService(cartId, productId, accessToken);
 
-      await removeFromCartService(cartId, productId, token);
-
-      const cartItems = await getCartItemsService(cartId, token);
+      const cartItems = await getCartItemsService(cartId, accessToken);
 
       if (cartItems.length === 0) {
-        await deleteCartService(cartId, token);
+        await deleteCartService(cartId, accessToken);
 
         set({
           cart: null,
@@ -202,16 +202,14 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  deleteCart: async (cartId) => {
+  deleteCart: async (cartId, accessToken) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
-
-      await deleteCartService(cartId, token);
+      await deleteCartService(cartId, accessToken);
 
       set({
         cart: null,
@@ -235,11 +233,9 @@ export const useCartStore = create((set) => ({
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
+      await updateCartItemService(cartId, productId, quantity, accessToken);
 
-      await updateCartItemService(cartId, productId, quantity, token);
-
-      const cartItems = await getCartItemsService(cartId, token);
+      const cartItems = await getCartItemsService(cartId, accessToken);
       console.log('Nuevos cartItems:', cartItems);
       set({
         cartItems,
