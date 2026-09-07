@@ -17,15 +17,15 @@ export const routes = [
     element: <Home />,
   },
   {
-    path: '/products',
+    path: '/productos',
     element: <Products />,
   },
   {
-    path: '/products/:id',
+    path: '/productos/:id',
     element: <Product />,
   },
   {
-    path: '/contact',
+    path: '/contacto',
     element: <Contact />,
   },
   {
@@ -36,17 +36,17 @@ export const routes = [
     element: <AdminRoute />,
     children: [
       {
-        path: '/admin/products',
+        path: '/admin',
         element: <ProductManagement />,
       },
       {
-        path: '/admin/products/edit/:id',
+        path: '/admin/editar/:id',
         element: <EditProduct />,
       },
     ],
   },
   {
-    path: '/cart',
+    path: '/carrito',
     element: <Cart />,
   },
   {

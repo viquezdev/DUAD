@@ -18,11 +18,11 @@ const validationSchema = Yup.object({
 });
 
 export const Checkout = () => {
-  const { cartItems } = useCart();
+  const { cartItems, cart } = useCart();
   const products = useProductStore((state) => state.products);
   const navigate = useNavigate();
-  const { cart } = useCart();
   const createInvoice = useInvoiceStore((state) => state.createInvoice);
+  const setPurchaseItems = useInvoiceStore((state) => state.setPurchaseItems);
   const { user } = useAuth();
   const { disableCheckout } = useCart();
   const [purchaseError, setPurchaseError] = useState(null);
@@ -36,7 +36,7 @@ export const Checkout = () => {
     }
 
     if (!cart || cartItems.length === 0) {
-      navigate('/cart');
+      navigate('/carrito');
     }
   }, [user, cart, cartItems.length, navigate]);
 
@@ -86,6 +86,7 @@ export const Checkout = () => {
                 const invoice = await createInvoice(invoiceData, accessToken);
 
                 if (invoice) {
+                  setPurchaseItems([...cartItems]);
                   navigate('/purchase-success');
                 }
               } catch (error) {
@@ -215,7 +216,7 @@ export const Checkout = () => {
             className="btn-cancel"
             onClick={() => {
               disableCheckout();
-              navigate('/cart');
+              navigate('/carrito');
             }}
           >
             Cancelar

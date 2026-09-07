@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { CartContext } from './CartContext';
 import { useAuth } from './useAuth';
-import { useInvoiceStore } from '../store/invoiceStore';
 
 import {
   getCartService,
@@ -22,22 +21,19 @@ export const CartProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [checkoutEnabled, setCheckoutEnabled] = useState(false);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart(null);
     setCartItems([]);
-
-    useInvoiceStore.getState().clearInvoice();
-
     setCheckoutEnabled(false);
-  };
+  }, []);
 
-  const enableCheckout = () => {
+  const enableCheckout = useCallback(() => {
     setCheckoutEnabled(true);
-  };
+  }, []);
 
-  const disableCheckout = () => {
+  const disableCheckout = useCallback(() => {
     setCheckoutEnabled(false);
-  };
+  }, []);
 
   const loadCart = useCallback(
     async (userId) => {

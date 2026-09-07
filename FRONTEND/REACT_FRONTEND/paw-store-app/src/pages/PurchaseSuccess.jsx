@@ -1,20 +1,21 @@
 import './PurchaseSuccess.css';
 import { useNavigate } from 'react-router-dom';
-
 import { useInvoiceStore } from '../store/invoiceStore';
-import { useCart } from '../context/useCart.js';
 import { useProductStore } from '../store/productStore';
+import { useCart } from '../context/useCart';
+import { useEffect } from 'react';
 
 export const PurchaseSuccess = () => {
   const navigate = useNavigate();
 
   const invoice = useInvoiceStore((state) => state.invoice);
-
-  const { cartItems } = useCart();
-
+  const purchaseItems = useInvoiceStore((state) => state.purchaseItems);
   const products = useProductStore((state) => state.products);
-
   const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
 
   if (!invoice) {
     return (
@@ -62,7 +63,7 @@ export const PurchaseSuccess = () => {
           <span>Subtotal</span>
         </div>
 
-        {cartItems.map((item) => {
+        {purchaseItems.map((item) => {
           const product = products.find(
             (product) => product.id === item.product_id
           );
@@ -113,7 +114,7 @@ export const PurchaseSuccess = () => {
         <button
           className="btn-catalog"
           onClick={() => {
-            (clearCart(), navigate('/products'));
+            navigate('/productos');
           }}
         >
           Volver al catálogo
@@ -122,7 +123,7 @@ export const PurchaseSuccess = () => {
         <button
           className="btn-home"
           onClick={() => {
-            (clearCart(), navigate('/'));
+            navigate('/');
           }}
         >
           Ir al inicio

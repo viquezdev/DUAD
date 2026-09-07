@@ -5,7 +5,6 @@ import {
   updateProductService,
   deleteProductService,
 } from '../services/productService';
-import { useAuthStore } from '../store/authStore';
 
 export const useProductStore = create((set) => ({
   products: [],
@@ -36,14 +35,13 @@ export const useProductStore = create((set) => ({
     }
   },
 
-  createProduct: async (product) => {
+  createProduct: async (product, token) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
       await createProductService(product, token);
 
       const products = await getProducts();
@@ -64,14 +62,13 @@ export const useProductStore = create((set) => ({
     }
   },
 
-  updateProduct: async (product) => {
+  updateProduct: async (product, token) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
       await updateProductService(product.id, product, token);
 
       const products = await getProducts();
@@ -92,14 +89,13 @@ export const useProductStore = create((set) => ({
     }
   },
 
-  deleteProduct: async (id) => {
+  deleteProduct: async (id, token) => {
     set({
       loading: true,
       error: null,
     });
 
     try {
-      const token = useAuthStore.getState().accessToken;
       await deleteProductService(id, token);
 
       const products = await getProducts();

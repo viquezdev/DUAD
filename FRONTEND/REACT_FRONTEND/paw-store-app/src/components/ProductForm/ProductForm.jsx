@@ -4,6 +4,7 @@ import './ProductForm.css';
 import { useProductStore } from '../../store/productStore';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../../context/useAuth';
 
 const validationSchema = Yup.object({
   sku: Yup.string().required('El SKU es obligatorio'),
@@ -28,6 +29,7 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
   const updateProduct = useProductStore((state) => state.updateProduct);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const { accessToken } = useAuth();
 
   return (
     <div className="formContainer">
@@ -59,7 +61,7 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
             };
 
             try {
-              await createProduct(newProduct);
+              await createProduct(newProduct, accessToken);
               resetForm();
               setErrorMessage('');
             } catch (error) {
@@ -79,8 +81,8 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
             };
 
             try {
-              await updateProduct(updatedProduct);
-              navigate('/admin/products');
+              await updateProduct(updatedProduct, accessToken);
+              navigate('/admin');
             } catch (error) {
               setErrorMessage(
                 error.response?.data?.error ||
@@ -195,7 +197,7 @@ export const ProductForm = ({ mode = 'create', product = null }) => {
                 type="button"
                 className="btnCancel"
                 onClick={() =>
-                  navigate(mode === 'edit' ? '/admin/products' : '/products')
+                  navigate(mode === 'edit' ? '/admin/productos' : '/productos')
                 }
               >
                 Cancelar

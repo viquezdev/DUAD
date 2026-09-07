@@ -41,7 +41,7 @@ export const Login = () => {
 
               loginUser(data.user, data.access_token, data.refresh_token);
 
-              navigate(data.user.is_admin ? '/admin/products' : '/products');
+              navigate(data.user.is_admin ? '/admin' : '/productos');
             } catch (error) {
               if (error.response?.status === 401) {
                 setErrorMessage(

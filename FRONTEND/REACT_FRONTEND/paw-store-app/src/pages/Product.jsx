@@ -1,15 +1,15 @@
 import './Product.css';
 import { useProductStore } from '../store/productStore';
-import { useCartStore } from '../store/cartStore';
 import { useAuth } from '../context/useAuth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useCart } from '../context/useCart';
 
 export const Product = () => {
   const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
 
-  const addProductToCart = useCartStore((state) => state.addProductToCart);
+  const { addProductToCart } = useCart();
   const loading = useProductStore((state) => state.loading);
   const { user, accessToken } = useAuth();
 
@@ -18,9 +18,6 @@ export const Product = () => {
   const { id } = useParams();
 
   const product = products.find((p) => p.id === Number(id));
-  console.log('ID de la URL:', id);
-  console.log('Productos:', products);
-  console.log('Producto encontrado:', product);
 
   useEffect(() => {
     if (products.length === 0) {
@@ -52,7 +49,7 @@ export const Product = () => {
         navigate('/login');
       } else {
         await addProductToCart(user.id, product.id, 1, accessToken);
-        navigate('/cart');
+        navigate('/carrito');
       }
     } catch (error) {
       console.error('Error al agregar producto al carrito:', error);
@@ -86,7 +83,7 @@ export const Product = () => {
           <small className="stock-message">No hay stock disponible</small>
         )}
 
-        <button className="btn-detail" onClick={() => navigate('/products')}>
+        <button className="btn-detail" onClick={() => navigate('/productos')}>
           Volver al catálogo
         </button>
       </div>

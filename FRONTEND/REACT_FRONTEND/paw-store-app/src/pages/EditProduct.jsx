@@ -27,10 +27,7 @@ export const EditProduct = () => {
       <div className="product-not-found">
         <h1>Producto no encontrado</h1>
 
-        <button
-          className="btnAdmin"
-          onClick={() => navigate('/admin/products')}
-        >
+        <button className="btnAdmin" onClick={() => navigate('/admin')}>
           Volver a la administración
         </button>
       </div>

@@ -2,12 +2,14 @@ import './ProductTable.css';
 import { useProductStore } from '../../store/productStore';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAuth } from '../../context/useAuth';
 
 export const ProductTable = () => {
   const loadProducts = useProductStore((state) => state.loadProducts);
   const products = useProductStore((state) => state.products);
   const deleteProduct = useProductStore((state) => state.deleteProduct);
   const navigate = useNavigate();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     if (products.length === 0) {
@@ -51,7 +53,7 @@ export const ProductTable = () => {
                   className="btnEdit"
                   aria-label={`Editar ${product.name}`}
                   onClick={() => {
-                    navigate(`/admin/products/edit/${product.id}`);
+                    navigate(`/admin/editar/${product.id}`);
                   }}
                 >
                   Editar
@@ -60,7 +62,7 @@ export const ProductTable = () => {
                 <button
                   className="btnDelete"
                   aria-label={`Eliminar ${product.name}`}
-                  onClick={() => deleteProduct(product.id)}
+                  onClick={() => deleteProduct(product.id, accessToken)}
                 >
                   Eliminar
                 </button>

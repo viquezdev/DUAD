@@ -29,7 +29,7 @@ export const Home = () => {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button className="btn-products" onClick={() => navigate('/products')}>
+        <button className="btn-products" onClick={() => navigate('/productos')}>
           Ver productos
         </button>
         <p>

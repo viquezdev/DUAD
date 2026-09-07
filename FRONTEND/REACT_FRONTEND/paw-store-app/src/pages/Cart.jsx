@@ -87,7 +87,7 @@ export const Cart = () => {
 
           <p>Agrega productos para verlos aquí.</p>
 
-          <button className="btn-back" onClick={() => navigate('/products')}>
+          <button className="btn-back" onClick={() => navigate('/productos')}>
             Ir a productos
           </button>
         </div>

@@ -5,7 +5,7 @@ export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const handleDetails = () => {
-    navigate(`/products/${product.id}`);
+    navigate(`/productos/${product.id}`);
   };
 
   return (

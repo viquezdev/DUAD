@@ -3,6 +3,7 @@ import { createInvoiceService } from '../services/invoiceService';
 
 export const useInvoiceStore = create((set) => ({
   invoice: null,
+  purchaseItems: [],
   loading: false,
   error: null,
 
@@ -33,9 +34,16 @@ export const useInvoiceStore = create((set) => ({
     }
   },
 
+  setPurchaseItems: (items) => {
+    set({
+      purchaseItems: items,
+    });
+  },
+
   clearInvoice: () => {
     set({
       invoice: null,
+      purchaseItems: [],
       error: null,
     });
   },
