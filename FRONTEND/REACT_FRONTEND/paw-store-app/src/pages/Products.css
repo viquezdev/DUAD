@@ -1,0 +1,54 @@
+.products-grid {
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  text-align: center;
+  color: black;
+  font-size: 2rem;
+}
+
+.products-page {
+  background-color: white;
+}
+
+.empty-products {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 2rem;
+  height: 50vh;
+}
+
+.empty-catalog {
+  background-color: white;
+  padding: 5rem;
+  border-radius: 2rem;
+  text-align: center;
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.empty-products-img {
+  width: 5rem;
+  height: 5rem;
+  display: block;
+  margin: 1rem auto;
+}
+
+.empty-products h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: black;
+}
+
+.empty-products p {
+  color: gray;
+  margin-bottom: 1rem;
+}

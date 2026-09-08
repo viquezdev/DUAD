@@ -1,0 +1,40 @@
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 1rem;
+  border: 0.12rem solid #f0efef;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 1.5rem 0.3rem rgba(0, 0, 0, 0.15);
+}
+
+.productCategory {
+  background-color: rgb(244, 244, 244);
+  border-radius: 2rem;
+  text-align: center;
+  width: 2rem;
+}
+
+table {
+  text-align: center;
+}
+
+.btnEdit {
+  background-color: #aa3bff;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.btnDelete {
+  background-color: red;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+caption {
+  position: absolute;
+  left: -9999px;
+}

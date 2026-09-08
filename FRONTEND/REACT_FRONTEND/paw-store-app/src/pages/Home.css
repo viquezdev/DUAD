@@ -1,0 +1,39 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 50rem;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.home-page h1 {
+  font-weight: bold;
+  color: #08060d;
+}
+
+.btn-products {
+  background: none;
+  color: #aa3bff;
+  font-weight: bold;
+  border: none;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  font-size: 1.3rem;
+}
+
+.btn-products:hover {
+  font-weight: bold;
+  cursor: pointer;
+  font-style: italic;
+}
+
+.errorMessage {
+  background-color: #edd4d4;
+  color: #fb0000;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: bold;
+}

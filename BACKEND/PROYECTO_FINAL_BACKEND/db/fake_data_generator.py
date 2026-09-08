@@ -88,7 +88,9 @@ def seed_database():
             price=round(random.uniform(1500,6000),2)
             description=product_description
             quantity=random.randint(1,10)
-            new_product=product_repo.create(sku,name,price,description,quantity)
+            category="General"
+            image="https://via.placeholder.com/300"
+            new_product=product_repo.create(sku,name,price,description,quantity,category,image)
             product_ids.append(new_product.id)
 
         for _ in range(10):
