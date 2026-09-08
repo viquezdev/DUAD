@@ -14,7 +14,7 @@ const validationSchema = Yup.object({
     .email('El correo electrónico no es válido')
     .required('El correo electrónico es obligatorio'),
   address: Yup.string().required('La dirección es obligatoria'),
-  phone: Yup.string().required('El número de teléfono es obligatorio'),
+  phone: Yup.string(),
 });
 
 export const Checkout = () => {
@@ -143,17 +143,13 @@ export const Checkout = () => {
                   aria-describedby="address-error"
                 />
 
-                <label htmlFor="phone">
-                  Teléfono <span aria-hidden="true">*</span>
-                </label>
+                <label htmlFor="phone">Teléfono</label>
 
                 <Field
                   id="phone"
                   name="phone"
                   type="tel"
                   placeholder="Teléfono"
-                  aria-required="true"
-                  aria-describedby="phone-error"
                 />
 
                 <p>Esta información se utilizará para completar la compra.</p>

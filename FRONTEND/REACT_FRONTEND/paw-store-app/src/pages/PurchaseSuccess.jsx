@@ -40,7 +40,7 @@ export const PurchaseSuccess = () => {
           ✓
         </div>
 
-        <h1>!Gracias por tu compra!</h1>
+        <h1>¡Gracias por tu compra!</h1>
 
         <p>
           Hemos enviado un correo de confirmación con los detalles de tu pedido.

@@ -83,7 +83,7 @@ export const Cart = () => {
             className="empty-cart-image"
           />
 
-          <h2>Tu carrito está vacío</h2>
+          <h2>Tu carrito está vacío.</h2>
 
           <p>Agrega productos para verlos aquí.</p>
 

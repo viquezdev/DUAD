@@ -8,7 +8,7 @@ export const NotFound = () => {
     <div className="not-found">
       <h1>Página no encontrada</h1>
 
-      <p>La ruta solicitada no existe o ha sido movida.</p>
+      <p>La página que estás buscando no existe o ha sido movida</p>
 
       <button className="btn-not-found" onClick={() => navigate('/')}>
         Volver al inicio

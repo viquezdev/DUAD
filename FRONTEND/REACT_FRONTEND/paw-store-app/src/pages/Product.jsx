@@ -36,7 +36,7 @@ export const Product = () => {
 
         <p>Lo sentimos, no pudimos encontrar el producto que estás buscando.</p>
 
-        <button className="btn-detail" onClick={() => navigate('/products')}>
+        <button className="btn-detail" onClick={() => navigate('/productos')}>
           Volver al catálogo
         </button>
       </div>
