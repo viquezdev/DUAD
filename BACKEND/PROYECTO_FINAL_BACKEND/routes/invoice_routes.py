@@ -6,6 +6,8 @@ from repositories.product_repository import ProductRepository
 from services.decorators import roles_required,verify_cache,get_jwt_identity
 from cache_utils.manager import cache_manager
 from cache_utils.invoice_keys import generate_cache_invoice_key, generate_cache_invoices_all_key
+from cache_utils.cart_keys import generate_cache_active_cart_key
+from cache_utils.product_keys import generate_cache_products_all_key
 
 
 invoice_repo=InvoiceRepository()
@@ -62,64 +64,113 @@ def get_invoice_by_id(id):
     
 
 @invoices_bp.route("/invoices", methods=["POST"])
-@roles_required(True)
+@roles_required()
 def create_invoice():
     try:
         user_data = get_jwt_identity()
         invoice_data = request.get_json()
 
         required_fields = [
-            "invoice_number",
-            "user_id",
             "shopping_cart_id",
-            "created_at",
             "billing_address",
             "payment_method",
-            "payment_status"
+            "full_name",
+            "phone_number",
+            "email"
         ]
 
-        missing_fields = [f for f in required_fields if f not in invoice_data]
+        missing_fields = [
+            field
+            for field in required_fields
+            if field not in invoice_data
+        ]
+
         if missing_fields:
-            return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+            return jsonify({
+                "error": f"Missing fields: {', '.join(missing_fields)}"
+            }), 400
 
-        shopping_cart = shopping_cart_repo.get_by_id(invoice_data["shopping_cart_id"])
+        user_id = int(user_data["sub"])
+
+        shopping_cart_id = invoice_data["shopping_cart_id"]
+
+        shopping_cart = shopping_cart_repo.get_by_id(
+            shopping_cart_id
+        )
+
         if not shopping_cart:
-            return jsonify({"error": "Shopping cart not found"}), 404
+            return jsonify({
+                "error": "Shopping cart not found"
+            }), 404
 
-        if not user_data["is_admin"] and str(user_data["sub"]) != str(shopping_cart.user_id):
-            return jsonify({"error": "Access denied"}), 403
+        if (
+            not user_data["is_admin"]
+            and str(user_id) != str(shopping_cart.user_id)
+        ):
+            return jsonify({
+                "error": "Access denied"
+            }), 403
 
-        if shopping_cart.status != "completed":
-            return jsonify({"error": "Shopping cart must be 'completed' before invoicing"}), 400
-
-        cart_products = shopping_cart_product_repo.get_by_shopping_cart_id(shopping_cart.id)
+        cart_products = (
+            shopping_cart_product_repo
+            .get_by_shopping_cart_id(shopping_cart.id)
+        )
 
         if not cart_products:
-            return jsonify({"error": "This cart has no products"}), 400
+            return jsonify({
+                "error": "This cart has no products"
+            }), 400
 
         total = 0
 
-        for cp in cart_products:
+        for cart_product in cart_products:
 
-            product = product_repo.get_by_id(cp.product_id)
+            product = product_repo.get_by_id(
+                cart_product.product_id
+            )
+
             if not product:
-                return jsonify({"error": f"Product {cp.product_id} not found"}), 404
+                return jsonify({
+                    "error": (
+                        f"Product {cart_product.product_id} not found"
+                    )
+                }), 404
 
-            if product.quantity < cp.quantity:
-                return jsonify({"error": f"Not enough stock for product {product.id}"}), 400
+            if product.quantity < cart_product.quantity:
+                return jsonify({
+                    "error": (
+                        f"Not enough stock for product {product.id}"
+                    )
+                }), 400
 
-            total += cp.subtotal
+            total += cart_product.subtotal
 
-        invoice_data["total_amount"] = total
+        new_invoice = invoice_repo.create(
+            user_id=user_id,
+            shopping_cart_id=shopping_cart.id,
+            billing_address=invoice_data["billing_address"],
+            payment_method=invoice_data["payment_method"],
+            payment_status="paid",
+            total_amount=total,
+            full_name=invoice_data["full_name"],
+            phone_number=invoice_data["phone_number"],
+            email=invoice_data["email"]
+        )
 
+        if not new_invoice:
+            return jsonify({
+                "error": "Error creating invoice"
+            }), 400
 
-        new_invoice = invoice_repo.create(**invoice_data)
+        for cart_product in cart_products:
 
-        for cp in cart_products:
-            product = product_repo.get_by_id(cp.product_id)
+            product = product_repo.get_by_id(
+                cart_product.product_id
+            )
+
             product_repo.update(
                 id=product.id,
-                quantity=product.quantity - cp.quantity
+                quantity=product.quantity - cart_product.quantity
             )
 
         shopping_cart_repo.update(
@@ -127,15 +178,29 @@ def create_invoice():
             status="invoiced"
         )
 
-        role = "admin" if user_data["is_admin"] else "user"
-        cache_manager.delete_data(generate_cache_invoices_all_key(user_data["sub"], role))
-        cache_manager.delete_data(generate_cache_invoices_all_key(invoice_data["user_id"], "user"))
+        cache_manager.delete_data(generate_cache_products_all_key())
+
+        owner_user_id = shopping_cart.user_id
+        requester_role = (
+                    "admin"
+                    if user_data["is_admin"]
+                    else "user"
+                )
+
+        cache_key_owner = generate_cache_active_cart_key(
+            owner_user_id,
+            requester_role
+        )
+
+        cache_manager.delete_data(cache_key_owner)
 
         return jsonify({
             "message": "Invoice created successfully",
             "invoice": new_invoice.to_dict()
         }), 201
-        
+
     except Exception as e:
-        return jsonify({"error": "Unexpected error", "details": str(e)}), 500
-    
+        return jsonify({
+            "error": "Unexpected error",
+            "details": str(e)
+        }), 500

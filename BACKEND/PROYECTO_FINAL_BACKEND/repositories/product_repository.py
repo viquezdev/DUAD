@@ -8,7 +8,7 @@ class ProductRepository:
         self.session_factory=session_factory
 
 
-    def create(self,sku,name,price,description,quantity):
+    def create(self,sku,name,price,description,quantity,category,image):
         try:
             with self.session_factory() as session:
                 product_sku_verify=session.query(Product).filter_by(sku=sku).one_or_none()
@@ -19,7 +19,9 @@ class ProductRepository:
                     name=name,
                     price=price,
                     description=description,
-                    quantity=quantity
+                    quantity=quantity,
+                    category=category,
+                    image=image
                     )
                 session.add(product)
                 session.commit()
@@ -30,7 +32,7 @@ class ProductRepository:
             return None
 
 
-    def update(self,id,sku=None,name=None,price=None,description=None,quantity=None):
+    def update(self,id,sku=None,name=None,price=None,description=None,quantity=None,category=None,image=None):
         try:
             with self.session_factory() as session:
 
@@ -53,7 +55,9 @@ class ProductRepository:
                     "name": name,
                     "price": price,
                     "description": description,
-                    "quantity": quantity
+                    "quantity": quantity,
+                    "category": category,
+                    "image": image
                 }
 
                 for attr, value in fields.items():

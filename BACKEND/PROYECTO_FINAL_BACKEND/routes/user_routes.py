@@ -20,9 +20,9 @@ users_bp=Blueprint("users",__name__)
 def login():
     try:
         user_data=request.get_json()
-        username=user_data.get("username")
+        email=user_data.get("email")
         password=user_data.get("password")
-        user=users_repo.get_by_username(username)
+        user=users_repo.get_by_email(email)
         if not user or not password_manager.verify_password(password,user.password):
             if user:
                 login_history_repo.create(user.id,datetime.utcnow(),request.remote_addr,False)

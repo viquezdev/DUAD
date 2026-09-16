@@ -1,0 +1,6 @@
+# Ignorar Artefactos
+build
+coverage
+
+# Ignorar todos los archivos de HTML
+**/*.html

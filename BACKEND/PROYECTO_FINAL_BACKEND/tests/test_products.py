@@ -50,7 +50,9 @@ def test_get_all_products_success(mock_get_all, mock_jwt_decode, client):
         "name": "Dog Food",
         "price": 10.0,
         "description": "Food for dogs",
-        "quantity": 5
+        "quantity": 5,
+        "category": "General",
+        "image": "https://via.placeholder.com/300"
     }
     mock_get_all.return_value = [fake_product]
     response = client.get("/products/products", headers={
@@ -123,7 +125,9 @@ def test_create_product_success(mock_create, mock_jwt_decode, client):
             "name":"Dry dog food",
             "price":3600,
             "description":"Nutritios formula",
-            "quantity":7
+            "quantity":7,
+            "category": "General",
+            "image": "https://via.placeholder.com/300"
                 
         },
         headers={

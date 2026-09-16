@@ -1,0 +1,136 @@
+.purchase-success-page {
+  max-width: 56rem;
+  margin: 2.5rem auto;
+  padding: 0 1.25rem;
+}
+
+.success-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 2rem 2rem;
+  text-align: center;
+  box-shadow: 0 0.1rem 0.6rem rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.success-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.4rem solid #6366f1;
+  border-radius: 50%;
+  color: #6366f1;
+  font-size: 2.4rem;
+  font-weight: bold;
+}
+
+.success-card h1 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.success-card p {
+  max-width: 41rem;
+  margin: 0 auto;
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.purchase-summary {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1.6rem 1.9rem;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.08);
+}
+
+.purchase-summary h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: black;
+}
+
+.summary-divider {
+  height: 0.1rem;
+  background-color: #e5e7eb;
+  margin: 1.25rem 0;
+}
+
+.summary-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1.25rem;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #374151;
+  padding: 0 1rem 1rem;
+}
+
+.summary-total {
+  border-top: 0.0625rem solid #e5e7eb;
+  margin-top: 1.25rem;
+  padding: 1.25rem 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5625rem;
+}
+
+.success-actions button {
+  min-width: 12rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn-catalog {
+  background-color: #6366f1;
+  color: white;
+}
+
+.btn-home {
+  background-color: white;
+  border: 0.1rem solid #6366f1;
+  color: #6366f1;
+}
+
+.btn-catalog:hover {
+  opacity: 0.9;
+}
+
+.btn-home:hover {
+  background-color: #6366f1;
+  color: white;
+}
+
+.summary-header,
+.summary-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1.2fr;
+  align-items: center;
+  width: 40rem;
+  padding: 8px 0;
+}
+
+.summary-header span,
+.summary-item span:first-child {
+  text-align: left;
+}
+
+.summary-item span:not(:first-child) {
+  text-align: right;
+}
+
+.summary-header span:not(:first-child) {
+  text-align: right;
+}
