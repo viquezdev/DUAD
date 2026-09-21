@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ExperienceLevel } from "../../types/experienceLevel";
 
-export function UserForm() {
+export function UserForm({ onSubmit }: UserFormProps) {
   const [name, setName] = useState<string>("");
   const [age, setAge] = useState<number>(0);
   const [experienceLevel, setExperienceLevel] =
@@ -10,7 +10,7 @@ export function UserForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        console.log({ name, age, experienceLevel });
+        onSubmit({ name, age, experienceLevel });
       }}
     >
       <label htmlFor="name">Name:</label>
@@ -41,5 +41,15 @@ export function UserForm() {
     </form>
   );
 }
+
+type UserFormData = {
+  name: string;
+  age: number;
+  experienceLevel: ExperienceLevel;
+};
+
+type UserFormProps = {
+  onSubmit: (data: UserFormData) => void;
+};
 
 export default UserForm;
