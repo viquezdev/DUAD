@@ -42,7 +42,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
   );
 }
 
-type UserFormData = {
+export type UserFormData = {
   name: string;
   age: number;
   experienceLevel: ExperienceLevel;
