@@ -7,6 +7,10 @@ import {
   calculateCalories,
   formatDuration,
   calculatePace,
+  findLongestExercise,
+  findHighestCalorieExercise,
+  calculateCaloriePercentage,
+  calculateAverageCalories,
 } from "./utils/fitness";
 import "./App.css";
 
@@ -19,6 +23,8 @@ function App() {
   const handleExerciseSubmit = (data: ExerciseFormData) => {
     setExercises((currentExercises) => [...currentExercises, data]);
   };
+  const longestExercise = findLongestExercise(exercises);
+  const highestCalorieExercise = findHighestCalorieExercise(exercises);
   const totalCalories = exercises.reduce(
     (total, exercise) => total + calculateCalories(exercise),
     0,
@@ -33,6 +39,7 @@ function App() {
       )}
       <ExerciseForm onSubmit={handleExerciseSubmit} />
       <section>
+        <h2>Ejercicios registrados</h2>
         {exercises.map((exercise, index) => (
           <p key={index}>
             {exercise.name} - {formatDuration(exercise.duration)} -{" "}
@@ -43,6 +50,28 @@ function App() {
           </p>
         ))}
         <p>Total de calorías: {totalCalories}</p>
+
+        <section>
+          <h2>Resumen comparativo</h2>
+
+          {longestExercise && (
+            <p>
+              Mayor duración: {longestExercise.name} ({longestExercise.duration}{" "}
+              min)
+            </p>
+          )}
+          {highestCalorieExercise && (
+            <p>
+              Más calorías : {highestCalorieExercise.name} (
+              {calculateCalories(highestCalorieExercise)} cal,{" "}
+              {calculateCaloriePercentage(
+                highestCalorieExercise,
+                totalCalories,
+              )}
+              % del total))
+            </p>
+          )}
+        </section>
       </section>
     </div>
   );
