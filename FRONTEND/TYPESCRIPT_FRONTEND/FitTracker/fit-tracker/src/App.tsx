@@ -3,6 +3,11 @@ import type { UserFormData } from "./components/UserForm/UserForm";
 import { useState } from "react";
 import { ExerciseForm } from "./components/ExerciseForm/ExerciseForm";
 import type { ExerciseFormData } from "./components/ExerciseForm/ExerciseForm";
+import {
+  calculateCalories,
+  formatDuration,
+  calculatePace,
+} from "./utils/fitness";
 import "./App.css";
 
 function App() {
@@ -14,6 +19,10 @@ function App() {
   const handleExerciseSubmit = (data: ExerciseFormData) => {
     setExercises((currentExercises) => [...currentExercises, data]);
   };
+  const totalCalories = exercises.reduce(
+    (total, exercise) => total + calculateCalories(exercise),
+    0,
+  );
   return (
     <div className="App">
       <UserForm onSubmit={handleUserSubmit} />
@@ -25,8 +34,15 @@ function App() {
       <ExerciseForm onSubmit={handleExerciseSubmit} />
       <section>
         {exercises.map((exercise, index) => (
-          <p key={index}>{exercise.name} </p>
+          <p key={index}>
+            {exercise.name} - {formatDuration(exercise.duration)} -{" "}
+            {calculateCalories(exercise)} -
+            {calculatePace(exercise) !== null
+              ? `Pace: ${calculatePace(exercise)} min/km`
+              : ""}
+          </p>
         ))}
+        <p>Total de calorías: {totalCalories}</p>
       </section>
     </div>
   );
