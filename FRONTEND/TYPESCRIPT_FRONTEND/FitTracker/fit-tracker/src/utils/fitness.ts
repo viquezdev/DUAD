@@ -19,7 +19,8 @@ export function calculatePace(exercise: Exercise): number | null {
 }
 
 export function getTrainingDays(routine: WeeklyRoutine): number {
-  return routine.entries.length;
+  const days = new Set(routine.entries.map((entry) => entry.day));
+  return days.size;
 }
 
 export function calculateAverageCalories(routine: WeeklyRoutine): number {
