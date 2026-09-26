@@ -26,22 +26,24 @@ export function getTrainingDays(routine: WeeklyRoutine): number {
 export function calculateAverageCalories(routine: WeeklyRoutine): number {
   const totalCalories = calculateRoutineCalories(routine);
   const trainingDays = getTrainingDays(routine);
-  return trainingDays > 0 ? totalCalories / trainingDays : 0;
+  return trainingDays > 0
+    ? Math.round((totalCalories / trainingDays) * 100) / 100
+    : 0;
 }
 
 export function formatDuration(duration: number): string {
   const hours = Math.floor(duration / 60);
   const minutes = duration % 60;
   if (hours === 0 && minutes === 0) {
-    return "0m";
+    return "0min";
   }
   if (hours > 0 && minutes === 0) {
     return `${hours}h`;
   }
   if (hours > 0 && minutes > 0) {
-    return `${hours}h ${minutes}m`;
+    return `${hours}h ${minutes}min`;
   }
-  return `${minutes}m`;
+  return `${minutes}min`;
 }
 
 export function findLongestExercise(exercises: Exercise[]): Exercise | null {
@@ -81,14 +83,24 @@ export function findHighestCalorieDay(routine: WeeklyRoutine): string | null {
   if (routine.entries.length === 0) {
     return null;
   }
-  let highestCalorieDay = routine.entries[0].day;
-  let highestCalories = calculateCalories(routine.entries[0].exercise);
+  const caloriesByDay = new Map<string, number>();
   for (const entry of routine.entries) {
-    const entryCalories = calculateCalories(entry.exercise);
-    if (entryCalories > highestCalories) {
-      highestCalories = entryCalories;
-      highestCalorieDay = entry.day;
+    const calories = calculateCalories(entry.exercise);
+    if (caloriesByDay.has(entry.day)) {
+      const currentCalories = caloriesByDay.get(entry.day) ?? 0;
+      caloriesByDay.set(entry.day, currentCalories + calories);
+    } else {
+      caloriesByDay.set(entry.day, calories);
     }
   }
-  return highestCalorieDay;
+  let highestCalorieDay = "";
+  let highestCalories = 0;
+  for (const [day, calories] of caloriesByDay) {
+    if (calories > highestCalories) {
+      highestCalories = calories;
+      highestCalorieDay = day;
+    }
+  }
+
+  return highestCalorieDay || null;
 }
