@@ -52,90 +52,102 @@ function App() {
   );
   const highestCalorieDay = routine ? findHighestCalorieDay(routine) : null;
   return (
-    <div className="App">
+    <>
       <header className="app-header">
         <h1>FitTracker</h1>
         <p>Seguimiento de tu entrenamiento</p>
       </header>
-      <UserForm onSubmit={handleUserSubmit} />
-      {profile && (
-        <section className="card">
-          <h2>Perfil registrado</h2>
-          <p>Nombre: {profile.name}</p>
-          <p>Edad: {profile.age}</p>
-          <p>Nivel: {profile.experienceLevel}</p>
-        </section>
-      )}
-      {user && (
-        <section className="card">
-          <h2>Usuario completo</h2>
-          <p>Nombre: {user.name}</p>
-          <p>Edad: {user.age}</p>
-          <p>Nivel: {user.experienceLevel}</p>
-          <p>Rutina: {user.routine.name}</p>
-          <h3>Entrenamientos</h3>
-          {user.routine.entries.map((entry, index) => (
-            <p key={index}>
-              {entry.day} → {entry.exercise.name}
-            </p>
-          ))}
-        </section>
-      )}
-      <ExerciseForm onSubmit={handleExerciseSubmit} />
-      <RoutineForm
-        exercises={exercises}
-        onCreateRoutine={handleRoutineCreate}
-      />
-      {routine && (
-        <section className="card">
-          <h2>Rutina creada</h2>
+      <div className="App">
+        <div className="forms-container">
+          <UserForm onSubmit={handleUserSubmit} />
 
-          <h3>{routine.name}</h3>
+          <ExerciseForm onSubmit={handleExerciseSubmit} />
+          <RoutineForm
+            exercises={exercises}
+            onCreateRoutine={handleRoutineCreate}
+          />
+        </div>
+        <div className="results-container">
+          {profile && (
+            <section className="card">
+              <h2>Perfil de Usuario</h2>
+              <p>Nombre: {profile.name}</p>
+              <p>Edad: {profile.age}</p>
+              <p>Nivel: {profile.experienceLevel}</p>
+            </section>
+          )}
+          {user && (
+            <section className="card">
+              <h2>Rutina asignada</h2>
+              <p>Nombre: {user.name}</p>
+              <p>Edad: {user.age}</p>
+              <p>Nivel: {user.experienceLevel}</p>
+              <p>Rutina: {user.routine.name}</p>
+              <h3>Entrenamientos</h3>
+              {user.routine.entries.map((entry, index) => (
+                <p key={index}>
+                  {entry.day} → {entry.exercise.name}
+                </p>
+              ))}
+            </section>
+          )}
+          {routine && (
+            <section className="card">
+              <h2>Rutina creada</h2>
 
-          {routine.entries.map((entry, index) => (
-            <p key={index}>
-              {entry.day} → {entry.exercise.name}
-            </p>
-          ))}
-          <p>Calorías totales: {calculateRoutineCalories(routine)}</p>
-          <p>
-            Promedio de calorías por día: {calculateAverageCalories(routine)}
-          </p>
-          <p>Día con más calorías: {highestCalorieDay}</p>
-        </section>
-      )}
-      <section className="card">
-        <h2>Ejercicios registrados</h2>
-        {exercises.map((exercise, index) => (
-          <p key={index}>
-            {exercise.name} - {formatDuration(exercise.duration)} -{" "}
-            {calculateCalories(exercise)} -
-            {calculatePace(exercise) !== null
-              ? `Pace: ${calculatePace(exercise)} min/km`
-              : ""}
-          </p>
-        ))}
-        <p>Total de calorías: {totalCalories}</p>
-      </section>
-      <section className="card">
-        <h2>Resumen comparativo</h2>
+              <h3>{routine.name}</h3>
 
-        {longestExercise && (
-          <p>
-            Mayor duración: {longestExercise.name} ({longestExercise.duration}{" "}
-            min)
-          </p>
-        )}
-        {highestCalorieExercise && (
-          <p>
-            Más calorías : {highestCalorieExercise.name} (
-            {calculateCalories(highestCalorieExercise)} cal,{" "}
-            {calculateCaloriePercentage(highestCalorieExercise, totalCalories)}%
-            del total)
-          </p>
-        )}
-      </section>
-    </div>
+              {routine.entries.map((entry, index) => (
+                <p key={index}>
+                  {entry.day} → {entry.exercise.name}
+                </p>
+              ))}
+              <p>Calorías totales: {calculateRoutineCalories(routine)}</p>
+              <p>
+                Promedio de calorías por día:{" "}
+                {calculateAverageCalories(routine)}
+              </p>
+              <p>Día con más calorías: {highestCalorieDay}</p>
+            </section>
+          )}
+
+          <section className="card">
+            <h2>Ejercicios registrados</h2>
+            {exercises.map((exercise, index) => (
+              <p key={index}>
+                {exercise.name} - {formatDuration(exercise.duration)} -{" "}
+                {calculateCalories(exercise)} -
+                {calculatePace(exercise) !== null
+                  ? `Pace: ${calculatePace(exercise)} min/km`
+                  : ""}
+              </p>
+            ))}
+            <p>Total de calorías: {totalCalories}</p>
+          </section>
+          <section className="card">
+            <h2>Resumen comparativo</h2>
+
+            {longestExercise && (
+              <p>
+                Mayor duración: {longestExercise.name} (
+                {longestExercise.duration} min)
+              </p>
+            )}
+            {highestCalorieExercise && (
+              <p>
+                Más calorías : {highestCalorieExercise.name} (
+                {calculateCalories(highestCalorieExercise)} cal,{" "}
+                {calculateCaloriePercentage(
+                  highestCalorieExercise,
+                  totalCalories,
+                )}
+                % del total)
+              </p>
+            )}
+          </section>
+        </div>
+      </div>
+    </>
   );
 }
 
