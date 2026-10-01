@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ExperienceLevel } from "../../types/experienceLevel";
+import type { User } from "../../types/user";
 import "./UserForm.css";
 export function UserForm({ onSubmit }: UserFormProps) {
   const [name, setName] = useState<string>("");
@@ -18,10 +19,10 @@ export function UserForm({ onSubmit }: UserFormProps) {
         }}
       >
         <h2>Registro de perfil</h2>
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="user-name">Name:</label>
         <input
           type="text"
-          id="name"
+          id="user-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -50,11 +51,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
   );
 }
 
-export type UserFormData = {
-  name: string;
-  age: number;
-  experienceLevel: ExperienceLevel;
-};
+export type UserFormData = Pick<User, "name" | "age" | "experienceLevel">;
 
 type UserFormProps = {
   onSubmit: (data: UserFormData) => void;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { CaloriesPerMinute } from "../../types/caloriesPerMinute";
+import type { Exercise } from "../../types/exercise";
 import "./ExerciseForm.css";
 
 export const ExerciseForm = ({ onSubmit }: ExerciseFormProps) => {
@@ -17,18 +18,18 @@ export const ExerciseForm = ({ onSubmit }: ExerciseFormProps) => {
             onSubmit({ name, duration, caloriesPerMinute });
           } else {
             onSubmit({ name, duration, caloriesPerMinute, distance });
-            setDistance(0);
-            setName("");
-            setDuration(0);
-            setCaloriesPerMinute(0);
           }
+          setDistance(0);
+          setName("");
+          setDuration(0);
+          setCaloriesPerMinute(0);
         }}
       >
         <h2>Registro de ejercicio</h2>
-        <label htmlFor="name">Nombre:</label>
+        <label htmlFor="exercise-name">Nombre:</label>
         <input
           type="text"
-          id="name"
+          id="exercise-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -63,15 +64,8 @@ export const ExerciseForm = ({ onSubmit }: ExerciseFormProps) => {
   );
 };
 
-export type ExerciseFormData = {
-  name: string;
-  duration: number;
-  caloriesPerMinute: CaloriesPerMinute;
-  distance?: number;
-};
-
 type ExerciseFormProps = {
-  onSubmit: (data: ExerciseFormData) => void;
+  onSubmit: (data: Exercise) => void;
 };
 
 export default ExerciseForm;

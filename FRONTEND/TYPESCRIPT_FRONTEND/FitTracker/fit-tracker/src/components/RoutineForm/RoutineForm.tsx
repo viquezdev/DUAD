@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Exercise } from "../../types/exercise";
 import type { RoutineEntry } from "../../types/routineEntry";
 import type { WeeklyRoutine } from "../../types/weeklyRoutine";
+import type { DayOfWeek } from "../../types/routineEntry";
 import "./RoutineForm.css";
 
 type RoutineFormProps = {
@@ -14,7 +15,7 @@ export const RoutineForm = ({
   onCreateRoutine,
 }: RoutineFormProps) => {
   const [name, setName] = useState<string>("");
-  const [day, setDay] = useState<string>("");
+  const [day, setDay] = useState<DayOfWeek | "">("");
   const [exerciseName, setExerciseName] = useState<string>("");
   const [entries, setEntries] = useState<RoutineEntry[]>([]);
   const selectedExercise = exercises.find(
@@ -52,23 +53,27 @@ export const RoutineForm = ({
         }}
       >
         <h2>Crear rutina</h2>
-        <label htmlFor="name">Nombre de la rutina:</label>
+        <label htmlFor="routine-name">Nombre de la rutina:</label>
         <input
           type="text"
-          id="name"
+          id="routine-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <label htmlFor="day">Día de la rutina:</label>
-        <select id="day" value={day} onChange={(e) => setDay(e.target.value)}>
+        <select
+          id="day"
+          value={day}
+          onChange={(e) => setDay(e.target.value as DayOfWeek)}
+        >
           <option value="">Seleccione un día</option>
-          <option value="lunes">Lunes</option>
-          <option value="martes">Martes</option>
-          <option value="miércoles">Miércoles</option>
-          <option value="jueves">Jueves</option>
-          <option value="viernes">Viernes</option>
-          <option value="sábado">Sábado</option>
-          <option value="domingo">Domingo</option>
+          <option value="Lunes">Lunes</option>
+          <option value="Martes">Martes</option>
+          <option value="Miércoles">Miércoles</option>
+          <option value="Jueves">Jueves</option>
+          <option value="Viernes">Viernes</option>
+          <option value="Sábado">Sábado</option>
+          <option value="Domingo">Domingo</option>
         </select>
         <label htmlFor="routine-exercise">Ejercicio:</label>
 

@@ -2,7 +2,7 @@ import { UserForm } from "../../fit-tracker/src/components/UserForm/UserForm";
 import type { UserFormData } from "./components/UserForm/UserForm";
 import { useState } from "react";
 import { ExerciseForm } from "./components/ExerciseForm/ExerciseForm";
-import type { ExerciseFormData } from "./components/ExerciseForm/ExerciseForm";
+import type { Exercise } from "./types/exercise";
 import type { WeeklyRoutine } from "./types/weeklyRoutine";
 import {
   calculateCalories,
@@ -21,29 +21,26 @@ import "./App.css";
 
 function App() {
   const [profile, setProfile] = useState<UserFormData | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [exercises, setExercises] = useState<ExerciseFormData[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [routine, setRoutine] = useState<WeeklyRoutine | null>(null);
   const handleUserSubmit = (data: UserFormData) => {
     setProfile(data);
   };
-  const handleExerciseSubmit = (data: ExerciseFormData) => {
+  const handleExerciseSubmit = (data: Exercise) => {
     setExercises((currentExercises) => [...currentExercises, data]);
   };
   const handleRoutineCreate = (newRoutine: WeeklyRoutine) => {
     setRoutine(newRoutine);
-    if (!profile) {
-      return;
-    }
-
-    const newUser: User = {
-      name: profile.name,
-      age: profile.age,
-      experienceLevel: profile.experienceLevel,
-      routine: newRoutine,
-    };
-    setUser(newUser);
   };
+  const user: User | null =
+    profile && routine
+      ? {
+          name: profile.name,
+          age: profile.age,
+          experienceLevel: profile.experienceLevel,
+          routine: routine,
+        }
+      : null;
   const longestExercise = findLongestExercise(exercises);
   const highestCalorieExercise = findHighestCalorieExercise(exercises);
   const totalCalories = exercises.reduce(
