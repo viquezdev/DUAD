@@ -1,4 +1,4 @@
-import { UserForm } from "../../fit-tracker/src/components/UserForm/UserForm";
+import { UserForm } from "./components/UserForm/UserForm";
 import type { UserFormData } from "./components/UserForm/UserForm";
 import { useState } from "react";
 import { ExerciseForm } from "./components/ExerciseForm/ExerciseForm";
@@ -110,20 +110,20 @@ function App() {
 
           <section className="card">
             <h2>Ejercicios registrados</h2>
-            {exercises.map((exercise, index) => (
-              <p key={index}>
-                {exercise.name} - {formatDuration(exercise.duration)} -{" "}
-                {calculateCalories(exercise)} -
-                {calculatePace(exercise) !== null
-                  ? `Pace: ${calculatePace(exercise)} min/km`
-                  : ""}
-              </p>
-            ))}
+            {exercises.map((exercise, index) => {
+              const pace = calculatePace(exercise);
+              return (
+                <p key={index}>
+                  {exercise.name} - {formatDuration(exercise.duration)} -{" "}
+                  {calculateCalories(exercise)} cal
+                  {pace !== null ? ` - Pace: ${pace} min/km` : ""}
+                </p>
+              );
+            })}
             <p>Total de calorías: {totalCalories}</p>
           </section>
           <section className="card">
             <h2>Resumen comparativo</h2>
-
             {longestExercise && (
               <p>
                 Mayor duración: {longestExercise.name} (
@@ -141,6 +141,14 @@ function App() {
                 % del total)
               </p>
             )}
+            <h3>Contribución al total de calorías:</h3>
+            {exercises.map((exercise, index) => (
+              <p key={index}>
+                {exercise.name} ( {calculateCalories(exercise)} cal,{" "}
+                {calculateCaloriePercentage(exercise, totalCalories)}% del
+                total)
+              </p>
+            ))}
           </section>
         </div>
       </div>

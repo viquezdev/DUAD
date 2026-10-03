@@ -45,6 +45,9 @@ export const RoutineForm = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!name.trim() || entries.length === 0) {
+            return;
+          }
           handleCreateRoutine();
           setName("");
           setDay("");

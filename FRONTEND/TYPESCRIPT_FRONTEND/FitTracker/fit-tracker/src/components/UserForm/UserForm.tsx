@@ -12,6 +12,9 @@ export function UserForm({ onSubmit }: UserFormProps) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!name.trim() || age <= 0) {
+            return;
+          }
           onSubmit({ name, age, experienceLevel });
           setName("");
           setAge(0);

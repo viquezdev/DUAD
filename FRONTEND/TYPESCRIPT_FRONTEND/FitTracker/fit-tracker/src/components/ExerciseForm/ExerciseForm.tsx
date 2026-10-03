@@ -14,6 +14,9 @@ export const ExerciseForm = ({ onSubmit }: ExerciseFormProps) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!name.trim() || duration <= 0) {
+            return;
+          }
           if (distance === 0) {
             onSubmit({ name, duration, caloriesPerMinute });
           } else {
