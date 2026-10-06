@@ -3,5 +3,4 @@ export interface Exercise {
   name: string;
   duration: number;
   caloriesPerMinute: CaloriesPerMinute;
-  distance?: number;
 }
