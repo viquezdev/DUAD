@@ -1,6 +1,6 @@
-import type { Exercise } from "./exercise.ts";
+import type { BaseExercise } from "./exercise.ts";
 
-export interface StrengthExercise extends Exercise {
+export interface StrengthExercise extends BaseExercise {
   category: "strength";
   sets: number;
   reps: number;
