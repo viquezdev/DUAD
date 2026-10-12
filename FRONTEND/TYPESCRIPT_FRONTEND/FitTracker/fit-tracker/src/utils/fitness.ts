@@ -12,8 +12,10 @@ export function calculateRoutineCalories(routine: WeeklyRoutine): number {
 }
 
 export function calculatePace(exercise: Exercise): number | null {
-  if (exercise.distance && exercise.duration > 0) {
-    return Math.round((exercise.duration / exercise.distance) * 100) / 100;
+  if (exercise.category === "cardio") {
+    if (exercise.distance > 0 && exercise.duration > 0) {
+      return Math.round((exercise.duration / exercise.distance) * 100) / 100;
+    }
   }
   return null;
 }

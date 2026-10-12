@@ -1,11 +1,8 @@
-import type { ExperienceLevel } from "./experienceLevel";
 import type { WeeklyRoutine } from "./weeklyRoutine";
 import type { UserId } from "./userId";
+import type { CompleteProfile } from "./completeProfile";
 
-export interface User {
+export interface User extends CompleteProfile {
   id: UserId;
-  name: string;
-  age: number;
-  experienceLevel: ExperienceLevel;
   routine: WeeklyRoutine;
 }
