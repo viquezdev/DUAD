@@ -35,10 +35,14 @@ function App() {
   const user: User | null =
     profile && routine
       ? {
+          id: 1,
           name: profile.name,
           age: profile.age,
           experienceLevel: profile.experienceLevel,
-          routine: routine,
+          membershipPlan: profile.membershipPlan,
+          startDate: profile.startDate,
+          isActive: profile.isActive,
+          routine,
         }
       : null;
   const longestExercise = findLongestExercise(exercises);
@@ -71,6 +75,13 @@ function App() {
               <p>Nombre: {profile.name}</p>
               <p>Edad: {profile.age}</p>
               <p>Nivel: {profile.experienceLevel}</p>
+              <p>Membresía: {profile.membershipPlan}</p>
+              <p>
+                Fecha de inicio: {profile.startDate.toLocaleDateString("es-CR")}
+              </p>
+              <p>
+                Membresía activa: {profile.isActive ? "Activa" : "Inactiva"}
+              </p>
             </section>
           )}
           {user && (
