@@ -1,0 +1,27 @@
+.catalog {
+  padding: 1.5rem;
+}
+
+.catalog-category {
+  margin-block: 1.5rem;
+}
+
+.catalog-category h3 {
+  margin-bottom: 0.75rem;
+}
+
+.catalog-category ul {
+  padding-left: 1.5rem;
+}
+
+.catalog-category li {
+  margin-bottom: 0.5rem;
+}
+
+.catalog-total {
+  font-weight: bold;
+}
+
+.catalog-profile {
+  margin-top: 1.5rem;
+}
