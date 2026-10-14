@@ -2,7 +2,7 @@ import { UserForm } from "./components/UserForm/UserForm";
 import type { UserFormData } from "./components/UserForm/UserForm";
 import { useState } from "react";
 import { ExerciseForm } from "./components/ExerciseForm/ExerciseForm";
-import type { Exercise } from "./types/exercise";
+import type { Exercise, NewExercise } from "./types/exercise";
 import type { WeeklyRoutine } from "./types/weeklyRoutine";
 import {
   calculateCalories,
@@ -17,6 +17,7 @@ import {
 } from "./utils/fitness";
 import { RoutineForm } from "./components/RoutineForm/RoutineForm";
 import type { User } from "./types/user";
+import { ExerciseCatalog } from "./components/ExerciseCatalog/ExerciseCatalog";
 import "./App.css";
 
 function App() {
@@ -26,8 +27,18 @@ function App() {
   const handleUserSubmit = (data: UserFormData) => {
     setProfile(data);
   };
-  const handleExerciseSubmit = (data: Exercise) => {
-    setExercises((currentExercises) => [...currentExercises, data]);
+  const handleExerciseSubmit = (data: NewExercise) => {
+    const nextId =
+      exercises.length === 0
+        ? 1
+        : Math.max(...exercises.map((exercise) => exercise.id)) + 1;
+
+    const newExercise: Exercise = {
+      ...data,
+      id: nextId,
+    };
+
+    setExercises((currentExercises) => [...currentExercises, newExercise]);
   };
   const handleRoutineCreate = (newRoutine: WeeklyRoutine) => {
     setRoutine(newRoutine);
@@ -133,6 +144,11 @@ function App() {
             })}
             <p>Total de calorías: {totalCalories}</p>
           </section>
+          {profile && (
+            <section className="card">
+              <ExerciseCatalog exercises={exercises} profile={profile} />
+            </section>
+          )}
           <section className="card">
             <h2>Resumen comparativo</h2>
             {longestExercise && (

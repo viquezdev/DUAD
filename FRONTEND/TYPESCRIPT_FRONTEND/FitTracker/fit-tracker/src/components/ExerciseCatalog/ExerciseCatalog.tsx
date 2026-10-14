@@ -14,10 +14,28 @@ export const ExerciseCatalog = ({
   profile,
 }: ExerciseCatalogProps) => {
   const catalog = getExerciseCatalog(exercises);
+  const totalCardio =
+    catalog.find((summary) => summary.category === "cardio")?.exercises
+      .length ?? 0;
+
+  const totalStrength =
+    catalog.find((summary) => summary.category === "strength")?.exercises
+      .length ?? 0;
+
+  const totalFlexibility =
+    catalog.find((summary) => summary.category === "flexibility")?.exercises
+      .length ?? 0;
 
   return (
     <div className="catalog">
       <h2>Catálogo de Ejercicios</h2>
+      <div className="exercise-counter">
+        <h3>Resumen por categoría</h3>
+        <p>Cardio: {totalCardio} ejercicios</p>
+        <p>Fuerza: {totalStrength} ejercicios</p>
+        <p>Flexibilidad: {totalFlexibility} ejercicios</p>
+        <p>Total registrados: {exercises.length} ejercicios</p>
+      </div>
 
       {catalog.map((summary) => (
         <section className="catalog-category" key={summary.category}>

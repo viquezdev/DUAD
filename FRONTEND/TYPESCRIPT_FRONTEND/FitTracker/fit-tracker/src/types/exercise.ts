@@ -12,3 +12,7 @@ export interface BaseExercise {
 }
 
 export type Exercise = FlexibilityExercise | StrengthExercise | CardioExercise;
+export type NewExercise =
+  | Omit<CardioExercise, "id">
+  | Omit<StrengthExercise, "id">
+  | Omit<FlexibilityExercise, "id">;
