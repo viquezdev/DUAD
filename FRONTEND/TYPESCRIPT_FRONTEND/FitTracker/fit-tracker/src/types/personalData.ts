@@ -1,7 +1,6 @@
 import type { ExperienceLevel } from "./experienceLevel";
+import type { Person } from "./person";
 
-export interface PersonalData {
-  name: string;
-  age: number;
+export interface PersonalData extends Person {
   experienceLevel: ExperienceLevel;
 }
