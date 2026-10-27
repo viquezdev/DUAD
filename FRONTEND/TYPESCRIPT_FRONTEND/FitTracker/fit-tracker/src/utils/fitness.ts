@@ -1,5 +1,8 @@
 import type { Exercise } from "../types/exercise";
 import type { WeeklyRoutine } from "../types/weeklyRoutine";
+import type { WeeklyLoad } from "../types/weeklyLoad";
+import type { RestRecommendation } from "../types/restRecommendation";
+import type { FindHighestCalorieDay } from "../types/fitnessContracts";
 
 export function calculateCalories(exercise: Exercise): number {
   return exercise.duration * exercise.caloriesPerMinute;
@@ -106,3 +109,100 @@ export function findHighestCalorieDay(routine: WeeklyRoutine): string | null {
 
   return highestCalorieDay || null;
 }
+
+export function calculateTotalMinutes(weeklyRoutine: WeeklyRoutine): number {
+  const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
+  const totalMinutes = exercises.reduce((total, ex) => total + ex.duration, 0);
+  return totalMinutes;
+}
+
+export function calculateTotalCalories(weeklyRoutine: WeeklyRoutine): number {
+  const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
+  const totalCalories = exercises.reduce((total, ex) => {
+    switch (ex.category) {
+      case "cardio":
+        return total + ex.caloriesBurned;
+      case "strength":
+        return total + calculateCalories(ex);
+      case "flexibility":
+        return total + calculateCalories(ex);
+    }
+  }, 0);
+  return totalCalories;
+}
+
+export function calculateCardioMinutes(weeklyRoutine: WeeklyRoutine): number {
+  const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
+  const totalMinutes = exercises.reduce((total, ex) => {
+    if (ex.category === "cardio") {
+      return total + ex.duration;
+    } else {
+      return total;
+    }
+  }, 0);
+  return totalMinutes;
+}
+
+export function calculateStrengthMinutes(weeklyRoutine: WeeklyRoutine): number {
+  const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
+  const totalMinutes = exercises.reduce((total, ex) => {
+    if (ex.category === "strength") {
+      return total + ex.duration;
+    } else {
+      return total;
+    }
+  }, 0);
+  return totalMinutes;
+}
+
+export function calculateFlexibilityMinutes(
+  weeklyRoutine: WeeklyRoutine,
+): number {
+  const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
+  const totalMinutes = exercises.reduce((total, ex) => {
+    if (ex.category === "flexibility") {
+      return total + ex.duration;
+    } else {
+      return total;
+    }
+  }, 0);
+  return totalMinutes;
+}
+
+export function calculateTrainingDays(weeklyRoutine: WeeklyRoutine): number {
+  const sessions = weeklyRoutine.sessions.filter(
+    (session) => session.exercises.length > 0,
+  );
+  return sessions.length;
+}
+
+export function calculateWeeklyLoad(weeklyRoutine: WeeklyRoutine): WeeklyLoad {
+  return {
+    totalMinutes: calculateTotalMinutes(weeklyRoutine),
+    totalCalories: calculateTotalCalories(weeklyRoutine),
+    cardioMinutes: calculateCardioMinutes(weeklyRoutine),
+    strengthMinutes: calculateStrengthMinutes(weeklyRoutine),
+    flexibilityMinutes: calculateFlexibilityMinutes(weeklyRoutine),
+    trainingDays: calculateTrainingDays(weeklyRoutine),
+  };
+}
+
+export function getRestRecommendation(
+  weeklyLoad: WeeklyLoad,
+): RestRecommendation {
+  if (weeklyLoad.totalMinutes > 300 || weeklyLoad.trainingDays > 5) {
+    return "high";
+  }
+  if (weeklyLoad.totalMinutes < 150 || weeklyLoad.trainingDays < 3) {
+    return "low";
+  }
+  return "balanced";
+}
+
+export const findHighestCalorieDay: FindHighestCalorieDay = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
+  if (weeklyRoutine.sessions.length === 0) {
+    return null;
+  }
+};
