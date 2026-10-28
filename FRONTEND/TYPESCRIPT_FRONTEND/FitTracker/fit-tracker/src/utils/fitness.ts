@@ -1,17 +1,17 @@
 import type { Exercise } from "../types/exercise";
 import type { WeeklyRoutine } from "../types/weeklyRoutine";
 import type { WeeklyLoad } from "../types/weeklyLoad";
-import type { RestRecommendation } from "../types/restRecommendation";
 import type { FindHighestCalorieDay } from "../types/fitnessContracts";
+import type { DaySession } from "../types/daySession";
+import type { GetPendingExercises } from "../types/fitnessContracts";
+import type { CalculateWeeklyLoad } from "../types/fitnessContracts";
+import type { GetRestRecommendation } from "../types/fitnessContracts";
+import type { GetWeeklySummary } from "../types/fitnessContracts";
+import type { GetInstructorWeeklySummaries } from "../types/fitnessContracts";
+import type { Instructor } from "../types/instructor";
 
 export function calculateCalories(exercise: Exercise): number {
   return exercise.duration * exercise.caloriesPerMinute;
-}
-
-export function calculateRoutineCalories(routine: WeeklyRoutine): number {
-  return routine.entries.reduce((total, entry) => {
-    return total + calculateCalories(entry.exercise);
-  }, 0);
 }
 
 export function calculatePace(exercise: Exercise): number | null {
@@ -23,14 +23,9 @@ export function calculatePace(exercise: Exercise): number | null {
   return null;
 }
 
-export function getTrainingDays(routine: WeeklyRoutine): number {
-  const days = new Set(routine.entries.map((entry) => entry.day));
-  return days.size;
-}
-
 export function calculateAverageCalories(routine: WeeklyRoutine): number {
-  const totalCalories = calculateRoutineCalories(routine);
-  const trainingDays = getTrainingDays(routine);
+  const totalCalories = calculateTotalCalories(routine);
+  const trainingDays = calculateTrainingDays(routine);
   return trainingDays > 0
     ? Math.round((totalCalories / trainingDays) * 100) / 100
     : 0;
@@ -82,32 +77,6 @@ export function calculateCaloriePercentage(
   }
   const exerciseCalories = calculateCalories(exercise);
   return Math.round((exerciseCalories / totalCalories) * 100);
-}
-
-export function findHighestCalorieDay(routine: WeeklyRoutine): string | null {
-  if (routine.entries.length === 0) {
-    return null;
-  }
-  const caloriesByDay = new Map<string, number>();
-  for (const entry of routine.entries) {
-    const calories = calculateCalories(entry.exercise);
-    if (caloriesByDay.has(entry.day)) {
-      const currentCalories = caloriesByDay.get(entry.day) ?? 0;
-      caloriesByDay.set(entry.day, currentCalories + calories);
-    } else {
-      caloriesByDay.set(entry.day, calories);
-    }
-  }
-  let highestCalorieDay = "";
-  let highestCalories = 0;
-  for (const [day, calories] of caloriesByDay) {
-    if (calories > highestCalories) {
-      highestCalories = calories;
-      highestCalorieDay = day;
-    }
-  }
-
-  return highestCalorieDay || null;
 }
 
 export function calculateTotalMinutes(weeklyRoutine: WeeklyRoutine): number {
@@ -176,7 +145,9 @@ export function calculateTrainingDays(weeklyRoutine: WeeklyRoutine): number {
   return sessions.length;
 }
 
-export function calculateWeeklyLoad(weeklyRoutine: WeeklyRoutine): WeeklyLoad {
+export const calculateWeeklyLoad: CalculateWeeklyLoad = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
   return {
     totalMinutes: calculateTotalMinutes(weeklyRoutine),
     totalCalories: calculateTotalCalories(weeklyRoutine),
@@ -185,11 +156,11 @@ export function calculateWeeklyLoad(weeklyRoutine: WeeklyRoutine): WeeklyLoad {
     flexibilityMinutes: calculateFlexibilityMinutes(weeklyRoutine),
     trainingDays: calculateTrainingDays(weeklyRoutine),
   };
-}
+};
 
-export function getRestRecommendation(
+export const getRestRecommendation: GetRestRecommendation = (
   weeklyLoad: WeeklyLoad,
-): RestRecommendation {
+) => {
   if (weeklyLoad.totalMinutes > 300 || weeklyLoad.trainingDays > 5) {
     return "high";
   }
@@ -197,6 +168,18 @@ export function getRestRecommendation(
     return "low";
   }
   return "balanced";
+};
+
+function calculateSessionCalories(session: DaySession): number {
+  return session.exercises.reduce((total, ex) => {
+    switch (ex.category) {
+      case "cardio":
+        return total + ex.caloriesBurned;
+      case "strength":
+      case "flexibility":
+        return total + calculateCalories(ex);
+    }
+  }, 0);
 }
 
 export const findHighestCalorieDay: FindHighestCalorieDay = (
@@ -205,4 +188,51 @@ export const findHighestCalorieDay: FindHighestCalorieDay = (
   if (weeklyRoutine.sessions.length === 0) {
     return null;
   }
+  const highestCalorieDay = weeklyRoutine.sessions.reduce(
+    (highest, current) => {
+      const highestCalories = calculateSessionCalories(highest);
+      const currentCalories = calculateSessionCalories(current);
+
+      return currentCalories > highestCalories ? current : highest;
+    },
+    weeklyRoutine.sessions[0],
+  );
+
+  return highestCalorieDay;
+};
+
+export const getPendingExercises: GetPendingExercises = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
+  const weeklyExercises = weeklyRoutine.sessions.flatMap(
+    (session) => session.exercises,
+  );
+  const pendingExercises = weeklyExercises.filter(
+    (exercise) => !exercise.isCompleted,
+  );
+  return pendingExercises;
+};
+
+export const getWeeklySummary: GetWeeklySummary = (
+  name: string,
+  weeklyRoutine: WeeklyRoutine,
+) => {
+  return {
+    name: name,
+    trainingDays: calculateTrainingDays(weeklyRoutine),
+    totalMinutes: calculateTotalMinutes(weeklyRoutine),
+    totalCalories: calculateTotalCalories(weeklyRoutine),
+    restRecommendation: getRestRecommendation(
+      calculateWeeklyLoad(weeklyRoutine),
+    ),
+    pendingExercises: getPendingExercises(weeklyRoutine).length,
+  };
+};
+
+export const getInstructorWeeklySummaries: GetInstructorWeeklySummaries = (
+  instructor: Instructor,
+) => {
+  return instructor.assignedUsers.map((user) =>
+    getWeeklySummary(user.name, user.routine),
+  );
 };
