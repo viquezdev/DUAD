@@ -1,8 +1,10 @@
 import { useState } from "react";
-import type { Exercise } from "../../types/exercise";
-import type { RoutineEntry } from "../../types/routineEntry";
 import type { WeeklyRoutine } from "../../types/weeklyRoutine";
 import type { DayOfWeek } from "../../types/routineEntry";
+import type { DaySession } from "../../types/daySession";
+import type { RoutineExercise } from "../../types/routineExercise";
+import type { Exercise } from "../../types/exercise";
+
 import "./RoutineForm.css";
 
 type RoutineFormProps = {
@@ -17,26 +19,73 @@ export const RoutineForm = ({
   const [name, setName] = useState<string>("");
   const [day, setDay] = useState<DayOfWeek | "">("");
   const [exerciseName, setExerciseName] = useState<string>("");
-  const [entries, setEntries] = useState<RoutineEntry[]>([]);
+  const [daySessions, setDaySessions] = useState<DaySession[]>([]);
+  const [comment, setComment] = useState<string>("");
   const selectedExercise = exercises.find(
     (exercise) => exercise.name === exerciseName,
   );
-  const handleAddEntry = () => {
+  const createRoutineExercise = (exercise: Exercise): RoutineExercise => {
+    switch (exercise.category) {
+      case "cardio":
+        return {
+          ...exercise,
+          isCompleted: false,
+          caloriesBurned: 0,
+        };
+
+      case "strength":
+        return {
+          ...exercise,
+          isCompleted: false,
+        };
+
+      case "flexibility":
+        return {
+          ...exercise,
+          isCompleted: false,
+        };
+    }
+  };
+  const handleAddExercise = () => {
     if (!selectedExercise || !day) {
       return;
     }
+    const routineExercise = createRoutineExercise(selectedExercise);
+    const existingSession = daySessions.find((session) => session.day === day);
 
-    const newEntry: RoutineEntry = {
-      day,
-      exercise: selectedExercise,
-    };
+    if (existingSession) {
+      setDaySessions((currentSessions) =>
+        currentSessions.map((session) => {
+          if (session.day === day) {
+            return {
+              ...session,
+              exercises: [...session.exercises, routineExercise],
+              comment: comment.trim() ? comment : session.comment,
+            };
+          }
 
-    setEntries((currentEntries) => [...currentEntries, newEntry]);
+          return session;
+        }),
+      );
+    } else {
+      const newDaySession: DaySession = {
+        day,
+        exercises: [routineExercise],
+        comment,
+      };
+
+      setDaySessions((currentSessions) => [...currentSessions, newDaySession]);
+    }
+
+    setExerciseName("");
+    setComment("");
   };
   const handleCreateRoutine = () => {
     const newRoutine: WeeklyRoutine = {
+      id: Date.now(),
       name,
-      entries,
+      startDate: new Date(),
+      sessions: daySessions,
     };
     onCreateRoutine(newRoutine);
   };
@@ -45,14 +94,15 @@ export const RoutineForm = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (!name.trim() || entries.length === 0) {
+          if (!name.trim() || daySessions.length === 0) {
             return;
           }
           handleCreateRoutine();
           setName("");
           setDay("");
           setExerciseName("");
-          setEntries([]);
+          setDaySessions([]);
+          setComment("");
         }}
       >
         <h2>Crear rutina</h2>
@@ -93,16 +143,27 @@ export const RoutineForm = ({
             </option>
           ))}
         </select>
-        <button type="button" onClick={handleAddEntry}>
-          Agregar entrada
+        <label htmlFor="routine-comment">Comentario:</label>
+        <textarea
+          id="routine-comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Escribe un comentario para esta sesión..."
+        />
+        <button type="button" onClick={handleAddExercise}>
+          Agregar sesión
         </button>
         <section>
-          <h3>Entradas de la rutina</h3>
+          <h3>Sesiones de la rutina</h3>
+          {daySessions.map((session) => (
+            <div key={session.day}>
+              <h4>{session.day}</h4>
 
-          {entries.map((entry, index) => (
-            <p key={index}>
-              {entry.day} → {entry.exercise.name}
-            </p>
+              {session.exercises.map((exercise) => (
+                <p key={exercise.id}>{exercise.name}</p>
+              ))}
+              {session.comment && <p>{session.comment}</p>}
+            </div>
           ))}
         </section>
         <button type="submit">Crear rutina</button>
