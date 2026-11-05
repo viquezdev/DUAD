@@ -12,7 +12,7 @@ import {
   findHighestCalorieExercise,
   calculateCaloriePercentage,
   calculateAverageCalories,
-  calculateRoutineCalories,
+  calculateTotalCalories,
   findHighestCalorieDay,
 } from "./utils/fitness";
 import { RoutineForm } from "./components/RoutineForm/RoutineForm";
@@ -49,6 +49,7 @@ function App() {
           id: 1,
           name: profile.name,
           age: profile.age,
+          email: profile.email,
           experienceLevel: profile.experienceLevel,
           membershipPlan: profile.membershipPlan,
           startDate: profile.startDate,
@@ -103,10 +104,16 @@ function App() {
               <p>Nivel: {user.experienceLevel}</p>
               <p>Rutina: {user.routine.name}</p>
               <h3>Entrenamientos</h3>
-              {user.routine.entries.map((entry, index) => (
-                <p key={index}>
-                  {entry.day} → {entry.exercise.name}
-                </p>
+              {user.routine.sessions.map((session) => (
+                <div key={session.day}>
+                  <p>{session.day}</p>
+
+                  {session.exercises.map((exercise) => (
+                    <p key={exercise.id}>{exercise.name}</p>
+                  ))}
+
+                  {session.comment && <p>{session.comment}</p>}
+                </div>
               ))}
             </section>
           )}
@@ -116,17 +123,26 @@ function App() {
 
               <h3>{routine.name}</h3>
 
-              {routine.entries.map((entry, index) => (
-                <p key={index}>
-                  {entry.day} → {entry.exercise.name}
-                </p>
+              {routine.sessions.map((session) => (
+                <div key={session.day}>
+                  <p>{session.day}</p>
+
+                  {session.exercises.map((exercise) => (
+                    <p key={exercise.id}>{exercise.name}</p>
+                  ))}
+
+                  {session.comment && <p>{session.comment}</p>}
+                </div>
               ))}
-              <p>Calorías totales: {calculateRoutineCalories(routine)}</p>
+              <p>Calorías totales: {calculateTotalCalories(routine)}</p>
               <p>
                 Promedio de calorías por día:{" "}
                 {calculateAverageCalories(routine)}
               </p>
-              <p>Día con más calorías: {highestCalorieDay}</p>
+              <p>
+                Día con más calorías:{" "}
+                {highestCalorieDay !== null ? ` ${highestCalorieDay}` : ""}
+              </p>
             </section>
           )}
 

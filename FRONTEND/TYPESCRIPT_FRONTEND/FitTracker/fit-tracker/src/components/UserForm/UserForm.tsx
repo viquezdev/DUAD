@@ -12,6 +12,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
   const [membershipPlan, setMembershipPlan] = useState<MembershipPlan>("Basic");
   const [startDate, setStartDate] = useState<string>("");
   const [isActive, setIsActive] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>("");
   return (
     <div className="user-form">
       <form
@@ -27,6 +28,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
             membershipPlan,
             startDate: new Date(startDate),
             isActive,
+            email,
           });
           setName("");
           setAge(0);
@@ -34,6 +36,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
           setMembershipPlan("Basic");
           setStartDate("");
           setIsActive(true);
+          setEmail("");
         }}
       >
         <h2>Registro de perfil</h2>
@@ -50,6 +53,13 @@ export function UserForm({ onSubmit }: UserFormProps) {
           id="age"
           value={age}
           onChange={(e) => setAge(Number(e.target.value))}
+        />
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <label htmlFor="experienceLevel">Experience Level:</label>
         <select
@@ -104,6 +114,7 @@ export type UserFormData = Pick<
   | "membershipPlan"
   | "startDate"
   | "isActive"
+  | "email"
 >;
 
 type UserFormProps = {
