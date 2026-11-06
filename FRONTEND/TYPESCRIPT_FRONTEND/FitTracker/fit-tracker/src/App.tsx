@@ -139,10 +139,7 @@ function App() {
                 Promedio de calorías por día:{" "}
                 {calculateAverageCalories(routine)}
               </p>
-              <p>
-                Día con más calorías:{" "}
-                {highestCalorieDay !== null ? ` ${highestCalorieDay}` : ""}
-              </p>
+              <p>Día con más calorías:{highestCalorieDay?.day}</p>
             </section>
           )}
 
