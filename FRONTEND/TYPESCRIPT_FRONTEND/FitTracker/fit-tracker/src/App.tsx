@@ -4,6 +4,11 @@ import { useState } from "react";
 import { ExerciseForm } from "./components/ExerciseForm/ExerciseForm";
 import type { Exercise, NewExercise } from "./types/exercise";
 import type { WeeklyRoutine } from "./types/weeklyRoutine";
+import type { DayOfWeek } from "./types/routineEntry";
+import type { RoutineExercise } from "./types/routineExercise";
+import { RoutineView } from "./components/RoutineView/RoutineView";
+import { WeeklyLoadView } from "./components/WeeklyLoadView/WeeklyLoadView";
+
 import {
   calculateCalories,
   formatDuration,
@@ -11,9 +16,11 @@ import {
   findLongestExercise,
   findHighestCalorieExercise,
   calculateCaloriePercentage,
-  calculateAverageCalories,
-  calculateTotalCalories,
-  findHighestCalorieDay,
+  calculateWeeklyLoad,
+  getRestRecommendation,
+  // calculateAverageCalories,
+  //  calculateTotalCalories,
+  // findHighestCalorieDay,
 } from "./utils/fitness";
 import { RoutineForm } from "./components/RoutineForm/RoutineForm";
 import type { User } from "./types/user";
@@ -43,6 +50,38 @@ function App() {
   const handleRoutineCreate = (newRoutine: WeeklyRoutine) => {
     setRoutine(newRoutine);
   };
+  const handleToggleExercise = (
+    day: DayOfWeek,
+    exerciseId: RoutineExercise["id"],
+  ) => {
+    setRoutine((currentRoutine) => {
+      if (!currentRoutine) {
+        return currentRoutine;
+      }
+
+      return {
+        ...currentRoutine,
+        sessions: currentRoutine.sessions.map((session) => {
+          if (session.day !== day) {
+            return session;
+          }
+
+          return {
+            ...session,
+            exercises: session.exercises.map((exercise) => {
+              if (exercise.id === exerciseId) {
+                return {
+                  ...exercise,
+                  isCompleted: !exercise.isCompleted,
+                };
+              }
+              return exercise;
+            }),
+          };
+        }),
+      };
+    });
+  };
   const user: User | null =
     profile && routine
       ? {
@@ -63,7 +102,11 @@ function App() {
     (total, exercise) => total + calculateCalories(exercise),
     0,
   );
-  const highestCalorieDay = routine ? findHighestCalorieDay(routine) : null;
+  const weeklyLoad = routine ? calculateWeeklyLoad(routine) : null;
+  const restRecommendation = weeklyLoad
+    ? getRestRecommendation(weeklyLoad)
+    : null;
+  //const highestCalorieDay = routine ? findHighestCalorieDay(routine) : null;
   return (
     <>
       <header className="app-header">
@@ -96,53 +139,21 @@ function App() {
               </p>
             </section>
           )}
-          {user && (
-            <section className="card">
-              <h2>Rutina asignada</h2>
-              <p>Nombre: {user.name}</p>
-              <p>Edad: {user.age}</p>
-              <p>Nivel: {user.experienceLevel}</p>
-              <p>Rutina: {user.routine.name}</p>
-              <h3>Entrenamientos</h3>
-              {user.routine.sessions.map((session) => (
-                <div key={session.day}>
-                  <p>{session.day}</p>
 
-                  {session.exercises.map((exercise) => (
-                    <p key={exercise.id}>{exercise.name}</p>
-                  ))}
-
-                  {session.comment && <p>{session.comment}</p>}
-                </div>
-              ))}
-            </section>
-          )}
           {routine && (
-            <section className="card">
-              <h2>Rutina creada</h2>
-
-              <h3>{routine.name}</h3>
-
-              {routine.sessions.map((session) => (
-                <div key={session.day}>
-                  <p>{session.day}</p>
-
-                  {session.exercises.map((exercise) => (
-                    <p key={exercise.id}>{exercise.name}</p>
-                  ))}
-
-                  {session.comment && <p>{session.comment}</p>}
-                </div>
-              ))}
-              <p>Calorías totales: {calculateTotalCalories(routine)}</p>
-              <p>
-                Promedio de calorías por día:{" "}
-                {calculateAverageCalories(routine)}
-              </p>
-              <p>Día con más calorías:{highestCalorieDay?.day}</p>
-            </section>
+            <div>
+              <RoutineView
+                routine={routine}
+                onToggleExercise={handleToggleExercise}
+              />
+            </div>
           )}
-
+          {weeklyLoad && restRecommendation && (
+            <WeeklyLoadView
+              weeklyLoad={weeklyLoad}
+              restRecommendation={restRecommendation}
+            />
+          )}
           <section className="card">
             <h2>Ejercicios registrados</h2>
             {exercises.map((exercise, index) => {
@@ -182,8 +193,8 @@ function App() {
               </p>
             )}
             <h3>Contribución al total de calorías:</h3>
-            {exercises.map((exercise, index) => (
-              <p key={index}>
+            {exercises.map((exercise) => (
+              <p key={exercise.id}>
                 {exercise.name} ( {calculateCalories(exercise)} cal,{" "}
                 {calculateCaloriePercentage(exercise, totalCalories)}% del
                 total)

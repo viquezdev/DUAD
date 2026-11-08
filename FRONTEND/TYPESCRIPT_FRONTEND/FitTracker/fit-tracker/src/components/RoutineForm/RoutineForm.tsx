@@ -4,6 +4,7 @@ import type { DayOfWeek } from "../../types/routineEntry";
 import type { DaySession } from "../../types/daySession";
 import type { RoutineExercise } from "../../types/routineExercise";
 import type { Exercise } from "../../types/exercise";
+import { calculateCalories } from "../../utils/fitness";
 
 import "./RoutineForm.css";
 
@@ -30,7 +31,7 @@ export const RoutineForm = ({
         return {
           ...exercise,
           isCompleted: false,
-          caloriesBurned: 0,
+          caloriesBurned: calculateCalories(exercise),
         };
 
       case "strength":
