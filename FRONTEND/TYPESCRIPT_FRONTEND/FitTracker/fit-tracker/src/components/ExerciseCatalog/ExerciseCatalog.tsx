@@ -1,18 +1,13 @@
 import type { Exercise } from "../../types/exercise";
-import type { CompleteProfile } from "../../types/completeProfile";
 import { getExerciseCatalog } from "../../utils/exerciseCatalog";
 import { describeExercise } from "../../utils/exerciseDescription";
 import "./ExerciseCatalog.css";
 
 interface ExerciseCatalogProps {
   exercises: Exercise[];
-  profile: CompleteProfile;
 }
 
-export const ExerciseCatalog = ({
-  exercises,
-  profile,
-}: ExerciseCatalogProps) => {
+export const ExerciseCatalog = ({ exercises }: ExerciseCatalogProps) => {
   const catalog = getExerciseCatalog(exercises);
   const totalCardio =
     catalog.find((summary) => summary.category === "cardio")?.exercises
@@ -60,14 +55,6 @@ export const ExerciseCatalog = ({
       ))}
 
       <p className="catalog-total">Total: {exercises.length} ejercicios</p>
-
-      <section className="catalog-profile">
-        <h2>Perfil del usuario</h2>
-        <p>
-          Usuario: {profile.name} | Nivel: {profile.experienceLevel} |
-          Membresía: {profile.membershipPlan}
-        </p>
-      </section>
     </div>
   );
 };

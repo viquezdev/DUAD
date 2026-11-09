@@ -1,6 +1,7 @@
 import type { WeeklyRoutine } from "../../types/weeklyRoutine";
 import type { DayOfWeek } from "../../types/routineEntry";
 import type { RoutineExercise } from "../../types/routineExercise";
+import "./RoutineView.css";
 
 type RoutineViewProps = {
   routine: WeeklyRoutine;
@@ -12,8 +13,8 @@ export const RoutineView = ({
   onToggleExercise,
 }: RoutineViewProps) => {
   return (
-    <section className="card">
-      <h2>{routine.name}</h2>
+    <section className="routine-view">
+      <h2>Rutina: {routine.name}</h2>
 
       {routine.sessions.map((session) => {
         const completedExercises = session.exercises.filter(
@@ -39,7 +40,9 @@ export const RoutineView = ({
                       onToggleExercise(session.day, exercise.id);
                     }}
                   />
-                  {exercise.name}, {exercise.duration} min
+                  <p>
+                    {exercise.name}, {exercise.duration} min
+                  </p>
                 </label>
               </div>
             ))}

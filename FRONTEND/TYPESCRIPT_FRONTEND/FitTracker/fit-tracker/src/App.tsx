@@ -28,11 +28,26 @@ import { ExerciseCatalog } from "./components/ExerciseCatalog/ExerciseCatalog";
 import "./App.css";
 
 function App() {
-  const [profile, setProfile] = useState<UserFormData | null>(null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [routine, setRoutine] = useState<WeeklyRoutine | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<User["id"] | null>(null);
+  const selectedUser = users.find((user) => user.id === selectedUserId) || null;
   const handleUserSubmit = (data: UserFormData) => {
-    setProfile(data);
+    const newUserId = users.length + 1;
+    setUsers((currentUsers) => [
+      ...currentUsers,
+      {
+        id: newUserId,
+        name: data.name,
+        age: data.age,
+        email: data.email,
+        experienceLevel: data.experienceLevel,
+        membershipPlan: data.membershipPlan,
+        startDate: data.startDate,
+        isActive: data.isActive,
+      },
+    ]);
+    setSelectedUserId(newUserId);
   };
   const handleExerciseSubmit = (data: NewExercise) => {
     const nextId =
@@ -48,61 +63,65 @@ function App() {
     setExercises((currentExercises) => [...currentExercises, newExercise]);
   };
   const handleRoutineCreate = (newRoutine: WeeklyRoutine) => {
-    setRoutine(newRoutine);
+    if (selectedUserId === null) {
+      return;
+    }
+
+    setUsers((currentUsers) =>
+      currentUsers.map((user) =>
+        user.id === selectedUserId ? { ...user, routine: newRoutine } : user,
+      ),
+    );
   };
   const handleToggleExercise = (
     day: DayOfWeek,
     exerciseId: RoutineExercise["id"],
   ) => {
-    setRoutine((currentRoutine) => {
-      if (!currentRoutine) {
-        return currentRoutine;
-      }
+    if (selectedUserId === null) {
+      return;
+    }
 
-      return {
-        ...currentRoutine,
-        sessions: currentRoutine.sessions.map((session) => {
-          if (session.day !== day) {
-            return session;
-          }
-
-          return {
-            ...session,
-            exercises: session.exercises.map((exercise) => {
-              if (exercise.id === exerciseId) {
-                return {
-                  ...exercise,
-                  isCompleted: !exercise.isCompleted,
-                };
-              }
-              return exercise;
-            }),
-          };
-        }),
-      };
-    });
-  };
-  const user: User | null =
-    profile && routine
-      ? {
-          id: 1,
-          name: profile.name,
-          age: profile.age,
-          email: profile.email,
-          experienceLevel: profile.experienceLevel,
-          membershipPlan: profile.membershipPlan,
-          startDate: profile.startDate,
-          isActive: profile.isActive,
-          routine,
+    setUsers((currentUsers) =>
+      currentUsers.map((user) => {
+        if (user.id !== selectedUserId || !user.routine) {
+          return user;
         }
-      : null;
+
+        return {
+          ...user,
+          routine: {
+            ...user.routine,
+            sessions: user.routine.sessions.map((session) => {
+              if (session.day !== day) {
+                return session;
+              }
+
+              return {
+                ...session,
+                exercises: session.exercises.map((exercise) =>
+                  exercise.id === exerciseId
+                    ? {
+                        ...exercise,
+                        isCompleted: !exercise.isCompleted,
+                      }
+                    : exercise,
+                ),
+              };
+            }),
+          },
+        };
+      }),
+    );
+  };
   const longestExercise = findLongestExercise(exercises);
   const highestCalorieExercise = findHighestCalorieExercise(exercises);
   const totalCalories = exercises.reduce(
     (total, exercise) => total + calculateCalories(exercise),
     0,
   );
-  const weeklyLoad = routine ? calculateWeeklyLoad(routine) : null;
+  const weeklyLoad = selectedUser?.routine
+    ? calculateWeeklyLoad(selectedUser.routine)
+    : null;
   const restRecommendation = weeklyLoad
     ? getRestRecommendation(weeklyLoad)
     : null;
@@ -115,51 +134,19 @@ function App() {
       </header>
       <div className="App">
         <div className="forms-container">
+          <div className="column-heading">
+            <h2>Administración</h2>
+            <p>Gestión general de FitTracker</p>
+          </div>
           <UserForm onSubmit={handleUserSubmit} />
 
           <ExerciseForm onSubmit={handleExerciseSubmit} />
-          <RoutineForm
-            exercises={exercises}
-            onCreateRoutine={handleRoutineCreate}
-          />
-        </div>
-        <div className="results-container">
-          {profile && (
-            <section className="card">
-              <h2>Perfil de Usuario</h2>
-              <p>Nombre: {profile.name}</p>
-              <p>Edad: {profile.age}</p>
-              <p>Nivel: {profile.experienceLevel}</p>
-              <p>Membresía: {profile.membershipPlan}</p>
-              <p>
-                Fecha de inicio: {profile.startDate.toLocaleDateString("es-CR")}
-              </p>
-              <p>
-                Membresía activa: {profile.isActive ? "Activa" : "Inactiva"}
-              </p>
-            </section>
-          )}
-
-          {routine && (
-            <div>
-              <RoutineView
-                routine={routine}
-                onToggleExercise={handleToggleExercise}
-              />
-            </div>
-          )}
-          {weeklyLoad && restRecommendation && (
-            <WeeklyLoadView
-              weeklyLoad={weeklyLoad}
-              restRecommendation={restRecommendation}
-            />
-          )}
           <section className="card">
             <h2>Ejercicios registrados</h2>
-            {exercises.map((exercise, index) => {
+            {exercises.map((exercise) => {
               const pace = calculatePace(exercise);
               return (
-                <p key={index}>
+                <p key={exercise.id}>
                   {exercise.name} - {formatDuration(exercise.duration)} -{" "}
                   {calculateCalories(exercise)} cal
                   {pace !== null ? ` - Pace: ${pace} min/km` : ""}
@@ -168,11 +155,11 @@ function App() {
             })}
             <p>Total de calorías: {totalCalories}</p>
           </section>
-          {profile && (
-            <section className="card">
-              <ExerciseCatalog exercises={exercises} profile={profile} />
-            </section>
-          )}
+
+          <section className="card">
+            <ExerciseCatalog exercises={exercises} />
+          </section>
+
           <section className="card">
             <h2>Resumen comparativo</h2>
             {longestExercise && (
@@ -201,6 +188,81 @@ function App() {
               </p>
             ))}
           </section>
+        </div>
+        <div className="results-container">
+          <div className="column-heading">
+            <h2>Seguimiento de usuarios</h2>
+            <p>Control individual de entrenamientos y progreso</p>
+          </div>
+          <section className="card">
+            <h2>Seleccionar usuario:</h2>
+
+            <select
+              value={selectedUserId ?? ""}
+              onChange={(event) => {
+                setSelectedUserId(
+                  event.target.value === "" ? null : Number(event.target.value),
+                );
+              }}
+            >
+              <option value="">Seleccione un usuario</option>
+
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+            {!selectedUser && (
+              <p>Seleccione un usuario para crear o asignar una rutina.</p>
+            )}
+          </section>
+          {selectedUser && (
+            <section className="card">
+              <h2>Perfil de Usuario</h2>
+              <p>Nombre: {selectedUser.name}</p>
+              <p>Edad: {selectedUser.age}</p>
+              <p>Nivel: {selectedUser.experienceLevel}</p>
+              <p>Membresía: {selectedUser.membershipPlan}</p>
+              <p>
+                Fecha de inicio:{" "}
+                {selectedUser.startDate.toLocaleDateString("es-CR")}
+              </p>
+              <p>
+                Membresía activa:{" "}
+                {selectedUser.isActive ? "Activa" : "Inactiva"}
+              </p>
+            </section>
+          )}
+          {selectedUser && (
+            <>
+              {selectedUser.routine && (
+                <p>
+                  Este usuario ya tiene una rutina asignada. Si creas una nueva,
+                  reemplazará la anterior.
+                </p>
+              )}
+
+              <RoutineForm
+                key={selectedUser.id}
+                exercises={exercises}
+                onCreateRoutine={handleRoutineCreate}
+              />
+            </>
+          )}
+
+          {selectedUser?.routine && (
+            <RoutineView
+              routine={selectedUser.routine}
+              onToggleExercise={handleToggleExercise}
+            />
+          )}
+          {weeklyLoad && restRecommendation && (
+            <WeeklyLoadView
+              weeklyLoad={weeklyLoad}
+              restRecommendation={restRecommendation}
+            />
+          )}
         </div>
       </div>
     </>

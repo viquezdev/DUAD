@@ -18,7 +18,7 @@ export type GetPendingExercises = (
 ) => RoutineExercise[];
 export type GetWeeklySummary = (
   name: string,
-  weeklyRoutine: WeeklyRoutine,
+  weeklyRoutine?: WeeklyRoutine,
 ) => WeeklySummary;
 export type GetInstructorWeeklySummaries = (
   instructor: Instructor,
