@@ -5,6 +5,7 @@ import type { DaySession } from "./daySession";
 import type { RoutineExercise } from "./routineExercise";
 import type { WeeklySummary } from "./weeklySummary";
 import type { Instructor } from "./instructor";
+import type { User } from "./user";
 
 export type CalculateWeeklyLoad = (weeklyRoutine: WeeklyRoutine) => WeeklyLoad;
 export type GetRestRecommendation = (
@@ -22,4 +23,5 @@ export type GetWeeklySummary = (
 ) => WeeklySummary;
 export type GetInstructorWeeklySummaries = (
   instructor: Instructor,
+  users: User[],
 ) => WeeklySummary[];

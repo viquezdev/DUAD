@@ -39,7 +39,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
           setEmail("");
         }}
       >
-        <h2>Registro de perfil</h2>
+        <h2>Registro de perfil de usuario</h2>
         <label htmlFor="user-name">Name:</label>
         <input
           type="text"

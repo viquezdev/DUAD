@@ -9,6 +9,7 @@ import type { GetRestRecommendation } from "../types/fitnessContracts";
 import type { GetWeeklySummary } from "../types/fitnessContracts";
 import type { GetInstructorWeeklySummaries } from "../types/fitnessContracts";
 import type { Instructor } from "../types/instructor";
+import type { User } from "../types/user";
 
 export function calculateCalories(exercise: Exercise): number {
   return exercise.duration * exercise.caloriesPerMinute;
@@ -215,10 +216,22 @@ export const getPendingExercises: GetPendingExercises = (
 
 export const getWeeklySummary: GetWeeklySummary = (
   name: string,
-  weeklyRoutine: WeeklyRoutine,
+  weeklyRoutine?: WeeklyRoutine,
 ) => {
+  if (!weeklyRoutine) {
+    return {
+      name,
+      hasRoutine: false,
+      trainingDays: 0,
+      totalMinutes: 0,
+      totalCalories: 0,
+      pendingExercises: 0,
+    };
+  }
+
   return {
-    name: name,
+    name,
+    hasRoutine: true,
     trainingDays: calculateTrainingDays(weeklyRoutine),
     totalMinutes: calculateTotalMinutes(weeklyRoutine),
     totalCalories: calculateTotalCalories(weeklyRoutine),
@@ -231,8 +244,10 @@ export const getWeeklySummary: GetWeeklySummary = (
 
 export const getInstructorWeeklySummaries: GetInstructorWeeklySummaries = (
   instructor: Instructor,
+  users: User[],
 ) => {
-  return instructor.assignedUsers.map((user) =>
-    getWeeklySummary(user.name, user.routine),
-  );
+  return instructor.assignedUsers
+    .map((userId) => users.find((user) => user.id === userId))
+    .filter((user) => user !== undefined)
+    .map((user) => getWeeklySummary(user.name, user.routine));
 };

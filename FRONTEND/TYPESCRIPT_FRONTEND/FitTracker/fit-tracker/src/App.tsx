@@ -8,6 +8,10 @@ import type { DayOfWeek } from "./types/routineEntry";
 import type { RoutineExercise } from "./types/routineExercise";
 import { RoutineView } from "./components/RoutineView/RoutineView";
 import { WeeklyLoadView } from "./components/WeeklyLoadView/WeeklyLoadView";
+import type { Instructor } from "./types/instructor";
+import { InstructorForm } from "./components/InstructorForm/InstructorForm";
+import type { InstructorFormData } from "./components/InstructorForm/InstructorForm";
+import type { InstructorId } from "./types/instructorId";
 
 import {
   calculateCalories,
@@ -32,6 +36,8 @@ function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<User["id"] | null>(null);
   const selectedUser = users.find((user) => user.id === selectedUserId) || null;
+  const [instructors, setInstructors] = useState<Instructor[]>([]);
+  const [profileType, setProfileType] = useState<"user" | "instructor">("user");
   const handleUserSubmit = (data: UserFormData) => {
     const newUserId = users.length + 1;
     setUsers((currentUsers) => [
@@ -48,6 +54,19 @@ function App() {
       },
     ]);
     setSelectedUserId(newUserId);
+  };
+  const handleInstructorSubmit = (data: InstructorFormData) => {
+    const newInstructorId = instructors.length + 1;
+    setInstructors((currentInstructors) => [
+      ...currentInstructors,
+      {
+        id: newInstructorId,
+        name: data.name,
+        age: data.age,
+        email: data.email,
+        assignedUsers: [],
+      },
+    ]);
   };
   const handleExerciseSubmit = (data: NewExercise) => {
     const nextId =
@@ -138,7 +157,28 @@ function App() {
             <h2>Administración</h2>
             <p>Gestión general de FitTracker</p>
           </div>
-          <UserForm onSubmit={handleUserSubmit} />
+          <section className="card">
+            <h2>Registro de perfiles</h2>
+
+            <label htmlFor="profileType">Tipo de perfil:</label>
+
+            <select
+              id="profileType"
+              value={profileType}
+              onChange={(e) =>
+                setProfileType(e.target.value as "user" | "instructor")
+              }
+            >
+              <option value="user">Usuario</option>
+              <option value="instructor">Instructor</option>
+            </select>
+
+            {profileType === "user" ? (
+              <UserForm onSubmit={handleUserSubmit} />
+            ) : (
+              <InstructorForm onSubmit={handleInstructorSubmit} />
+            )}
+          </section>
 
           <ExerciseForm onSubmit={handleExerciseSubmit} />
           <section className="card">
