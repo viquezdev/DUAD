@@ -12,7 +12,9 @@ import type { Instructor } from "./types/instructor";
 import { InstructorForm } from "./components/InstructorForm/InstructorForm";
 import type { InstructorFormData } from "./components/InstructorForm/InstructorForm";
 import type { InstructorId } from "./types/instructorId";
-
+import type { UserId } from "./types/userId";
+import { AssignmentForm } from "./components/AssignmentForm/AssignmentForm";
+import { InstructorView } from "./components/InstructorView/InstructorView";
 import {
   calculateCalories,
   formatDuration,
@@ -132,6 +134,36 @@ function App() {
       }),
     );
   };
+  const handleAssignUser = (instructorId: InstructorId, userId: UserId) => {
+    const userExists = users.some((user) => user.id === userId);
+
+    if (!userExists) {
+      return;
+    }
+
+    setInstructors((currentInstructors) => {
+      const instructorExists = currentInstructors.some(
+        (instructor) => instructor.id === instructorId,
+      );
+
+      const alreadyAssigned = currentInstructors.some((instructor) =>
+        instructor.assignedUsers.includes(userId),
+      );
+
+      if (!instructorExists || alreadyAssigned) {
+        return currentInstructors;
+      }
+
+      return currentInstructors.map((instructor) =>
+        instructor.id === instructorId
+          ? {
+              ...instructor,
+              assignedUsers: [...instructor.assignedUsers, userId],
+            }
+          : instructor,
+      );
+    });
+  };
   const longestExercise = findLongestExercise(exercises);
   const highestCalorieExercise = findHighestCalorieExercise(exercises);
   const totalCalories = exercises.reduce(
@@ -178,6 +210,12 @@ function App() {
             ) : (
               <InstructorForm onSubmit={handleInstructorSubmit} />
             )}
+            <AssignmentForm
+              instructors={instructors}
+              users={users}
+              onAssignUser={handleAssignUser}
+            />
+            <InstructorView instructors={instructors} users={users} />
           </section>
 
           <ExerciseForm onSubmit={handleExerciseSubmit} />
