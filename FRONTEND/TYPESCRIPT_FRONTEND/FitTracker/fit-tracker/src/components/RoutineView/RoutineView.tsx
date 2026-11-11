@@ -1,6 +1,11 @@
 import type { WeeklyRoutine } from "../../types/weeklyRoutine";
 import type { DayOfWeek } from "../../types/routineEntry";
 import type { RoutineExercise } from "../../types/routineExercise";
+import {
+  calculateTotalCalories,
+  calculateAverageCalories,
+  calculateTrainingDays,
+} from "../../utils/fitness";
 import "./RoutineView.css";
 
 type RoutineViewProps = {
@@ -12,6 +17,9 @@ export const RoutineView = ({
   routine,
   onToggleExercise,
 }: RoutineViewProps) => {
+  const totalCalories = calculateTotalCalories(routine);
+  const averageCalories = calculateAverageCalories(routine);
+  const trainingDays = calculateTrainingDays(routine);
   return (
     <section className="routine-view">
       <h2>Rutina: {routine.name}</h2>
@@ -30,6 +38,7 @@ export const RoutineView = ({
             <h3>{session.day}</h3>
             <p>Completados: {completedExercises}</p>
             <p>Pendientes: {pendingExercises}</p>
+
             {session.exercises.map((exercise) => (
               <div key={exercise.id}>
                 <label>
@@ -51,6 +60,15 @@ export const RoutineView = ({
           </div>
         );
       })}
+
+      <div className="weekly-summary">
+        <h3>Resumen semanal</h3>
+        <p>Total semanal: {totalCalories} kcal</p>
+        <p>
+          Promedio: {averageCalories.toFixed(2)} kcal ({trainingDays} días
+          entrenados)
+        </p>
+      </div>
     </section>
   );
 };

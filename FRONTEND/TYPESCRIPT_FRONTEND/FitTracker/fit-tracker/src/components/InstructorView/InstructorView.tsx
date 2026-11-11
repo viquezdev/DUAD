@@ -48,16 +48,16 @@ export function InstructorView({ instructors, users }: InstructorViewProps) {
 
       {selectedInstructor && (
         <div className="assigned-users">
-          <h3>Usuarios asignados a {selectedInstructor.name}</h3>
+          <h3>Instructor: {selectedInstructor.name}</h3>
 
           {assignedUsers.length === 0 ? (
             <p>Este instructor todavía no tiene usuarios asignados.</p>
           ) : (
             assignedUsers.map((user, index) => (
               <article key={user.id} className="user-summary">
-                <h4>{user.name}</h4>
-
-                <p>Nivel: {user.experienceLevel}</p>
+                <h4>
+                  {user.name} ({user.experienceLevel}){" "}
+                </h4>
 
                 <p>
                   Rutina:{" "}
@@ -81,10 +81,24 @@ export function InstructorView({ instructors, users }: InstructorViewProps) {
                       Calorías totales: {weeklySummaries[index].totalCalories}
                     </p>
 
-                    <p>
-                      Ejercicios pendientes:{" "}
-                      {weeklySummaries[index].pendingExercises}
-                    </p>
+                    <div className="pending-exercises">
+                      <p>
+                        Ejercicios pendientes:{" "}
+                        {weeklySummaries[index].pendingExercises.length}
+                      </p>
+
+                      {weeklySummaries[index].pendingExercises.length > 0 ? (
+                        <ul>
+                          {weeklySummaries[index].pendingExercises.map(
+                            (exercise) => (
+                              <li key={exercise.id}>{exercise.name}</li>
+                            ),
+                          )}
+                        </ul>
+                      ) : (
+                        <p>No hay ejercicios pendientes.</p>
+                      )}
+                    </div>
 
                     {weeklySummaries[index].restRecommendation && (
                       <p>

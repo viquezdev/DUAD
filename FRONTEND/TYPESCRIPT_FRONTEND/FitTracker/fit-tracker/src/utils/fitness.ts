@@ -225,7 +225,7 @@ export const getWeeklySummary: GetWeeklySummary = (
       trainingDays: 0,
       totalMinutes: 0,
       totalCalories: 0,
-      pendingExercises: 0,
+      pendingExercises: [],
     };
   }
 
@@ -238,7 +238,7 @@ export const getWeeklySummary: GetWeeklySummary = (
     restRecommendation: getRestRecommendation(
       calculateWeeklyLoad(weeklyRoutine),
     ),
-    pendingExercises: getPendingExercises(weeklyRoutine).length,
+    pendingExercises: getPendingExercises(weeklyRoutine),
   };
 };
 

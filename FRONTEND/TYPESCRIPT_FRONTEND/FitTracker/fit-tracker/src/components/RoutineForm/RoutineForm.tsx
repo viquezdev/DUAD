@@ -151,7 +151,11 @@ export const RoutineForm = ({
           onChange={(e) => setComment(e.target.value)}
           placeholder="Escribe un comentario para esta sesión..."
         />
-        <button type="button" onClick={handleAddExercise}>
+        <button
+          className="btn-session"
+          type="button"
+          onClick={handleAddExercise}
+        >
           Agregar sesión
         </button>
         <section>

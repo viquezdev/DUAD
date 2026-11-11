@@ -24,9 +24,6 @@ import {
   calculateCaloriePercentage,
   calculateWeeklyLoad,
   getRestRecommendation,
-  // calculateAverageCalories,
-  //  calculateTotalCalories,
-  // findHighestCalorieDay,
 } from "./utils/fitness";
 import { RoutineForm } from "./components/RoutineForm/RoutineForm";
 import type { User } from "./types/user";
@@ -176,24 +173,26 @@ function App() {
   const restRecommendation = weeklyLoad
     ? getRestRecommendation(weeklyLoad)
     : null;
-  //const highestCalorieDay = routine ? findHighestCalorieDay(routine) : null;
   return (
     <>
       <header className="app-header">
-        <h1>FitTracker</h1>
-        <p>Seguimiento de tu entrenamiento</p>
+        <div className="app-header-content">
+          <h1>FitTracker</h1>
+          <p>Seguimiento de entrenamiento y progreso físico</p>
+        </div>
       </header>
-      <div className="App">
-        <div className="forms-container">
+
+      <main className="App">
+        <section className="forms-container">
           <div className="column-heading">
+            <span className="section-label">GESTIÓN GENERAL</span>
             <h2>Administración</h2>
-            <p>Gestión general de FitTracker</p>
           </div>
+
           <section className="card">
             <h2>Registro de perfiles</h2>
 
             <label htmlFor="profileType">Tipo de perfil:</label>
-
             <select
               id="profileType"
               value={profileType}
@@ -210,27 +209,46 @@ function App() {
             ) : (
               <InstructorForm onSubmit={handleInstructorSubmit} />
             )}
+          </section>
+
+          <section className="card">
+            <h2>Asignación de usuarios</h2>
             <AssignmentForm
               instructors={instructors}
               users={users}
               onAssignUser={handleAssignUser}
             />
+          </section>
+
+          <section className="card">
+            <h2>Instructores y usuarios asignados</h2>
             <InstructorView instructors={instructors} users={users} />
           </section>
 
-          <ExerciseForm onSubmit={handleExerciseSubmit} />
+          <section className="card">
+            <h2>Registrar ejercicio</h2>
+            <ExerciseForm onSubmit={handleExerciseSubmit} />
+          </section>
+
           <section className="card">
             <h2>Ejercicios registrados</h2>
-            {exercises.map((exercise) => {
-              const pace = calculatePace(exercise);
-              return (
-                <p key={exercise.id}>
-                  {exercise.name} - {formatDuration(exercise.duration)} -{" "}
-                  {calculateCalories(exercise)} cal
-                  {pace !== null ? ` - Pace: ${pace} min/km` : ""}
-                </p>
-              );
-            })}
+
+            {exercises.length === 0 ? (
+              <p>Aún no hay ejercicios registrados.</p>
+            ) : (
+              exercises.map((exercise) => {
+                const pace = calculatePace(exercise);
+
+                return (
+                  <p key={exercise.id}>
+                    {exercise.name} - {formatDuration(exercise.duration)} -{" "}
+                    {calculateCalories(exercise)} cal
+                    {pace !== null ? ` - Pace: ${pace} min/km` : ""}
+                  </p>
+                );
+              })
+            )}
+
             <p>Total de calorías: {totalCalories}</p>
           </section>
 
@@ -240,15 +258,17 @@ function App() {
 
           <section className="card">
             <h2>Resumen comparativo</h2>
+
             {longestExercise && (
               <p>
                 Mayor duración: {longestExercise.name} (
                 {longestExercise.duration} min)
               </p>
             )}
+
             {highestCalorieExercise && (
               <p>
-                Más calorías : {highestCalorieExercise.name} (
+                Más calorías: {highestCalorieExercise.name} (
                 {calculateCalories(highestCalorieExercise)} cal,{" "}
                 {calculateCaloriePercentage(
                   highestCalorieExercise,
@@ -257,23 +277,27 @@ function App() {
                 % del total)
               </p>
             )}
+
             <h3>Contribución al total de calorías:</h3>
+
             {exercises.map((exercise) => (
               <p key={exercise.id}>
-                {exercise.name} ( {calculateCalories(exercise)} cal,{" "}
+                {exercise.name} ({calculateCalories(exercise)} cal,{" "}
                 {calculateCaloriePercentage(exercise, totalCalories)}% del
                 total)
               </p>
             ))}
           </section>
-        </div>
-        <div className="results-container">
+        </section>
+
+        <section className="results-container">
           <div className="column-heading">
+            <span className="section-label">CONTROL Y PROGRESO</span>
             <h2>Seguimiento de usuarios</h2>
-            <p>Control individual de entrenamientos y progreso</p>
           </div>
+
           <section className="card">
-            <h2>Seleccionar usuario:</h2>
+            <h2>Seleccionar usuario</h2>
 
             <select
               value={selectedUserId ?? ""}
@@ -291,13 +315,15 @@ function App() {
                 </option>
               ))}
             </select>
+
             {!selectedUser && (
-              <p>Seleccione un usuario para crear o asignar una rutina.</p>
+              <p>Seleccione un usuario para consultar o gestionar su rutina.</p>
             )}
           </section>
+
           {selectedUser && (
             <section className="card">
-              <h2>Perfil de Usuario</h2>
+              <h2>Perfil del usuario</h2>
               <p>Nombre: {selectedUser.name}</p>
               <p>Edad: {selectedUser.age}</p>
               <p>Nivel: {selectedUser.experienceLevel}</p>
@@ -312,10 +338,11 @@ function App() {
               </p>
             </section>
           )}
+
           {selectedUser && (
             <>
               {selectedUser.routine && (
-                <p>
+                <p className="routine-warning">
                   Este usuario ya tiene una rutina asignada. Si creas una nueva,
                   reemplazará la anterior.
                 </p>
@@ -335,14 +362,15 @@ function App() {
               onToggleExercise={handleToggleExercise}
             />
           )}
+
           {weeklyLoad && restRecommendation && (
             <WeeklyLoadView
               weeklyLoad={weeklyLoad}
               restRecommendation={restRecommendation}
             />
           )}
-        </div>
-      </div>
+        </section>
+      </main>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import type { RestRecommendation } from "./restRecommendation";
+import type { RoutineExercise } from "./routineExercise";
 
 export interface WeeklySummary {
   name: string;
@@ -7,5 +8,5 @@ export interface WeeklySummary {
   totalMinutes: number;
   totalCalories: number;
   restRecommendation?: RestRecommendation;
-  pendingExercises: number;
+  pendingExercises: RoutineExercise[]; // Updated type to include RoutineExercise IDs
 }
