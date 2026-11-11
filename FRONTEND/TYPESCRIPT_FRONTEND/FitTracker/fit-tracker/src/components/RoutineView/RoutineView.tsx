@@ -5,6 +5,7 @@ import {
   calculateTotalCalories,
   calculateAverageCalories,
   calculateTrainingDays,
+  findHighestCalorieDay,
 } from "../../utils/fitness";
 import "./RoutineView.css";
 
@@ -20,6 +21,7 @@ export const RoutineView = ({
   const totalCalories = calculateTotalCalories(routine);
   const averageCalories = calculateAverageCalories(routine);
   const trainingDays = calculateTrainingDays(routine);
+  const highestCalorieDay = findHighestCalorieDay(routine);
   return (
     <section className="routine-view">
       <h2>Rutina: {routine.name}</h2>
@@ -68,6 +70,7 @@ export const RoutineView = ({
           Promedio: {averageCalories.toFixed(2)} kcal ({trainingDays} días
           entrenados)
         </p>
+        <p>Día con más calorías: {highestCalorieDay?.day}</p>
       </div>
     </section>
   );
