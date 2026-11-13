@@ -12,11 +12,24 @@ import "./RoutineView.css";
 type RoutineViewProps = {
   routine: WeeklyRoutine;
   onToggleExercise: (day: DayOfWeek, exerciseId: RoutineExercise["id"]) => void;
+  onUpdateSessionComment: (day: DayOfWeek, comment: string) => void;
 };
+
+function describeRoutineExercise(exercise: RoutineExercise): string {
+  switch (exercise.category) {
+    case "cardio":
+      return `${exercise.name} [${exercise.category}], ${exercise.duration} min | ${exercise.caloriesBurned} kcal quemadas `;
+    case "strength":
+      return `${exercise.name} [${exercise.category}], ${exercise.duration} min | ${exercise.weight} kg levantados `;
+    case "flexibility":
+      return `${exercise.name} [${exercise.category}], ${exercise.duration} min `;
+  }
+}
 
 export const RoutineView = ({
   routine,
   onToggleExercise,
+  onUpdateSessionComment,
 }: RoutineViewProps) => {
   const totalCalories = calculateTotalCalories(routine);
   const averageCalories = calculateAverageCalories(routine);
@@ -51,14 +64,26 @@ export const RoutineView = ({
                       onToggleExercise(session.day, exercise.id);
                     }}
                   />
-                  <p>
-                    {exercise.name}, {exercise.duration} min
-                  </p>
+                  <p>{describeRoutineExercise(exercise)}</p>
+                  {exercise.category === "flexibility" && exercise.comment && (
+                    <p className="exercise-comment">
+                      Comentario: {exercise.comment}
+                    </p>
+                  )}
                 </label>
               </div>
             ))}
-
-            {session.comment && <p>{session.comment}</p>}
+            <label>
+              Comentario de la sesión:
+              <input
+                type="text"
+                value={session.comment ?? ""}
+                onChange={(e) =>
+                  onUpdateSessionComment(session.day, e.target.value)
+                }
+                placeholder="Escribe una nota para este día..."
+              />
+            </label>
           </div>
         );
       })}

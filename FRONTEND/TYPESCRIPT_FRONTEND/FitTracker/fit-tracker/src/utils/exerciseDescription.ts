@@ -15,7 +15,7 @@ export function describeExercise(exercise: Exercise): string {
       return `${exercise.name}, ${formatDuration(exercise.duration)} | ${exercise.sets} series de ${exercise.reps} reps | ${exercise.weight} kg | ${calculateCalories(exercise)} cal   `;
     }
     case "flexibility": {
-      return `${exercise.name}, ${formatDuration(exercise.duration)} | ${exercise.poses} poses | ${calculateCalories(exercise)} cal   `;
+      return `${exercise.name}, ${formatDuration(exercise.duration)} | ${exercise.poses} poses | ${calculateCalories(exercise)} cal  `;
     }
   }
 }

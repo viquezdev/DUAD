@@ -91,6 +91,33 @@ function App() {
       ),
     );
   };
+  const handleUpdateSessionComment = (day: DayOfWeek, comment: string) => {
+    if (selectedUserId === null) {
+      return;
+    }
+    setUsers((currentUsers) =>
+      currentUsers.map((user) => {
+        if (user.id !== selectedUserId || !user.routine) {
+          return user;
+        }
+        return {
+          ...user,
+          routine: {
+            ...user.routine,
+            sessions: user.routine.sessions.map((session) => {
+              if (session.day !== day) {
+                return session;
+              }
+              return {
+                ...session,
+                comment: comment,
+              };
+            }),
+          },
+        };
+      }),
+    );
+  };
   const handleToggleExercise = (
     day: DayOfWeek,
     exerciseId: RoutineExercise["id"],
@@ -360,6 +387,7 @@ function App() {
             <RoutineView
               routine={selectedUser.routine}
               onToggleExercise={handleToggleExercise}
+              onUpdateSessionComment={handleUpdateSessionComment}
             />
           )}
 

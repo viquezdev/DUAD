@@ -22,6 +22,7 @@ export const RoutineForm = ({
   const [exerciseName, setExerciseName] = useState<string>("");
   const [daySessions, setDaySessions] = useState<DaySession[]>([]);
   const [comment, setComment] = useState<string>("");
+  const [flexibilityComment, setFlexibilityComment] = useState<string>("");
   const selectedExercise = exercises.find(
     (exercise) => exercise.name === exerciseName,
   );
@@ -44,6 +45,7 @@ export const RoutineForm = ({
         return {
           ...exercise,
           isCompleted: false,
+          comment: flexibilityComment,
         };
     }
   };
@@ -104,6 +106,7 @@ export const RoutineForm = ({
           setExerciseName("");
           setDaySessions([]);
           setComment("");
+          setFlexibilityComment("");
         }}
       >
         <h2>Crear rutina</h2>
@@ -144,7 +147,20 @@ export const RoutineForm = ({
             </option>
           ))}
         </select>
-        <label htmlFor="routine-comment">Comentario:</label>
+        {selectedExercise?.category === "flexibility" && (
+          <>
+            <label htmlFor="flexibility-comment">
+              Comentario del ejercicio:
+            </label>
+            <textarea
+              id="flexibility-comment"
+              value={flexibilityComment}
+              onChange={(e) => setFlexibilityComment(e.target.value)}
+              placeholder="Escribe un comentario para el ejercicio de flexibilidad..."
+            />
+          </>
+        )}
+        <label htmlFor="routine-comment">Comentario de la sesión:</label>
         <textarea
           id="routine-comment"
           value={comment}
@@ -160,14 +176,24 @@ export const RoutineForm = ({
         </button>
         <section>
           <h3>Sesiones de la rutina</h3>
+
           {daySessions.map((session) => (
             <div key={session.day}>
               <h4>{session.day}</h4>
 
               {session.exercises.map((exercise) => (
-                <p key={exercise.id}>{exercise.name}</p>
+                <div key={exercise.id}>
+                  <p>{exercise.name}</p>
+
+                  {exercise.category === "flexibility" && exercise.comment && (
+                    <p>Comentario del ejercicio: {exercise.comment}</p>
+                  )}
+                </div>
               ))}
-              {session.comment && <p>{session.comment}</p>}
+
+              {session.comment && (
+                <p>Comentario de la sesión: {session.comment}</p>
+              )}
             </div>
           ))}
         </section>
