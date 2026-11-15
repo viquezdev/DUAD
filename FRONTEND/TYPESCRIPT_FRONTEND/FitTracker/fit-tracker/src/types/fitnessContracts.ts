@@ -6,6 +6,7 @@ import type { RoutineExercise } from "./routineExercise";
 import type { WeeklySummary } from "./weeklySummary";
 import type { Instructor } from "./instructor";
 import type { User } from "./user";
+import type { Exercise } from "./exercise";
 
 export type CalculateWeeklyLoad = (weeklyRoutine: WeeklyRoutine) => WeeklyLoad;
 export type GetRestRecommendation = (
@@ -25,3 +26,23 @@ export type GetInstructorWeeklySummaries = (
   instructor: Instructor,
   users: User[],
 ) => WeeklySummary[];
+export type CalculateCalories = (exercise: Exercise) => number;
+export type CalculatePace = (exercise: Exercise) => number | null;
+export type CalculateAverageCalories = (weeklyRoutine: WeeklyRoutine) => number;
+export type FormatDuration = (duration: number) => string;
+export type FindLongestExercise = (exercises: Exercise[]) => Exercise | null;
+export type FindHighestCalorieExercise = (
+  exercises: Exercise[],
+) => Exercise | null;
+export type CalculateCaloriePercentage = (
+  exercise: Exercise,
+  totalCalories: number,
+) => number;
+export type CalculateTotalMinutes = (weeklyRoutine: WeeklyRoutine) => number;
+export type CalculateTotalCalories = (weeklyRoutine: WeeklyRoutine) => number;
+export type CalculateCardioMinutes = (weeklyRoutine: WeeklyRoutine) => number;
+export type CalculateStrengthMinutes = (weeklyRoutine: WeeklyRoutine) => number;
+export type CalculateFlexibilityMinutes = (
+  weeklyRoutine: WeeklyRoutine,
+) => number;
+export type CalculateTrainingDays = (weeklyRoutine: WeeklyRoutine) => number;

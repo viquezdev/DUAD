@@ -10,29 +10,44 @@ import type { GetWeeklySummary } from "../types/fitnessContracts";
 import type { GetInstructorWeeklySummaries } from "../types/fitnessContracts";
 import type { Instructor } from "../types/instructor";
 import type { User } from "../types/user";
+import type { CalculateCalories } from "../types/fitnessContracts";
+import type { CalculatePace } from "../types/fitnessContracts";
+import type { CalculateAverageCalories } from "../types/fitnessContracts";
+import type { FormatDuration } from "../types/fitnessContracts";
+import type { FindLongestExercise } from "../types/fitnessContracts";
+import type { FindHighestCalorieExercise } from "../types/fitnessContracts";
+import type { CalculateCaloriePercentage } from "../types/fitnessContracts";
+import type { CalculateTotalMinutes } from "../types/fitnessContracts";
+import type { CalculateTotalCalories } from "../types/fitnessContracts";
+import type { CalculateCardioMinutes } from "../types/fitnessContracts";
+import type { CalculateStrengthMinutes } from "../types/fitnessContracts";
+import type { CalculateFlexibilityMinutes } from "../types/fitnessContracts";
+import type { CalculateTrainingDays } from "../types/fitnessContracts";
 
-export function calculateCalories(exercise: Exercise): number {
+export const calculateCalories: CalculateCalories = (exercise: Exercise) => {
   return exercise.duration * exercise.caloriesPerMinute;
-}
+};
 
-export function calculatePace(exercise: Exercise): number | null {
+export const calculatePace: CalculatePace = (exercise: Exercise) => {
   if (exercise.category === "cardio") {
     if (exercise.distance > 0 && exercise.duration > 0) {
       return Math.round((exercise.duration / exercise.distance) * 100) / 100;
     }
   }
   return null;
-}
+};
 
-export function calculateAverageCalories(routine: WeeklyRoutine): number {
+export const calculateAverageCalories: CalculateAverageCalories = (
+  routine: WeeklyRoutine,
+) => {
   const totalCalories = calculateTotalCalories(routine);
   const trainingDays = calculateTrainingDays(routine);
   return trainingDays > 0
     ? Math.round((totalCalories / trainingDays) * 100) / 100
     : 0;
-}
+};
 
-export function formatDuration(duration: number): string {
+export const formatDuration: FormatDuration = (duration: number) => {
   const hours = Math.floor(duration / 60);
   const minutes = duration % 60;
   if (hours === 0 && minutes === 0) {
@@ -45,20 +60,22 @@ export function formatDuration(duration: number): string {
     return `${hours}h ${minutes}min`;
   }
   return `${minutes}min`;
-}
+};
 
-export function findLongestExercise(exercises: Exercise[]): Exercise | null {
+export const findLongestExercise: FindLongestExercise = (
+  exercises: Exercise[],
+) => {
   if (exercises.length === 0) {
     return null;
   }
   return exercises.reduce((longest, current) => {
     return current.duration > longest.duration ? current : longest;
   });
-}
+};
 
-export function findHighestCalorieExercise(
+export const findHighestCalorieExercise: FindHighestCalorieExercise = (
   exercises: Exercise[],
-): Exercise | null {
+) => {
   if (exercises.length === 0) {
     return null;
   }
@@ -67,26 +84,30 @@ export function findHighestCalorieExercise(
       ? current
       : highest;
   });
-}
+};
 
-export function calculateCaloriePercentage(
+export const calculateCaloriePercentage: CalculateCaloriePercentage = (
   exercise: Exercise,
   totalCalories: number,
-): number {
+) => {
   if (totalCalories === 0) {
     return 0;
   }
   const exerciseCalories = calculateCalories(exercise);
   return Math.round((exerciseCalories / totalCalories) * 100);
-}
+};
 
-export function calculateTotalMinutes(weeklyRoutine: WeeklyRoutine): number {
+export const calculateTotalMinutes: CalculateTotalMinutes = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
   const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
   const totalMinutes = exercises.reduce((total, ex) => total + ex.duration, 0);
   return totalMinutes;
-}
+};
 
-export function calculateTotalCalories(weeklyRoutine: WeeklyRoutine): number {
+export const calculateTotalCalories: CalculateTotalCalories = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
   const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
   const totalCalories = exercises.reduce((total, ex) => {
     switch (ex.category) {
@@ -99,9 +120,11 @@ export function calculateTotalCalories(weeklyRoutine: WeeklyRoutine): number {
     }
   }, 0);
   return totalCalories;
-}
+};
 
-export function calculateCardioMinutes(weeklyRoutine: WeeklyRoutine): number {
+export const calculateCardioMinutes: CalculateCardioMinutes = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
   const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
   const totalMinutes = exercises.reduce((total, ex) => {
     if (ex.category === "cardio") {
@@ -111,9 +134,11 @@ export function calculateCardioMinutes(weeklyRoutine: WeeklyRoutine): number {
     }
   }, 0);
   return totalMinutes;
-}
+};
 
-export function calculateStrengthMinutes(weeklyRoutine: WeeklyRoutine): number {
+export const calculateStrengthMinutes: CalculateStrengthMinutes = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
   const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
   const totalMinutes = exercises.reduce((total, ex) => {
     if (ex.category === "strength") {
@@ -123,11 +148,11 @@ export function calculateStrengthMinutes(weeklyRoutine: WeeklyRoutine): number {
     }
   }, 0);
   return totalMinutes;
-}
+};
 
-export function calculateFlexibilityMinutes(
+export const calculateFlexibilityMinutes: CalculateFlexibilityMinutes = (
   weeklyRoutine: WeeklyRoutine,
-): number {
+) => {
   const exercises = weeklyRoutine.sessions.flatMap((day) => day.exercises);
   const totalMinutes = exercises.reduce((total, ex) => {
     if (ex.category === "flexibility") {
@@ -137,14 +162,16 @@ export function calculateFlexibilityMinutes(
     }
   }, 0);
   return totalMinutes;
-}
+};
 
-export function calculateTrainingDays(weeklyRoutine: WeeklyRoutine): number {
+export const calculateTrainingDays: CalculateTrainingDays = (
+  weeklyRoutine: WeeklyRoutine,
+) => {
   const sessions = weeklyRoutine.sessions.filter(
     (session) => session.exercises.length > 0,
   );
   return sessions.length;
-}
+};
 
 export const calculateWeeklyLoad: CalculateWeeklyLoad = (
   weeklyRoutine: WeeklyRoutine,

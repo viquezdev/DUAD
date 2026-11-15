@@ -31,6 +31,7 @@ export const RoutineForm = ({
       case "cardio":
         return {
           ...exercise,
+          id: Date.now(),
           isCompleted: false,
           caloriesBurned: calculateCalories(exercise),
         };
@@ -38,12 +39,14 @@ export const RoutineForm = ({
       case "strength":
         return {
           ...exercise,
+          id: Date.now(),
           isCompleted: false,
         };
 
       case "flexibility":
         return {
           ...exercise,
+          id: Date.now(),
           isCompleted: false,
           comment: flexibilityComment,
         };
@@ -142,7 +145,7 @@ export const RoutineForm = ({
           <option value="">Seleccione un ejercicio</option>
 
           {exercises.map((exercise) => (
-            <option key={exercise.name} value={exercise.name}>
+            <option key={exercise.id} value={exercise.name}>
               {exercise.name}
             </option>
           ))}
