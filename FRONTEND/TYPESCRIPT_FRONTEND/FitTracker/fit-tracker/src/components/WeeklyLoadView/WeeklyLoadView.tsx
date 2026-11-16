@@ -2,10 +2,10 @@ import type { WeeklyLoad } from "../../types/weeklyLoad";
 import type { RestRecommendation } from "../../types/restRecommendation";
 import "./WeeklyLoadView.css";
 
-type WeeklyLoadViewProps = {
+interface WeeklyLoadViewProps {
   weeklyLoad: WeeklyLoad;
   restRecommendation: RestRecommendation;
-};
+}
 
 export const WeeklyLoadView = ({
   weeklyLoad,

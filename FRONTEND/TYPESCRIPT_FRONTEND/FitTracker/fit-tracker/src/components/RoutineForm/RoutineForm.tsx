@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { WeeklyRoutine } from "../../types/weeklyRoutine";
-import type { DayOfWeek } from "../../types/routineEntry";
+import type { DayOfWeek } from "../../types/dayOfWeek";
 import type { DaySession } from "../../types/daySession";
 import type { RoutineExercise } from "../../types/routineExercise";
 import type { Exercise } from "../../types/exercise";
@@ -8,10 +8,10 @@ import { calculateCalories } from "../../utils/fitness";
 
 import "./RoutineForm.css";
 
-type RoutineFormProps = {
+interface RoutineFormProps {
   exercises: Exercise[];
   onCreateRoutine: (routine: WeeklyRoutine) => void;
-};
+}
 
 export const RoutineForm = ({
   exercises,

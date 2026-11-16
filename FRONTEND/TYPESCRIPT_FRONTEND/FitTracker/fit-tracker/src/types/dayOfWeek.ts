@@ -1,5 +1,3 @@
-import type { Exercise } from "./exercise";
-
 export type DayOfWeek =
   | "Lunes"
   | "Martes"
@@ -8,8 +6,3 @@ export type DayOfWeek =
   | "Viernes"
   | "Sábado"
   | "Domingo";
-
-export interface RoutineEntry {
-  day: DayOfWeek;
-  exercise: Exercise;
-}

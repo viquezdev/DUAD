@@ -1,21 +1,24 @@
 import type { Instructor } from "../../types/instructor";
 import type { User } from "../../types/user";
 import { useState } from "react";
+import type { InstructorId } from "../../types/instructorId";
+import type { UserId } from "../../types/userId";
 import "./AssignmentForm.css";
 
-type AssignmentFormProps = {
+interface AssignmentFormProps {
   instructors: Instructor[];
   users: User[];
-  onAssignUser: (instructorId: number, userId: number) => void;
-};
+  onAssignUser: (instructorId: InstructorId, userId: UserId) => void;
+}
 
 export function AssignmentForm({
   instructors,
   users,
   onAssignUser,
 }: AssignmentFormProps) {
-  const [selectedInstructorId, setSelectedInstructorId] = useState<number>(0);
-  const [selectedUserId, setSelectedUserId] = useState<number>(0);
+  const [selectedInstructorId, setSelectedInstructorId] =
+    useState<InstructorId | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<UserId | null>(null);
   const availableUsers = users.filter(
     (user) =>
       !instructors.some((instructor) =>
@@ -31,8 +34,8 @@ export function AssignmentForm({
             return;
           }
           onAssignUser(selectedInstructorId, selectedUserId);
-          setSelectedInstructorId(0);
-          setSelectedUserId(0);
+          setSelectedInstructorId(null);
+          setSelectedUserId(null);
         }}
       >
         <h2>Asignar usuario a instructor</h2>
@@ -40,8 +43,12 @@ export function AssignmentForm({
 
         <select
           id="instructor"
-          value={selectedInstructorId}
-          onChange={(e) => setSelectedInstructorId(Number(e.target.value))}
+          value={selectedInstructorId ?? ""}
+          onChange={(e) =>
+            setSelectedInstructorId(
+              e.target.value === "" ? null : Number(e.target.value),
+            )
+          }
         >
           <option value={0}>Seleccione un instructor</option>
 
@@ -56,8 +63,12 @@ export function AssignmentForm({
 
         <select
           id="usuario"
-          value={selectedUserId}
-          onChange={(e) => setSelectedUserId(Number(e.target.value))}
+          value={selectedUserId ?? ""}
+          onChange={(e) =>
+            setSelectedUserId(
+              e.target.value === "" ? null : Number(e.target.value),
+            )
+          }
         >
           <option value={0}>Seleccione un usuario</option>
 

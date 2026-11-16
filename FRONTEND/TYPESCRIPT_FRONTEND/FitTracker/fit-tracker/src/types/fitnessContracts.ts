@@ -18,10 +18,7 @@ export type FindHighestCalorieDay = (
 export type GetPendingExercises = (
   weeklyRoutine: WeeklyRoutine,
 ) => RoutineExercise[];
-export type GetWeeklySummary = (
-  name: string,
-  weeklyRoutine?: WeeklyRoutine,
-) => WeeklySummary;
+export type GetWeeklySummary = (user: User) => WeeklySummary;
 export type GetInstructorWeeklySummaries = (
   instructor: Instructor,
   users: User[],
@@ -40,9 +37,8 @@ export type CalculateCaloriePercentage = (
 ) => number;
 export type CalculateTotalMinutes = (weeklyRoutine: WeeklyRoutine) => number;
 export type CalculateTotalCalories = (weeklyRoutine: WeeklyRoutine) => number;
-export type CalculateCardioMinutes = (weeklyRoutine: WeeklyRoutine) => number;
-export type CalculateStrengthMinutes = (weeklyRoutine: WeeklyRoutine) => number;
-export type CalculateFlexibilityMinutes = (
-  weeklyRoutine: WeeklyRoutine,
-) => number;
 export type CalculateTrainingDays = (weeklyRoutine: WeeklyRoutine) => number;
+export type CalculateMinutesByCategory = (
+  weeklyRoutine: WeeklyRoutine,
+  category: Exercise["category"],
+) => number;

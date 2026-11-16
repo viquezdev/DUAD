@@ -1,4 +1,4 @@
 import type { PersonalData } from "./personalData";
 import type { Membership } from "./membership";
 
-export type CompleteProfile = PersonalData & Membership;
+export interface CompleteProfile extends PersonalData, Membership {}

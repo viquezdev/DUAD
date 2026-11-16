@@ -186,8 +186,8 @@ export const ExerciseForm = ({ onSubmit }: ExerciseFormProps) => {
   );
 };
 
-type ExerciseFormProps = {
+interface ExerciseFormProps {
   onSubmit: (data: NewExercise) => void;
-};
+}
 
 export default ExerciseForm;

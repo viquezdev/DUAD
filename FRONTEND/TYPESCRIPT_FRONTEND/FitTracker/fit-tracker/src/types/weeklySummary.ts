@@ -1,5 +1,6 @@
 import type { RestRecommendation } from "./restRecommendation";
 import type { RoutineExercise } from "./routineExercise";
+import type { User } from "./user";
 
 export interface WeeklySummary {
   name: string;
@@ -8,5 +9,8 @@ export interface WeeklySummary {
   totalMinutes: number;
   totalCalories: number;
   restRecommendation?: RestRecommendation;
-  pendingExercises: RoutineExercise[]; // Updated type to include RoutineExercise IDs
+  pendingExercises: RoutineExercise[];
+  userId: User["id"];
+  experienceLevel: User["experienceLevel"];
+  routineName: string | null;
 }

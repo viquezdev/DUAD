@@ -26,14 +26,14 @@ export function InstructorForm({ onSubmit }: InstructorFormProps) {
         }}
       >
         <h2>Registro de perfil de instructor</h2>
-        <label htmlFor="instructor-name">Name:</label>
+        <label htmlFor="instructor-name">Nombre:</label>
         <input
           type="text"
           id="instructor-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <label htmlFor="age">Age:</label>
+        <label htmlFor="age">Edad:</label>
         <input
           type="number"
           id="age"
@@ -56,8 +56,8 @@ export function InstructorForm({ onSubmit }: InstructorFormProps) {
 
 export type InstructorFormData = Pick<Instructor, "name" | "age" | "email">;
 
-type InstructorFormProps = {
+interface InstructorFormProps {
   onSubmit: (data: InstructorFormData) => void;
-};
+}
 
 export default InstructorForm;

@@ -1,5 +1,5 @@
 import type { WeeklyRoutine } from "../../types/weeklyRoutine";
-import type { DayOfWeek } from "../../types/routineEntry";
+import type { DayOfWeek } from "../../types/dayOfWeek";
 import type { RoutineExercise } from "../../types/routineExercise";
 import {
   calculateTotalCalories,
@@ -9,11 +9,11 @@ import {
 } from "../../utils/fitness";
 import "./RoutineView.css";
 
-type RoutineViewProps = {
+interface RoutineViewProps {
   routine: WeeklyRoutine;
   onToggleExercise: (day: DayOfWeek, exerciseId: RoutineExercise["id"]) => void;
   onUpdateSessionComment: (day: DayOfWeek, comment: string) => void;
-};
+}
 
 function describeRoutineExercise(exercise: RoutineExercise): string {
   switch (exercise.category) {

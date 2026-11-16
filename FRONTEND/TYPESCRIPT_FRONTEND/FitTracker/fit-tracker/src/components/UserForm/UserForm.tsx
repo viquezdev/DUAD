@@ -40,14 +40,14 @@ export function UserForm({ onSubmit }: UserFormProps) {
         }}
       >
         <h2>Registro de perfil de usuario</h2>
-        <label htmlFor="user-name">Name:</label>
+        <label htmlFor="user-name">Nombre:</label>
         <input
           type="text"
           id="user-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <label htmlFor="age">Age:</label>
+        <label htmlFor="age">Edad:</label>
         <input
           type="number"
           id="age"
@@ -61,7 +61,7 @@ export function UserForm({ onSubmit }: UserFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <label htmlFor="experienceLevel">Experience Level:</label>
+        <label htmlFor="experienceLevel">Nivel de experiencia:</label>
         <select
           id="experienceLevel"
           value={experienceLevel}
@@ -69,9 +69,9 @@ export function UserForm({ onSubmit }: UserFormProps) {
             setExperienceLevel(e.target.value as ExperienceLevel)
           }
         >
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
+          <option value="beginner">Inicial</option>
+          <option value="intermediate">Intermedio</option>
+          <option value="advanced">Avanzado</option>
         </select>
         <label htmlFor="membershipPlan">Membresía:</label>
         <select
@@ -117,8 +117,8 @@ export type UserFormData = Pick<
   | "email"
 >;
 
-type UserFormProps = {
+interface UserFormProps {
   onSubmit: (data: UserFormData) => void;
-};
+}
 
 export default UserForm;
