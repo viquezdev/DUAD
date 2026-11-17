@@ -1,5 +1,5 @@
 import type { RoutineExercise } from "./routineExercise";
-import type { DayOfWeek } from "./routineEntry";
+import type { DayOfWeek } from "./dayOfWeek";
 
 export interface DaySession {
   day: DayOfWeek;

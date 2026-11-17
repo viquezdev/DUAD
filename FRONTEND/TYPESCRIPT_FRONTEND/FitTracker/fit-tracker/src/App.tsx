@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ExerciseForm } from "./components/ExerciseForm/ExerciseForm";
 import type { Exercise, NewExercise } from "./types/exercise";
 import type { WeeklyRoutine } from "./types/weeklyRoutine";
-import type { DayOfWeek } from "./types/routineEntry";
+import type { DayOfWeek } from "./types/dayOfWeek";
 import type { RoutineExercise } from "./types/routineExercise";
 import { RoutineView } from "./components/RoutineView/RoutineView";
 import { WeeklyLoadView } from "./components/WeeklyLoadView/WeeklyLoadView";
