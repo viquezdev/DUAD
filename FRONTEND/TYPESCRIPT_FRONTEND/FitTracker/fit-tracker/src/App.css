@@ -1,0 +1,182 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-header {
+  width: 100%;
+  padding: 2.5rem 2rem;
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+.app-header-content {
+  width: min(100%, 90rem);
+  margin: 0 auto;
+}
+
+.app-brand {
+  color: #5eead4;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15rem;
+}
+
+.app-header h1 {
+  margin: 0.5rem 0;
+  font-size: 2.25rem;
+}
+
+.app-header p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+
+.App {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 2rem;
+  width: min(100% - 3rem, 90rem);
+  margin: 2rem auto;
+}
+
+.forms-container,
+.results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.column-heading {
+  padding: 0.5rem 0;
+}
+
+.section-label {
+  color: #0d9488;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+}
+
+.column-heading h2 {
+  margin: 0.5rem 0;
+  color: #0f172a;
+  font-size: 1.6rem;
+}
+
+.column-heading p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 0.0625rem solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 0.75rem rgb(15 23 42 / 4%);
+}
+
+.card h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.15rem;
+}
+
+.card h3 {
+  color: #334155;
+  font-size: 1rem;
+}
+
+.card p {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.card label {
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card input,
+.card select,
+.card textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem;
+  color: #1e293b;
+  background-color: #ffffff;
+  border: 0.0625rem solid #cbd5e1;
+  border-radius: 0.5rem;
+  font: inherit;
+}
+
+.card input:focus,
+.card select:focus,
+.card textarea:focus {
+  outline: 0.125rem solid #99f6e4;
+  border-color: #0d9488;
+}
+
+.routine-warning {
+  margin: 0;
+  padding: 1rem;
+  color: #92400e;
+  background-color: #fef3c7;
+  border-left: 0.25rem solid #d97706;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 60rem) {
+  .App {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100% - 2rem, 45rem);
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 40rem) {
+  .app-header {
+    padding: 2rem 1rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .App {
+    width: calc(100% - 1.5rem);
+    margin: 1.25rem auto;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .column-heading h2 {
+    font-size: 1.35rem;
+  }
+}
